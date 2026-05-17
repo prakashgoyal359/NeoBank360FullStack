@@ -1,0 +1,214 @@
+<div class="pending-container">
+  <div class="pending-header">
+    <h2>Pending Account Applications</h2>
+    <p class="pending-count">{{ pendingApplications.length }} applications pending</p>
+  </div>
+
+  <div class="pending-list" *ngIf="pendingApplications.length > 0; else noPending">
+    <div class="pending-item" *ngFor="let app of pendingApplications">
+      <div class="item-header">
+        <div class="item-info">
+          <h3>{{ app.fullName }}</h3>
+          <p>{{ app.email }} • {{ app.mobileNumber }}</p>
+        </div>
+        <span class="account-type">{{ app.accountType }}</span>
+      </div>
+
+      <div class="item-details">
+        <div class="detail-row">
+          <span class="label">Aadhaar:</span>
+          <span class="value">{{ app.aadhaarNumber }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">PAN:</span>
+          <span class="value">{{ app.panNumber }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Address:</span>
+          <span class="value">{{ app.address }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="label">Submitted:</span>
+          <span class="value">{{ app.submittedAt | date: 'short' }}</span>
+        </div>
+      </div>
+
+      <div class="item-actions">
+        <button (click)="openViewModal(app)" class="btn btn-view" [disabled]="isLoading">
+          View Form & Docs
+        </button>
+        <button (click)="openApproveModal(app)" class="btn btn-approve" [disabled]="isLoading">
+          Approve
+        </button>
+        <button (click)="onReject(app.id)" class="btn btn-reject" [disabled]="isLoading">
+          Reject
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noPending>
+    <div class="empty-state">
+      <p>No pending applications</p>
+    </div>
+  </ng-template>
+
+  <!-- View Documents Modal -->
+  <div class="modal-overlay" *ngIf="showViewModal && selectedApp" (click)="closeViewModal()">
+    <div class="modal-dialog modal-lg" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Application Details & Documents</h2>
+        <button class="close-btn" (click)="closeViewModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-section">
+          <h3>Personal Information</h3>
+          <div class="detail-grid">
+            <div class="detail">
+              <span class="label">Full Name:</span>
+              <span class="value">{{ selectedApp.fullName }}</span>
+            </div>
+            <div class="detail">
+              <span class="label">Email:</span>
+              <span class="value">{{ selectedApp.email }}</span>
+            </div>
+            <div class="detail">
+              <span class="label">Mobile:</span>
+              <span class="value">{{ selectedApp.mobileNumber }}</span>
+            </div>
+            <div class="detail">
+              <span class="label">Gender:</span>
+              <span class="value">{{ selectedApp.gender }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Document Information</h3>
+          <div class="detail-grid">
+            <div class="detail">
+              <span class="label">Aadhaar:</span>
+              <span class="value">{{ selectedApp.aadhaarNumber }}</span>
+            </div>
+            <div class="detail">
+              <span class="label">PAN:</span>
+              <span class="value">{{ selectedApp.panNumber }}</span>
+            </div>
+            <div class="detail full-width">
+              <span class="label">Address:</span>
+              <span class="value">{{ selectedApp.address }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Uploaded Documents</h3>
+          <div class="documents-grid">
+            <div class="document-card">
+              <div class="doc-preview" *ngIf="selectedApp.aadhaarCardPath">
+                <img *ngIf="isImage(selectedApp.aadhaarCardPath)"
+                     [src]="getDocumentUrl(selectedApp.aadhaarCardPath)"
+                     alt="Aadhaar Card">
+                <iframe *ngIf="isPdf(selectedApp.aadhaarCardPath)"
+                        [src]="getDocumentUrl(selectedApp.aadhaarCardPath)"
+                        class="pdf-viewer"></iframe>
+                <div *ngIf="!isImage(selectedApp.aadhaarCardPath) && !isPdf(selectedApp.aadhaarCardPath)" class="file-placeholder">
+                  📄
+                </div>
+              </div>
+              <div class="doc-info">
+                <span class="doc-label">Aadhaar Card</span>
+                <a [href]="getDocumentUrl(selectedApp.aadhaarCardPath)" target="_blank" class="btn btn-sm btn-view">
+                  View Full
+                </a>
+              </div>
+            </div>
+            <div class="document-card">
+              <div class="doc-preview" *ngIf="selectedApp.panCardPath">
+                <img *ngIf="isImage(selectedApp.panCardPath)"
+                     [src]="getDocumentUrl(selectedApp.panCardPath)"
+                     alt="PAN Card">
+                <iframe *ngIf="isPdf(selectedApp.panCardPath)"
+                        [src]="getDocumentUrl(selectedApp.panCardPath)"
+                        class="pdf-viewer"></iframe>
+                <div *ngIf="!isImage(selectedApp.panCardPath) && !isPdf(selectedApp.panCardPath)" class="file-placeholder">
+                  📄
+                </div>
+              </div>
+              <div class="doc-info">
+                <span class="doc-label">PAN Card</span>
+                <a [href]="getDocumentUrl(selectedApp.panCardPath)" target="_blank" class="btn btn-sm btn-view">
+                  View Full
+                </a>
+              </div>
+            </div>
+            <div class="document-card" *ngIf="selectedApp.photoPath">
+              <div class="doc-preview">
+                <img *ngIf="isImage(selectedApp.photoPath)"
+                     [src]="getDocumentUrl(selectedApp.photoPath)"
+                     alt="Photo">
+                <div *ngIf="!isImage(selectedApp.photoPath)" class="file-placeholder">
+                  📄
+                </div>
+              </div>
+              <div class="doc-info">
+                <span class="doc-label">Photo</span>
+                <a [href]="getDocumentUrl(selectedApp.photoPath)" target="_blank" class="btn btn-sm btn-view">
+                  View Full
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeViewModal()" class="btn btn-secondary">Close</button>
+        <button (click)="openApproveFromView()" class="btn btn-approve">Approve Application</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Approve Modal with Credentials -->
+  <div class="modal-overlay" *ngIf="showApproveModal && selectedApp" (click)="closeApproveModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>Approve Application</h2>
+        <button class="close-btn" (click)="closeApproveModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="approve-info">
+          <p><strong>Applicant:</strong> {{ selectedApp.fullName }}</p>
+          <p><strong>Email:</strong> {{ selectedApp.email }}</p>
+        </div>
+
+        <div class="credentials-form">
+          <h3>Set Login Credentials</h3>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" [(ngModel)]="username" class="form-control"
+                   placeholder="Enter username for the user" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" [(ngModel)]="password" class="form-control"
+                   placeholder="Enter password for the user" required>
+          </div>
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" [(ngModel)]="confirmPassword" class="form-control"
+                   placeholder="Confirm password" required>
+          </div>
+          <p class="password-hint" *ngIf="password && password !== confirmPassword">
+            ⚠️ Passwords do not match
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button (click)="closeApproveModal()" class="btn btn-secondary">Cancel</button>
+        <button (click)="onApprove()" class="btn btn-approve" [disabled]="!isFormValid() || isLoading">
+          {{ isLoading ? 'Approving...' : 'Confirm & Approve' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

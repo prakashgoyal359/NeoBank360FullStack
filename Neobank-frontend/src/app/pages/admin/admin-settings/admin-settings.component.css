@@ -1,0 +1,104 @@
+.settings-container {
+  padding: 2rem;
+}
+
+.settings-header {
+  margin-bottom: 2rem;
+}
+
+.settings-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.setting-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.setting-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.setting-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.setting-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.setting-card p {
+  margin: 0 0 1rem 0;
+  color: #999;
+  font-size: 0.9rem;
+}
+
+.btn-setting {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-setting:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.coming-soon {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
+
+/* Dark mode support */
+:host-context(.dark-mode) .settings-container {
+  background: #1a1a2e;
+}
+
+:host-context(.dark-mode) .settings-header h2 {
+  color: #e4e4e7;
+}
+
+:host-context(.dark-mode) .setting-card {
+  background: #16213e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) .setting-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(.dark-mode) .setting-card h3 {
+  color: #e4e4e7;
+}
+
+:host-context(.dark-mode) .setting-card p {
+  color: #94a3b8;
+}
+
+:host-context(.dark-mode) .coming-soon {
+  color: #94a3b8;
+}

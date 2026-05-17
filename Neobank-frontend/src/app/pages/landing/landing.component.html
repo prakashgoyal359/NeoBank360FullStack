@@ -1,0 +1,262 @@
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="container navbar-content">
+    <div class="navbar-brand">
+      <h1 class="brand-text">NeoBank360</h1>
+    </div>
+    <div class="navbar-menu">
+      <button class="nav-link" (click)="scrollToSection('features')">Features</button>
+      <button class="nav-link" (click)="scrollToSection('about')">About</button>
+      <button class="nav-link" (click)="scrollToSection('contact')">Contact</button>
+      <app-theme-toggle></app-theme-toggle>
+      <button class="btn btn-outline" (click)="navigateToLogin()">Login</button>
+      <button class="btn btn-primary" (click)="navigateToOpenAccount()">Open Account</button>
+    </div>
+    <div class="navbar-mobile-toggle">
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-text">
+      <h1 class="hero-title">Welcome to the Future of Banking</h1>
+      <p class="hero-subtitle">
+        Experience secure, fast, and innovative banking solutions with NeoBank360. Manage your
+        finances with cutting-edge technology and unparalleled convenience.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary btn-large" (click)="navigateToOpenAccount()">
+          Get Started Today
+        </button>
+        <button class="btn btn-outline btn-large" (click)="scrollToSection('features')">
+          Learn More
+        </button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <div class="hero-card">
+        <div class="card-header">
+          <div class="card-balance">
+            <span class="balance-label">Total Balance</span>
+            <span class="balance-amount">₹2,45,678.90</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="transaction-item">
+            <div class="transaction-icon">💳</div>
+            <div class="transaction-details">
+              <span class="transaction-title">Online Payment</span>
+              <span class="transaction-time">2 hours ago</span>
+            </div>
+            <span class="transaction-amount">-₹1,250.00</span>
+          </div>
+          <div class="transaction-item">
+            <div class="transaction-icon">💰</div>
+            <div class="transaction-details">
+              <span class="transaction-title">Salary Credit</span>
+              <span class="transaction-time">1 day ago</span>
+            </div>
+            <span class="transaction-amount positive">+₹75,000.00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Why Choose NeoBank360?</h2>
+      <p class="section-subtitle">
+        Discover the features that make us the preferred choice for modern banking
+      </p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">Bank-Grade Security</h3>
+        <p class="feature-description">
+          Your financial data is protected with advanced encryption and multi-factor authentication.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Lightning Fast</h3>
+        <p class="feature-description">
+          Experience instant transfers, real-time balance updates, and seamless transactions.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3 class="feature-title">Mobile Banking</h3>
+        <p class="feature-description">
+          Manage your accounts on-the-go with our intuitive mobile app and responsive web platform.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💳</div>
+        <h3 class="feature-title">Digital Cards</h3>
+        <p class="feature-description">
+          Get virtual and physical cards with contactless payments and instant card controls.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">Smart Analytics</h3>
+        <p class="feature-description">
+          Track your spending patterns and get personalized insights to manage your finances better.
+        </p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">Goal Tracking</h3>
+        <p class="feature-description">
+          Set financial goals and track your progress with automated savings and budget planning.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-number">500K+</div>
+        <div class="stat-label">Happy Customers</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">₹10B+</div>
+        <div class="stat-label">Transactions Processed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">99.9%</div>
+        <div class="stat-label">Uptime Guarantee</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">Customer Support</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="about-content">
+      <div class="about-text">
+        <h2 class="section-title">About NeoBank360</h2>
+        <p class="about-description">
+          NeoBank360 is revolutionizing the banking industry with cutting-edge technology and
+          customer-centric solutions. We combine traditional banking values with modern innovation
+          to provide you with the best financial experience possible.
+        </p>
+        <p class="about-description">
+          Our mission is to make banking simple, secure, and accessible to everyone. With our
+          digital-first approach, we eliminate the barriers between you and your money, giving you
+          complete control over your financial future.
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <span class="checkmark">✓</span>
+            <span>Fully Digital Banking Experience</span>
+          </div>
+          <div class="about-feature">
+            <span class="checkmark">✓</span>
+            <span>Zero Hidden Fees</span>
+          </div>
+          <div class="about-feature">
+            <span class="checkmark">✓</span>
+            <span>Instant Account Opening</span>
+          </div>
+          <div class="about-feature">
+            <span class="checkmark">✓</span>
+            <span>Advanced Security Features</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-image">
+        <div class="about-card">
+          <div class="card-content">
+            <h3>Start Your Banking Journey</h3>
+            <p>
+              Join thousands of satisfied customers who trust NeoBank360 with their financial needs.
+            </p>
+            <button class="btn btn-primary" (click)="navigateToOpenAccount()">
+              Open Your Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta">
+  <div class="container cta-content">
+    <h2 class="cta-title">Ready to Experience Modern Banking?</h2>
+    <p class="cta-subtitle">
+      Join NeoBank360 today and take control of your financial future with our innovative banking
+      solutions.
+    </p>
+    <div class="cta-buttons">
+      <button class="btn btn-primary btn-large" (click)="navigateToOpenAccount()">
+        Get Started Now
+      </button>
+      <button class="btn btn-outline btn-large" (click)="navigateToLogin()">Sign In</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h3 class="brand-text">NeoBank360</h3>
+        <p>Your trusted partner in modern banking.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-section">
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#" (click)="scrollToSection('features')">Features</a></li>
+            <li><a href="#" (click)="scrollToSection('about')">About</a></li>
+            <li><a href="#" (click)="navigateToOpenAccount()">Open Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Security</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Compliance</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 NeoBank360. All rights reserved.</p>
+    </div>
+  </div>
+</footer>

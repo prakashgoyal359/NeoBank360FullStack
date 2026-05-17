@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-Content 'c:\\\\Users\\\\MONU\\\\Documents\\\\NeoBank360_New\\\\Neobank-backend\\\\src\\\\main\\\\java\\\\com\\\\neobank\\\\config\\\\SecurityConfig.java')",
+      "Bash(mysql -u neobank360_user -pNeoBank360# neobank360 -e \"DELETE FROM account_opening_forms WHERE email = 'ankit@gmail.com';\")",
+      "Bash(npm run *)",
+      "Bash(npm install *)"
+    ]
+  }
+}

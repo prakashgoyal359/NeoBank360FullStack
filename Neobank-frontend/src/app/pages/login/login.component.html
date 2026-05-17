@@ -1,0 +1,54 @@
+<div class="auth-container">
+  <div class="theme-toggle-container">
+    <app-theme-toggle></app-theme-toggle>
+  </div>
+  <div class="auth-card">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-primary">Sign in to NeoBank360</h2>
+    </div>
+    <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="space-y-px">
+        <div>
+          <label for="username" class="sr-only">Username</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            formControlName="username"
+            required
+            class="form-input rounded-none rounded-t"
+            placeholder="Username"
+          />
+        </div>
+        <div>
+          <label for="password" class="sr-only">Password</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            formControlName="password"
+            required
+            class="form-input rounded-none rounded-b"
+            placeholder="Password"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="text-error text-sm text-center">
+        {{ errorMessage }}
+      </div>
+
+      <div>
+        <button type="submit" [disabled]="!loginForm.valid" class="btn btn-primary btn-full">
+          Sign in
+        </button>
+      </div>
+
+      <div class="text-center">
+        <a routerLink="/open-account" class="font-medium text-primary hover:text-primary-hover">
+          Open New Account
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

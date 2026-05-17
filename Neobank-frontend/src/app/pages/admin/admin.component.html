@@ -1,0 +1,176 @@
+<div class="admin-layout" [class.dark-mode]="themeService.isDarkMode()">
+  <!-- Top Header -->
+  <header class="top-header">
+    <div class="header-left">
+      <h1 class="logo">NeoBank Admin</h1>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-name">{{ user?.username || 'Admin' }}</span>
+      </div>
+      <button class="btn-logout" (click)="onLogout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <button
+          [class.active]="activeSection === 'home'"
+          (click)="onSectionChange('home'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">🏠</span>
+          <span class="nav-text">Home</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'users'"
+          (click)="onSectionChange('users'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">👥</span>
+          <span class="nav-text">Users</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'pending'"
+          (click)="onSectionChange('pending'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">⏳</span>
+          <span class="nav-text">Pending</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'deposit'"
+          (click)="onSectionChange('deposit'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">💰</span>
+          <span class="nav-text">Deposit</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'profile'"
+          (click)="onSectionChange('profile'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">👤</span>
+          <span class="nav-text">Profile</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'settings'"
+          (click)="onSectionChange('settings'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-text">Settings</span>
+        </button>
+        <div class="sidebar-footer">
+          <app-theme-toggle></app-theme-toggle>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content-area">
+      <app-admin-home
+        *ngIf="activeSection === 'home'"
+        [accounts]="accounts"
+        [allApplications]="allApplications"
+      ></app-admin-home>
+
+      <app-admin-users *ngIf="activeSection === 'users'" [accounts]="accounts"></app-admin-users>
+
+      <app-admin-pending
+        *ngIf="activeSection === 'pending'"
+        [pendingApplications]="pendingApplications"
+        (approve)="onApproveApplication($event)"
+        (reject)="onRejectApplication($event)"
+      ></app-admin-pending>
+
+      <div *ngIf="activeSection === 'deposit'" class="section">
+        <div class="deposit-container">
+          <div class="deposit-header">
+            <h2>Deposit to User Account</h2>
+          </div>
+
+          <div class="search-box">
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              placeholder="Search by name, email, or account number..."
+              class="search-input"
+              (input)="filterUsers()"
+            />
+          </div>
+
+          <div class="users-list">
+            <table class="users-table">
+              <thead>
+                <tr>
+                  <th>User</th>
+                  <th>Email</th>
+                  <th>Account Number</th>
+                  <th>Current Balance</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let account of filteredAccounts">
+                  <td>{{ account.userName || 'N/A' }}</td>
+                  <td>{{ account.email || 'N/A' }}</td>
+                  <td>{{ account.accountNumber }}</td>
+                  <td>₹{{ account.balance | number }}</td>
+                  <td>
+                    <button class="btn btn-deposit" (click)="openDepositModal(account)">
+                      Deposit
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="filteredAccounts.length === 0">
+                  <td colspan="5" class="empty-state">No users found</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <app-admin-profile *ngIf="activeSection === 'profile'"></app-admin-profile>
+
+      <app-admin-settings *ngIf="activeSection === 'settings'"></app-admin-settings>
+    </main>
+  </div>
+
+  <!-- Deposit Modal -->
+  <div class="modal-overlay" *ngIf="showDepositModal" (click)="closeDepositModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Deposit Amount</h3>
+        <button class="close-btn" (click)="closeDepositModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Account Number</label>
+          <input type="text" [value]="selectedAccountForDeposit?.accountNumber" readonly class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>Account Holder</label>
+          <input type="text" [value]="selectedAccountForDeposit?.userName || 'N/A'" readonly class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>Current Balance</label>
+          <input type="text" [value]="'₹' + (selectedAccountForDeposit?.balance || 0)" readonly class="form-input" />
+        </div>
+        <div class="form-group">
+          <label>Deposit Amount</label>
+          <input type="number" [(ngModel)]="depositAmount" placeholder="Enter amount to deposit" class="form-input" min="1" />
+        </div>
+        <div *ngIf="depositError" class="error-message">{{ depositError }}</div>
+        <div *ngIf="depositSuccess" class="success-message">{{ depositSuccess }}</div>
+        <button class="btn btn-primary" (click)="submitDeposit()" [disabled]="!depositAmount || depositAmount <= 0">
+          Deposit Amount
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

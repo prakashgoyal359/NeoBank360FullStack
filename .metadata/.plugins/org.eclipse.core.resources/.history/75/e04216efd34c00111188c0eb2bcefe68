@@ -1,0 +1,36 @@
+package com.neobank.config;
+
+import com.neobank.entity.User;
+import com.neobank.entity.UserRole;
+import com.neobank.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+@RequiredArgsConstructor
+public class DataInitializer {
+
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+
+    @Bean
+    public CommandLineRunner seedAdmin() {
+        return args -> {
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                User admin = User.builder()
+                        .username("admin")
+                        .passwordHash(passwordEncoder.encode("admin123"))
+                        .email("admin@neobank.com")
+                        .fullName("NeoBank Administrator")
+                        .role(UserRole.ADMIN)
+                        .isActive(true)
+                        .isApproved(true)
+                        .build();
+                userRepository.save(admin);
+            }
+        };
+    }
+}

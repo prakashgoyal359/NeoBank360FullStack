@@ -1,0 +1,247 @@
+.home-container {
+  padding: 2rem;
+  background: #f5f7fa;
+  min-height: 100vh;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+
+.stat-icon {
+  font-size: 2.5rem;
+}
+
+.stat-content h3 {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.stat-number {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chart-card h3 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+  font-size: 1.1rem;
+}
+
+.pie-chart-container {
+  position: relative;
+  height: 250px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.pie-chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.chart {
+  display: flex;
+  gap: 0.25rem;
+  height: 40px;
+  margin-bottom: 1rem;
+  background: #f5f5f5;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.chart-bar {
+  height: 100%;
+  transition: opacity 0.3s ease;
+}
+
+.chart-bar:hover {
+  opacity: 0.8;
+}
+
+.bar-approved {
+  background: #10b981;
+}
+
+.bar-pending {
+  background: #f59e0b;
+}
+
+.bar-rejected {
+  background: #ef4444;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.legend-dot.approved {
+  background: #10b981;
+}
+
+.legend-dot.pending {
+  background: #f59e0b;
+}
+
+.legend-dot.rejected {
+  background: #ef4444;
+}
+
+.recent-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.recent-item:last-child {
+  border-bottom: none;
+}
+
+.recent-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.recent-email {
+  font-size: 0.85rem;
+  color: #999;
+  margin-top: 0.25rem;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.pending {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.status-badge.approved {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.status-badge.rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Dark mode support - when parent has dark-mode class */
+:host-context(.dark-mode) .home-container {
+  background: #1a1a2e;
+}
+
+:host-context(.dark-mode) .stat-card {
+  background: #16213e;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+:host-context(.dark-mode) .stat-content h3 {
+  color: #94a3b8;
+}
+
+:host-context(.dark-mode) .stat-number {
+  color: #e4e4e7;
+}
+
+:host-context(.dark-mode) .chart-card {
+  background: #16213e;
+}
+
+:host-context(.dark-mode) .chart-card h3 {
+  color: #e4e4e7;
+}
+
+:host-context(.dark-mode) .chart {
+  background: #0f3460;
+}
+
+:host-context(.dark-mode) .recent-item {
+  border-color: #2a2a4a;
+}
+
+:host-context(.dark-mode) .recent-name {
+  color: #e4e4e7;
+}
+
+:host-context(.dark-mode) .recent-email {
+  color: #94a3b8;
+}
+
+:host-context(.dark-mode) .status-badge.pending {
+  background: #78350f;
+  color: #fbbf24;
+}
+
+:host-context(.dark-mode) .status-badge.approved {
+  background: #064e3b;
+  color: #34d399;
+}
+
+:host-context(.dark-mode) .status-badge.rejected {
+  background: #7f1d1d;
+  color: #f87171;
+}

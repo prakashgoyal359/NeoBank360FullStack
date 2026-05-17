@@ -1,0 +1,319 @@
+<div class="auth-container">
+  <div class="theme-toggle-container">
+    <app-theme-toggle></app-theme-toggle>
+  </div>
+  <div class="auth-card">
+    <!-- KYC Verification Section -->
+    <div *ngIf="!isKycVerified && !showOtpForm">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-primary">KYC Verification</h2>
+        <p class="text-secondary text-sm">Enter your Aadhaar details for verification</p>
+      </div>
+
+      <form [formGroup]="kycForm" (ngSubmit)="verifyAadhaar()" class="space-y-6">
+        <div class="form-group">
+          <label for="aadhaarNumber" class="form-label">Aadhaar Number (12 digits)</label>
+          <input
+            type="text"
+            id="aadhaarNumber"
+            formControlName="aadhaarNumber"
+            class="form-input"
+            placeholder="Enter 12-digit Aadhaar number"
+            maxlength="12"
+          />
+          <p class="text-secondary text-xs mt-1">You'll receive an OTP for verification</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              class="form-input"
+              placeholder="First name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="middleName" class="form-label">Middle Name (Optional)</label>
+            <input
+              type="text"
+              id="middleName"
+              formControlName="middleName"
+              class="form-input"
+              placeholder="Middle name"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName" class="form-label">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            class="form-input"
+            placeholder="Last name"
+          />
+        </div>
+
+        <div *ngIf="errorMessage" class="form-error">
+          {{ errorMessage }}
+        </div>
+
+        <div>
+          <button type="submit" [disabled]="!kycForm.valid" class="btn btn-primary btn-full">
+            Send OTP
+          </button>
+        </div>
+
+        <div class="text-center">
+          <p class="text-secondary text-sm">Check console for OTP (for testing)</p>
+        </div>
+      </form>
+    </div>
+
+    <!-- OTP Verification Section -->
+    <div *ngIf="showOtpForm && !isKycVerified">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-primary">Verify OTP</h2>
+        <p class="text-secondary text-sm">Enter the 6-digit OTP sent to your registered details</p>
+      </div>
+
+      <form [formGroup]="otpForm" (ngSubmit)="verifyOtp()" class="space-y-6">
+        <div class="form-group">
+          <label for="otp" class="form-label">OTP (6 digits)</label>
+          <input
+            type="text"
+            id="otp"
+            formControlName="otp"
+            class="form-input"
+            placeholder="Enter 6-digit OTP"
+            maxlength="6"
+          />
+          <p class="text-secondary text-xs mt-1">Check browser console for OTP</p>
+        </div>
+
+        <div *ngIf="errorMessage" class="form-error">
+          {{ errorMessage }}
+        </div>
+
+        <div class="space-y-3">
+          <button type="submit" [disabled]="!otpForm.valid" class="btn btn-primary btn-full">
+            Verify OTP
+          </button>
+          <button type="button" (click)="goBackToAadhaar()" class="btn btn-outline btn-full">
+            Back
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Account Opening Form Section -->
+    <div *ngIf="isKycVerified" id="account-form">
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-primary">Open New Account</h2>
+        <p class="text-secondary text-sm">Complete your account details</p>
+        <div class="kyc-verified-badge">
+          <span class="text-success">✓ Aadhaar Verified</span>
+        </div>
+      </div>
+
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Auto-filled fields (Read-only) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="fullName" class="form-label">Full Name (Auto-filled)</label>
+            <input
+              type="text"
+              id="fullName"
+              formControlName="fullName"
+              class="form-input"
+              readonly
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="aadhaarNumber" class="form-label">Aadhaar Number (Verified)</label>
+            <input
+              type="text"
+              id="aadhaarNumber"
+              formControlName="aadhaarNumber"
+              class="form-input"
+              readonly
+            />
+          </div>
+        </div>
+
+        <!-- User Details -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" formControlName="email" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="mobileNumber" class="form-label">Mobile Number</label>
+            <input type="tel" id="mobileNumber" formControlName="mobileNumber" class="form-input" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="panNumber" class="form-label">PAN Number</label>
+            <input type="text" id="panNumber" formControlName="panNumber" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+            <input type="date" id="dateOfBirth" formControlName="dateOfBirth" class="form-input" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="occupation" class="form-label">Occupation</label>
+            <input type="text" id="occupation" formControlName="occupation" class="form-input" />
+          </div>
+
+          <div class="form-group">
+            <label for="annualIncome" class="form-label">Annual Income</label>
+            <input
+              type="number"
+              id="annualIncome"
+              formControlName="annualIncome"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="address" class="form-label">Address</label>
+          <textarea
+            id="address"
+            formControlName="address"
+            rows="3"
+            class="form-input form-textarea"
+          ></textarea>
+        </div>
+
+        <!-- Account Type and Initial Deposit -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label for="accountType" class="form-label">Account Type</label>
+            <select id="accountType" formControlName="accountType" class="form-input">
+              <option value="SAVINGS">Savings</option>
+              <option value="CURRENT">Current</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="initialDeposit" class="form-label">Initial Deposit (Min: ₹1000)</label>
+            <input
+              type="number"
+              id="initialDeposit"
+              formControlName="initialDeposit"
+              class="form-input"
+            />
+          </div>
+        </div>
+
+        <!-- File Uploads -->
+        <div class="file-uploads-section">
+          <h3 class="text-lg font-semibold text-primary mb-4">Document Upload</h3>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Aadhaar Card Upload -->
+            <div class="form-group file-upload-group">
+              <label for="aadhaarFile" class="form-label">Aadhaar Card</label>
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="aadhaarFile"
+                  (change)="onAadhaarFileSelected($event)"
+                  accept="image/*,.pdf"
+                  class="file-input"
+                />
+                <div class="file-input-label">
+                  <span class="file-icon">📄</span>
+                  <span class="file-text">
+                    {{ aadhaarFile ? aadhaarFile.name : 'Choose file' }}
+                  </span>
+                </div>
+              </div>
+              <p class="text-secondary text-xs mt-1">PDF or Image (Max 5MB)</p>
+            </div>
+
+            <!-- PAN Card Upload -->
+            <div class="form-group file-upload-group">
+              <label for="panFile" class="form-label">PAN Card</label>
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="panFile"
+                  (change)="onPanFileSelected($event)"
+                  accept="image/*,.pdf"
+                  class="file-input"
+                />
+                <div class="file-input-label">
+                  <span class="file-icon">📄</span>
+                  <span class="file-text">
+                    {{ panFile ? panFile.name : 'Choose file' }}
+                  </span>
+                </div>
+              </div>
+              <p class="text-secondary text-xs mt-1">PDF or Image (Max 5MB)</p>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-group file-upload-group">
+              <label for="photoFile" class="form-label">Passport Photo</label>
+              <div class="file-input-wrapper">
+                <input
+                  type="file"
+                  id="photoFile"
+                  (change)="onPhotoFileSelected($event)"
+                  accept="image/*"
+                  class="file-input"
+                />
+                <div class="file-input-label">
+                  <span class="file-icon">📷</span>
+                  <span class="file-text">
+                    {{ photoFile ? photoFile.name : 'Choose file' }}
+                  </span>
+                </div>
+              </div>
+              <p class="text-secondary text-xs mt-1">Image only (Max 5MB)</p>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="form-error">
+          {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="form-success">
+          {{ successMessage }}
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            [disabled]="!accountForm.valid || !aadhaarFile || !panFile || !photoFile"
+            class="btn btn-primary btn-full"
+          >
+            Create Account
+          </button>
+        </div>
+
+        <div class="text-center">
+          <a routerLink="/login" class="font-medium text-primary hover:text-primary-hover">
+            Already have an account? Sign in
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

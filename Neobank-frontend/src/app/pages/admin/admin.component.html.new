@@ -1,0 +1,35 @@
+<div class="admin-layout">
+  <app-admin-sidebar
+    [activeSection]="activeSection"
+    (sectionChange)="onSectionChange($event)"
+    (logoutClick)="onLogout()"
+  ></app-admin-sidebar>
+
+  <main class="admin-main">
+    <app-admin-home
+      *ngIf="activeSection === 'home'"
+      [accounts]="accounts"
+      [pendingApplications]="pendingApplications"
+    ></app-admin-home>
+
+    <app-admin-users
+      *ngIf="activeSection === 'users'"
+      [accounts]="accounts"
+    ></app-admin-users>
+
+    <app-admin-pending
+      *ngIf="activeSection === 'pending'"
+      [pendingApplications]="pendingApplications"
+      (approve)="onApproveApplication($event)"
+      (reject)="onRejectApplication($event)"
+    ></app-admin-pending>
+
+    <app-admin-profile
+      *ngIf="activeSection === 'profile'"
+    ></app-admin-profile>
+
+    <app-admin-settings
+      *ngIf="activeSection === 'settings'"
+    ></app-admin-settings>
+  </main>
+</div>
