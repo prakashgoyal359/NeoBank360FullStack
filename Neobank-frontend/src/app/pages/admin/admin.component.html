@@ -49,6 +49,14 @@
           <span class="nav-text">Deposit</span>
         </button>
         <button
+          [class.active]="activeSection === 'loans'"
+          (click)="onSectionChange('loans'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">🏦</span>
+          <span class="nav-text">Loans</span>
+        </button>
+        <button
           [class.active]="activeSection === 'profile'"
           (click)="onSectionChange('profile'); closeMobileMenu()"
           class="nav-item"
@@ -134,6 +142,8 @@
           </div>
         </div>
       </div>
+
+      <app-admin-loans *ngIf="activeSection === 'loans'"></app-admin-loans>
 
       <app-admin-profile *ngIf="activeSection === 'profile'"></app-admin-profile>
 

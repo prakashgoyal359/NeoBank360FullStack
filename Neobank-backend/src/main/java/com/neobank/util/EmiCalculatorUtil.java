@@ -58,27 +58,7 @@ public class EmiCalculatorUtil {
         BigDecimal numerator = principal.multiply(monthlyRate).multiply(onePlusRPowN);
         BigDecimal denominator = onePlusRPowN.subtract(BigDecimal.ONE);
 
-        BigDecimal emi = numerator.divide(denominator, SCALE, ROUNDING_MODE);
-
-        // Handle final installment rounding adjustment
-        return adjustFinalEmi(principal, emi, tenureInMonths);
-    }
-
-    /**
-     * Adjust the final EMI to ensure total matches exactly
-     * Sometimes the final payment needs adjustment due to rounding
-     */
-    private static BigDecimal adjustFinalEmi(BigDecimal principal, BigDecimal calculatedEmi, int tenureInMonths) {
-        BigDecimal totalPayment = calculatedEmi.multiply(BigDecimal.valueOf(tenureInMonths));
-        BigDecimal difference = totalPayment.subtract(principal);
-
-        if (difference.abs().compareTo(BigDecimal.valueOf(0.05)) > 0) {
-            // Adjust final EMI to match exactly
-            int lastEmiAdjustment = difference.compareTo(BigDecimal.ZERO) > 0 ? -1 : 1;
-            return calculatedEmi.add(BigDecimal.valueOf(lastEmiAdjustment));
-        }
-
-        return calculatedEmi;
+        return numerator.divide(denominator, SCALE, ROUNDING_MODE);
     }
 
     /**
@@ -107,7 +87,7 @@ public class EmiCalculatorUtil {
             BigDecimal annualRate,
             int tenureInMonths) {
 
-        BigDecimal emi = calculateEmi(principal, annualRate, tenureInMonths);
+        BigDecimal standardEmi = calculateEmi(principal, annualRate, tenureInMonths);
         BigDecimal monthlyRate = annualRate.divide(BigDecimal.valueOf(12), 6, ROUNDING_MODE);
 
         AmortizationSchedule[] schedule = new AmortizationSchedule[tenureInMonths];
@@ -117,12 +97,13 @@ public class EmiCalculatorUtil {
             BigDecimal interestComponent = remainingBalance.multiply(monthlyRate)
                     .setScale(SCALE, ROUNDING_MODE);
 
+            BigDecimal emi = standardEmi;
             BigDecimal principalComponent = emi.subtract(interestComponent);
 
-            // Ensure we don't go negative on the last payment
+            // Final installment absorbs rounding differences so the balance closes exactly.
             if (i == tenureInMonths - 1) {
                 principalComponent = remainingBalance;
-                // Recalculate EMI for last payment
+                emi = principalComponent.add(interestComponent).setScale(SCALE, ROUNDING_MODE);
             }
 
             remainingBalance = remainingBalance.subtract(principalComponent);

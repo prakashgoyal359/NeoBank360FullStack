@@ -41,6 +41,8 @@ public class LoanServiceImpl implements LoanService {
     @Override
     @Transactional
     public LoanProductDTO createLoanProduct(LoanProductRequest request, Long adminId) {
+        validateLoanProductRequest(request);
+
         LoanProduct product = LoanProduct.builder()
                 .productName(request.getProductName())
                 .loanType(request.getLoanType())
@@ -66,6 +68,8 @@ public class LoanServiceImpl implements LoanService {
     @Override
     @Transactional
     public LoanProductDTO updateLoanProduct(Long id, LoanProductRequest request) {
+        validateLoanProductRequest(request);
+
         LoanProduct product = loanProductRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan product not found"));
 
@@ -334,16 +338,21 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
-    public LoanAccountDTO getLoanAccountById(Long accountId) {
+    public LoanAccountDTO getLoanAccountById(Long accountId, Long requesterId) {
         LoanAccount account = loanAccountRepository.findById(accountId)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan account not found"));
+        assertLoanAccountAccess(account, requesterId);
         return mapLoanAccountToDTO(account);
     }
 
     // ==================== REPAYMENTS ====================
 
     @Override
-    public List<LoanRepaymentDTO> getRepaymentsByLoanAccount(Long loanAccountId) {
+    public List<LoanRepaymentDTO> getRepaymentsByLoanAccount(Long loanAccountId, Long requesterId) {
+        LoanAccount account = loanAccountRepository.findById(loanAccountId)
+                .orElseThrow(() -> new ResourceNotFoundException("Loan account not found"));
+        assertLoanAccountAccess(account, requesterId);
+
         return loanRepaymentRepository.findByLoanAccountIdOrderByInstallmentNumberAsc(loanAccountId).stream()
                 .map(this::mapRepaymentToDTO)
                 .collect(Collectors.toList());
@@ -358,13 +367,14 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
-    public LoanRepaymentDTO payRepayment(Long loanAccountId, Long repaymentId) {
+    public LoanRepaymentDTO payRepayment(Long loanAccountId, Long repaymentId, Long requesterId) {
         LoanRepayment repayment = loanRepaymentRepository.findById(repaymentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Repayment not found"));
 
         if (!repayment.getLoanAccount().getId().equals(loanAccountId)) {
             throw new BadRequestException("This repayment does not belong to the specified loan account");
         }
+        assertLoanAccountAccess(repayment.getLoanAccount(), requesterId);
 
         if (repayment.getStatus() == RepaymentStatus.PAID) {
             throw new BadRequestException("This installment has already been paid");
@@ -574,10 +584,45 @@ public class LoanServiceImpl implements LoanService {
     }
 
     private List<Integer> parseTenures(String allowedTenures) {
-        return Arrays.stream(allowedTenures.split(","))
-                .map(String::trim)
-                .map(Integer::parseInt)
-                .collect(Collectors.toList());
+        try {
+            return Arrays.stream(allowedTenures.split(","))
+                    .map(String::trim)
+                    .filter(value -> !value.isBlank())
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            throw new BadRequestException("Allowed tenures must be comma-separated month values, e.g. 12,24,36");
+        }
+    }
+
+    private void validateLoanProductRequest(LoanProductRequest request) {
+        if (request.getMaxAmount().compareTo(request.getMinAmount()) <= 0) {
+            throw new BadRequestException("Maximum loan amount must be greater than minimum loan amount");
+        }
+        if (request.getMaxTenure() < request.getMinTenure()) {
+            throw new BadRequestException("Maximum tenure must be greater than or equal to minimum tenure");
+        }
+
+        List<Integer> tenures = parseTenures(request.getAllowedTenures());
+        if (tenures.isEmpty()) {
+            throw new BadRequestException("At least one allowed tenure is required");
+        }
+        boolean outsideRange = tenures.stream()
+                .anyMatch(tenure -> tenure < request.getMinTenure() || tenure > request.getMaxTenure());
+        if (outsideRange) {
+            throw new BadRequestException("Allowed tenures must fall within the configured minimum and maximum tenure");
+        }
+    }
+
+    private void assertLoanAccountAccess(LoanAccount account, Long requesterId) {
+        User requester = userRepository.findById(requesterId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (requester.getRole() == UserRole.ADMIN) {
+            return;
+        }
+        if (!account.getUser().getId().equals(requesterId)) {
+            throw new BadRequestException("You are not allowed to access this loan account");
+        }
     }
 
     private String generateApplicationNumber() {

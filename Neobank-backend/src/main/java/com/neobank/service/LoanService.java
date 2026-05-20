@@ -29,12 +29,12 @@ public interface LoanService {
 
     // Loan Accounts
     List<LoanAccountDTO> getUserLoanAccounts(Long userId);
-    LoanAccountDTO getLoanAccountById(Long accountId);
+    LoanAccountDTO getLoanAccountById(Long accountId, Long requesterId);
 
     // Repayments
-    List<LoanRepaymentDTO> getRepaymentsByLoanAccount(Long loanAccountId);
+    List<LoanRepaymentDTO> getRepaymentsByLoanAccount(Long loanAccountId, Long requesterId);
     List<LoanRepaymentDTO> getUserRepayments(Long userId);
-    LoanRepaymentDTO payRepayment(Long loanAccountId, Long repaymentId);
+    LoanRepaymentDTO payRepayment(Long loanAccountId, Long repaymentId, Long requesterId);
     void checkAndUpdateOverdueRepayments();
 
     // Analytics

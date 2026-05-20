@@ -11,6 +11,7 @@ import { AdminPendingComponent } from './admin-pending/admin-pending.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
+import { AdminLoansComponent } from './admin-loans/admin-loans.component';
 import { Account, AccountOpeningResponse } from '../../models/banking.model';
 
 @Component({
@@ -25,6 +26,7 @@ import { Account, AccountOpeningResponse } from '../../models/banking.model';
     AdminUsersComponent,
     AdminProfileComponent,
     AdminSettingsComponent,
+    AdminLoansComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css'],

@@ -154,6 +154,27 @@
   font-size: 1.25rem;
 }
 
+.sidebar-nav .nav-item:nth-of-type(5) .nav-icon,
+.sidebar-nav .nav-item:nth-of-type(6) .nav-icon {
+  font-size: 0;
+  width: 1.5rem;
+  text-align: center;
+}
+
+.sidebar-nav .nav-item:nth-of-type(5) .nav-icon::before {
+  content: "Rs";
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
+.sidebar-nav .nav-item:nth-of-type(6) .nav-icon::before {
+  content: "EMI";
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+
 .sidebar-footer {
   padding: 1rem;
   border-top: 1px solid #e2e8f0;

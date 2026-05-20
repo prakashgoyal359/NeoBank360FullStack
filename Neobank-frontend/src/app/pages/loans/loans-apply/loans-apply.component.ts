@@ -52,17 +52,32 @@ interface LoanDecision {
       <!-- Step 1: Select Product -->
       <div *ngIf="step === 1" class="step-content">
         <div class="search-filter">
-          <select [(ngModel)]="filterType" (change)="filterProducts()" class="filter-select">
-            <option value="">All Loan Types</option>
-            <option value="PERSONAL">Personal Loan</option>
-            <option value="HOME">Home Loan</option>
-            <option value="AUTO">Auto Loan</option>
-            <option value="EDUCATION">Education Loan</option>
-            <option value="BUSINESS">Business Loan</option>
+          <select
+            [ngModel]="selectedProduct?.id || null"
+            (ngModelChange)="selectProductById($event)"
+            class="filter-select"
+          >
+            <option [ngValue]="null">Select Loan Product</option>
+            <option *ngFor="let product of products" [ngValue]="product.id">
+              {{ formatLoanType(product.loanType) }} - {{ product.productName }}
+            </option>
           </select>
         </div>
 
-        <div class="products-grid">
+        <div *ngIf="selectedProduct" class="selected-product-preview">
+          <div>
+            <span class="loan-type-badge">{{ formatLoanType(selectedProduct.loanType) }}</span>
+            <h3>{{ selectedProduct.productName }}</h3>
+            <p>{{ selectedProduct.description }}</p>
+          </div>
+          <div class="preview-metrics">
+            <span>{{ selectedProduct.interestRate * 100 | number: '1.2-2' }}% p.a.</span>
+            <span>Rs. {{ selectedProduct.minAmount | number }} - Rs. {{ selectedProduct.maxAmount | number }}</span>
+            <span>{{ selectedProduct.allowedTenures }} months</span>
+          </div>
+        </div>
+
+        <div *ngIf="filteredProducts.length > 0" class="products-grid">
           <div
             *ngFor="let product of filteredProducts"
             class="product-card"
@@ -91,7 +106,12 @@ interface LoanDecision {
                 <span class="value">{{ product.minTenure }} - {{ product.maxTenure }} months</span>
               </div>
             </div>
-            <button class="select-btn" [class.selected]="selectedProduct?.id === product.id">
+            <button
+              type="button"
+              class="select-btn"
+              [class.selected]="selectedProduct?.id === product.id"
+              (click)="selectProduct(product); $event.stopPropagation()"
+            >
               {{ selectedProduct?.id === product.id ? 'Selected' : 'Select' }}
             </button>
           </div>
@@ -121,6 +141,7 @@ interface LoanDecision {
               <input
                 type="number"
                 [(ngModel)]="applicationAmount"
+                (ngModelChange)="calculateEmi()"
                 [min]="selectedProduct?.minAmount || 0"
                 [max]="selectedProduct?.maxAmount || 0"
                 placeholder="Enter loan amount"
@@ -134,9 +155,13 @@ interface LoanDecision {
             </div>
             <div class="form-group">
               <label>Tenure (months)</label>
-              <select [(ngModel)]="applicationTenure" class="form-select">
+              <select
+                [(ngModel)]="applicationTenure"
+                (ngModelChange)="calculateEmi()"
+                class="form-select"
+              >
                 <option [ngValue]="null">Select tenure</option>
-                <option *ngFor="let tenure of tenureOptions" [value]="tenure">
+                <option *ngFor="let tenure of tenureOptions" [ngValue]="tenure">
                   {{ tenure }} months
                 </option>
               </select>
@@ -881,6 +906,35 @@ interface LoanDecision {
         color: #e4e4e7;
       }
 
+      .selected-product-preview {
+        display: flex;
+        justify-content: space-between;
+        gap: 1.5rem;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        border-radius: 14px;
+        background: rgba(59, 130, 246, 0.12);
+        border: 1px solid rgba(96, 165, 250, 0.35);
+      }
+
+      .selected-product-preview h3 {
+        margin: 0.75rem 0 0.35rem;
+        color: #e4e4e7;
+      }
+
+      .selected-product-preview p {
+        margin: 0;
+        color: #94a3b8;
+      }
+
+      .preview-metrics {
+        display: grid;
+        min-width: 280px;
+        gap: 0.5rem;
+        color: #dbeafe;
+        font-weight: 600;
+      }
+
       @media (max-width: 768px) {
         .loan-apply-container {
           padding: 1rem;
@@ -888,6 +942,14 @@ interface LoanDecision {
 
         .products-grid {
           grid-template-columns: 1fr;
+        }
+
+        .selected-product-preview {
+          flex-direction: column;
+        }
+
+        .preview-metrics {
+          min-width: 0;
         }
 
         .form-row {
@@ -920,6 +982,7 @@ export class LoansApplyComponent implements OnInit {
   step = 1;
 
   // Products
+  products: LoanProduct[] = [];
   filteredProducts: LoanProduct[] = [];
   selectedProduct: LoanProduct | null = null;
   filterType = '';
@@ -959,6 +1022,7 @@ export class LoansApplyComponent implements OnInit {
   loadProducts(): void {
     this.loanService.getActiveProducts().subscribe({
       next: (products) => {
+        this.products = products;
         this.filteredProducts = products;
         this.cdr.detectChanges();
       },
@@ -967,14 +1031,27 @@ export class LoansApplyComponent implements OnInit {
   }
 
   filterProducts(): void {
-    this.loanService.getActiveProducts().subscribe({
-      next: (products) => {
-        this.filteredProducts = this.filterType
-          ? products.filter((p) => p.loanType === this.filterType)
-          : products;
-        this.cdr.detectChanges();
-      },
-    });
+    this.filteredProducts = this.filterType
+      ? this.products.filter((p) => p.loanType === this.filterType)
+      : this.products;
+    this.cdr.detectChanges();
+  }
+
+  selectProductById(productId: number | null): void {
+    const product = this.products.find((item) => item.id === Number(productId));
+    if (product) {
+      this.selectProduct(product);
+      this.filterType = product.loanType;
+      this.filteredProducts = this.products.filter((item) => item.loanType === product.loanType);
+      return;
+    }
+
+    this.selectedProduct = null;
+    this.tenureOptions = [];
+    this.applicationTenure = null;
+    this.applicationAmount = null;
+    this.filteredProducts = this.products;
+    this.cdr.detectChanges();
   }
 
   selectProduct(product: LoanProduct): void {
@@ -988,12 +1065,21 @@ export class LoansApplyComponent implements OnInit {
 
   calculateEmi(): void {
     if (this.selectedProduct && this.applicationAmount && this.applicationTenure) {
+      const annualRate =
+        this.selectedProduct.interestRate > 1
+          ? this.selectedProduct.interestRate / 100
+          : this.selectedProduct.interestRate;
+
       this.emiCalculation = this.loanService.calculateEmi(
         this.applicationAmount,
-        this.selectedProduct.interestRate,
+        annualRate,
         this.applicationTenure,
       );
+      this.cdr.detectChanges();
+      return;
     }
+
+    this.emiCalculation = { emi: 0, totalInterest: 0, totalAmount: 0, monthlyRate: 0 };
   }
 
   isStep2Valid(): boolean {
@@ -1010,7 +1096,13 @@ export class LoansApplyComponent implements OnInit {
   }
 
   nextStep(): void {
+    if (this.step === 1 && !this.selectedProduct) {
+      return;
+    }
     if (this.step === 2) {
+      if (!this.isStep2Valid()) {
+        return;
+      }
       this.calculateEmi();
     }
     this.step++;

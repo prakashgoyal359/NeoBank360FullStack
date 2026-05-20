@@ -971,7 +971,40 @@ export class AdminLoansComponent implements OnInit {
       return;
     }
 
-    const request = { ...this.productForm, interestRate: this.productForm.interestRate / 100 };
+    if (this.productForm.minAmount <= 0 || this.productForm.maxAmount <= this.productForm.minAmount) {
+      this.formError = 'Maximum amount must be greater than minimum amount';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    if (this.productForm.minTenure <= 0 || this.productForm.maxTenure < this.productForm.minTenure) {
+      this.formError = 'Maximum tenure must be greater than or equal to minimum tenure';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const allowedTenures = this.productForm.allowedTenures
+      .split(',')
+      .map((tenure) => Number(tenure.trim()))
+      .filter((tenure) => Number.isFinite(tenure));
+
+    if (
+      allowedTenures.length === 0 ||
+      allowedTenures.some(
+        (tenure) => tenure < this.productForm.minTenure || tenure > this.productForm.maxTenure,
+      )
+    ) {
+      this.formError = 'Allowed tenures must be comma-separated months inside the min/max tenure range';
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const request = {
+      ...this.productForm,
+      interestRate: this.productForm.interestRate / 100,
+      processingFee: (this.productForm.processingFee || 0) / 100,
+      allowedTenures: allowedTenures.join(','),
+    };
 
     if (this.editingProduct) {
       this.loanService.updateProduct(this.editingProduct.id, request).subscribe({
@@ -980,7 +1013,7 @@ export class AdminLoansComponent implements OnInit {
           this.closeProductModal();
         },
         error: (err) => {
-          this.formError = err.error?.message || 'Failed to update product';
+          this.formError = this.getErrorMessage(err, 'Failed to update product');
           this.cdr.detectChanges();
         }
       });
@@ -991,11 +1024,18 @@ export class AdminLoansComponent implements OnInit {
           this.closeProductModal();
         },
         error: (err) => {
-          this.formError = err.error?.message || 'Failed to create product';
+          this.formError = this.getErrorMessage(err, 'Failed to create product');
           this.cdr.detectChanges();
         }
       });
     }
+  }
+
+  getErrorMessage(error: any, fallback: string): string {
+    if (typeof error?.error === 'string') {
+      return error.error;
+    }
+    return error?.error?.message || error?.message || fallback;
   }
 
   deleteProduct(product: LoanProduct): void {

@@ -7,6 +7,8 @@ import { AuthService } from '../../services/auth.service';
 import { BankingService } from '../../services/banking.service';
 import { ThemeService } from '../../services/theme.service';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
+import { LoansApplyComponent } from '../loans/loans-apply/loans-apply.component';
+import { MyLoansComponent } from '../loans/my-loans/my-loans.component';
 import {
   Account,
   Transaction,
@@ -23,7 +25,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, ThemeToggleComponent],
+  imports: [CommonModule, FormsModule, ThemeToggleComponent, LoansApplyComponent, MyLoansComponent],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
 })
@@ -181,6 +183,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user = this.authService.getUser();
     this.refreshTheme();
     this.loadUserData();
+    this.router.routerState.root.queryParams.subscribe((params) => {
+      if (params['section']) {
+        this.activeSection = params['section'];
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   refreshTheme(): void {

@@ -121,7 +121,7 @@ public class LoanController {
         return ResponseEntity.ok(loanService.getRejectedLoanApplications());
     }
 
-    @PutMapping("/admin/applications/{id}/decision")
+    @PutMapping({"/admin/applications/{id}/decision", "/{id}/decision"})
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Process loan application", description = "Approve or reject a loan application (Admin only)")
     public ResponseEntity<LoanApplicationDTO> processLoanApplication(
@@ -151,7 +151,8 @@ public class LoanController {
     @GetMapping("/accounts/{id}")
     @Operation(summary = "Get loan account by ID", description = "Get a specific loan account")
     public ResponseEntity<LoanAccountDTO> getLoanAccountById(@PathVariable Long id) {
-        return ResponseEntity.ok(loanService.getLoanAccountById(id));
+        Long userId = securityUtils.getCurrentUser().getId();
+        return ResponseEntity.ok(loanService.getLoanAccountById(id, userId));
     }
 
     // ==================== REPAYMENTS ====================
@@ -159,7 +160,8 @@ public class LoanController {
     @GetMapping("/{loanAccountId}/repayments")
     @Operation(summary = "Get loan repayments", description = "Get repayment schedule for a loan account")
     public ResponseEntity<List<LoanRepaymentDTO>> getRepayments(@PathVariable Long loanAccountId) {
-        return ResponseEntity.ok(loanService.getRepaymentsByLoanAccount(loanAccountId));
+        Long userId = securityUtils.getCurrentUser().getId();
+        return ResponseEntity.ok(loanService.getRepaymentsByLoanAccount(loanAccountId, userId));
     }
 
     @GetMapping("/my-repayments")
@@ -174,7 +176,8 @@ public class LoanController {
     public ResponseEntity<LoanRepaymentDTO> payRepayment(
             @PathVariable Long loanAccountId,
             @PathVariable Long repaymentId) {
-        LoanRepaymentDTO result = loanService.payRepayment(loanAccountId, repaymentId);
+        Long userId = securityUtils.getCurrentUser().getId();
+        LoanRepaymentDTO result = loanService.payRepayment(loanAccountId, repaymentId, userId);
         return ResponseEntity.ok(result);
     }
 
