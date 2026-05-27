@@ -27,6 +27,10 @@ public class Notification {
     @Column(nullable = false, length = 500)
     private String message;
 
+    @Column(name = "notification_type", nullable = false, length = 50)
+    @Builder.Default
+    private String notificationType = "GENERAL";
+
     @Column(nullable = false)
     private Boolean isRead = false;
 

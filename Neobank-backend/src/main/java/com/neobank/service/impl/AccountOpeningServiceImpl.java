@@ -9,6 +9,7 @@ import com.neobank.exception.ResourceNotFoundException;
 import com.neobank.repository.AccountOpeningFormRepository;
 import com.neobank.repository.AccountRepository;
 import com.neobank.repository.RewardRepository;
+import com.neobank.repository.TransactionRepository;
 import com.neobank.repository.UserRepository;
 import com.neobank.service.AccountOpeningService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,7 @@ public class AccountOpeningServiceImpl implements AccountOpeningService {
     private final UserRepository userRepository;
     private final AccountRepository accountRepository;
     private final RewardRepository rewardRepository;
+    private final TransactionRepository transactionRepository;
 
     @Override
     public AccountOpeningResponse submitApplication(AccountOpeningRequest request, MultipartFile aadhaarFile,
@@ -42,7 +44,10 @@ public class AccountOpeningServiceImpl implements AccountOpeningService {
             throw new BadRequestException("An application already exists for this email");
         }
         if (formRepository.findByAadhaarNumber(request.getAadhaarNumber()).isPresent()) {
-            throw new BadRequestException("An application already exists for this Aadhaar number");
+            throw new BadRequestException("This Aadhaar number user already exists");
+        }
+        if (userRepository.findByAadhaarNumber(request.getAadhaarNumber()).isPresent()) {
+            throw new BadRequestException("This Aadhaar number user already exists");
         }
 
         String aadhaarPath = storeFile(aadhaarFile, request.getAadhaarNumber(), "aadhaar");
@@ -164,15 +169,31 @@ public class AccountOpeningServiceImpl implements AccountOpeningService {
 
         userRepository.save(user);
 
+        java.math.BigDecimal openingBalance = form.getInitialDeposit() != null
+                ? form.getInitialDeposit()
+                : java.math.BigDecimal.ZERO;
+
         Account account = Account.builder()
                 .user(user)
                 .accountNumber(generateAccountNumber())
                 .accountType(form.getAccountType())
-                .balance(java.math.BigDecimal.ZERO)
+                .balance(openingBalance)
                 .isActive(true)
                 .build();
 
         accountRepository.save(account);
+
+        if (openingBalance.compareTo(java.math.BigDecimal.ZERO) > 0) {
+            transactionRepository.save(Transaction.builder()
+                    .account(account)
+                    .transactionType(TransactionType.CREDIT)
+                    .amount(openingBalance)
+                    .description("Initial deposit")
+                    .category("Initial Deposit")
+                    .balanceAfter(account.getBalance())
+                    .referenceNumber("OPEN" + System.currentTimeMillis())
+                    .build());
+        }
 
         rewardRepository.save(Reward.builder().user(user).pointsBalance(100L).lastUpdated(LocalDateTime.now()).build());
 

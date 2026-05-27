@@ -13,6 +13,7 @@ import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminLoansComponent } from './admin-loans/admin-loans.component';
 import { Account, AccountOpeningResponse } from '../../models/banking.model';
+import { LoanService } from '../../services/loan.service';
 
 @Component({
   selector: 'app-admin',
@@ -40,6 +41,8 @@ export class AdminComponent implements OnInit {
   user: any = null;
   isDarkMode = false;
   mobileMenuOpen = false;
+  showAdminNotifications = false;
+  pendingLoanApplicationsCount = 0;
 
   // Deposit functionality
   searchQuery = '';
@@ -56,6 +59,7 @@ export class AdminComponent implements OnInit {
     private router: Router,
     public themeService: ThemeService,
     private cdr: ChangeDetectorRef,
+    private loanService: LoanService,
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
   }
@@ -76,6 +80,11 @@ export class AdminComponent implements OnInit {
     this.loadAccounts();
     this.loadPendingApplications();
     this.loadAllApplications();
+    this.loadPendingLoanApplications();
+  }
+
+  get adminNotificationCount(): number {
+    return this.pendingApplications.length + this.pendingLoanApplicationsCount;
   }
 
   loadAllApplications(): void {
@@ -181,8 +190,21 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  loadPendingLoanApplications(): void {
+    this.loanService.getPendingApplications().subscribe({
+      next: (data) => {
+        this.pendingLoanApplicationsCount = data.length;
+        this.cdr.detectChanges();
+      },
+      error: (error) => console.error('Error loading pending loan applications:', error),
+    });
+  }
+
   onSectionChange(section: string): void {
     this.activeSection = section;
+    if (section === 'home') {
+      this.loadData();
+    }
     this.cdr.detectChanges();
   }
 

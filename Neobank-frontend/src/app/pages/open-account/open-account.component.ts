@@ -69,24 +69,30 @@ export class OpenAccountComponent {
   verifyAadhaar(): void {
     if (this.kycForm.get('aadhaarNumber')?.valid) {
       this.verifiedAadhaarNumber = this.kycForm.get('aadhaarNumber')?.value;
-      this.verifiedFirstName = this.kycForm.get('firstName')?.value;
-      this.verifiedMiddleName = this.kycForm.get('middleName')?.value || '';
-      this.verifiedLastName = this.kycForm.get('lastName')?.value;
+      this.bankingService.checkAadhaarExists(this.verifiedAadhaarNumber).subscribe({
+        next: (result) => {
+          if (result.exists) {
+            this.errorMessage = result.message || 'This Aadhaar number user already exists';
+            this.successMessage = '';
+            return;
+          }
 
-      // Generate 6-digit OTP
-      this.generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-
-      // Log OTP to console for testing
-      console.log('=== KYC Verification ===');
-      console.log(`Aadhaar Number: ${this.verifiedAadhaarNumber}`);
-      console.log(
-        `Name: ${this.verifiedFirstName} ${this.verifiedMiddleName} ${this.verifiedLastName}`,
-      );
-      console.log(`Generated OTP: ${this.generatedOtp}`);
-      console.log('========================');
-
-      this.showOtpForm = true;
-      this.errorMessage = '';
+          this.verifiedFirstName = this.kycForm.get('firstName')?.value;
+          this.verifiedMiddleName = this.kycForm.get('middleName')?.value || '';
+          this.verifiedLastName = this.kycForm.get('lastName')?.value;
+          this.generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+          console.log('=== KYC Verification ===');
+          console.log(`Aadhaar Number: ${this.verifiedAadhaarNumber}`);
+          console.log(`Name: ${this.verifiedFirstName} ${this.verifiedMiddleName} ${this.verifiedLastName}`);
+          console.log(`Generated OTP: ${this.generatedOtp}`);
+          console.log('========================');
+          this.showOtpForm = true;
+          this.errorMessage = '';
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'Unable to verify Aadhaar right now';
+        },
+      });
     } else {
       this.errorMessage = 'Please enter a valid 12-digit Aadhaar number';
     }

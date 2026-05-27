@@ -12,6 +12,7 @@
       <div class="user-info">
         <span class="user-name">{{ user?.username || 'User' }}</span>
       </div>
+      <app-theme-toggle></app-theme-toggle>
       <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
   </header>
@@ -56,9 +57,6 @@
           <span class="nav-icon">👤</span>
           <span class="nav-text">Profile</span>
         </button>
-        <div class="sidebar-footer">
-          <app-theme-toggle></app-theme-toggle>
-        </div>
       </nav>
     </aside>
 
@@ -100,11 +98,15 @@
         <div class="home-grid">
           <!-- Recent Transactions -->
           <div class="transactions-section">
-            <h3>Recent Transactions</h3>
+            <div class="section-title-row">
+              <h3>Recent Transactions</h3>
+              <button class="btn-text" (click)="openTransactionsModal()" *ngIf="transactions.length > 5">Show All</button>
+            </div>
             <div class="transactions-list">
-              <div *ngFor="let tx of transactions" class="transaction-item">
+              <div *ngFor="let tx of recentTransactions" class="transaction-item">
                 <div class="tx-info">
                   <span class="tx-desc">{{ tx.description }}</span>
+                  <span class="tx-category">{{ tx.category || 'Other' }}</span>
                   <span class="tx-date">{{ tx.transactionDate | date:'short' }}</span>
                 </div>
                 <span class="tx-amount" [class.positive]="tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'" [class.negative]="tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'">
@@ -117,7 +119,10 @@
 
           <!-- Chart Section -->
           <div class="chart-section">
-            <h3>Spending Overview</h3>
+            <div class="section-title-row">
+              <h3>Spending Overview</h3>
+              <button class="btn-text" (click)="refreshDashboardCharts()">Refresh</button>
+            </div>
             <div class="chart-container">
               <div class="pie-chart-wrapper">
                 <canvas #spendingChart></canvas>
@@ -132,7 +137,10 @@
 
         <!-- Budget Analytics Summary -->
         <div class="budget-summary" *ngIf="budgetAnalytics">
-          <h3>Budget Overview - {{ selectedBudgetMonth }}</h3>
+          <div class="section-title-row">
+            <h3>Budget Overview - {{ selectedBudgetMonth }}</h3>
+            <button class="btn-text" (click)="loadBudgetAnalytics()">Refresh</button>
+          </div>
           <div class="budget-stats">
             <div class="budget-stat">
               <span class="stat-label">Total Budget</span>
@@ -477,6 +485,38 @@
             <button *ngIf="bill.status === 'PENDING'" class="btn-pay" (click)="payExistingBill(bill.id!)">Pay</button>
           </div>
           <div *ngIf="bills.length === 0" class="no-data">No bills found</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifications Modal -->
+  <div class="modal-overlay" *ngIf="showTransactionsModal" (click)="closeTransactionsModal()">
+    <div class="modal-content modal-large" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Monthly Transactions</h3>
+        <button class="close-btn" (click)="closeTransactionsModal()">x</button>
+      </div>
+      <div class="modal-body">
+        <div class="transaction-filters">
+          <input type="month" [(ngModel)]="transactionMonthFilter" class="month-input">
+          <select [(ngModel)]="transactionCategoryFilter">
+            <option value="">All Categories</option>
+            <option *ngFor="let category of transactionCategories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+        <div class="transactions-list">
+          <div *ngFor="let tx of filteredTransactions" class="transaction-item">
+            <div class="tx-info">
+              <span class="tx-desc">{{ tx.description }}</span>
+              <span class="tx-category">{{ tx.category || 'Other' }}</span>
+              <span class="tx-date">{{ tx.transactionDate | date:'short' }}</span>
+            </div>
+            <span class="tx-amount" [class.positive]="tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'" [class.negative]="tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'">
+              {{ (tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT') ? '+' : '-' }}₹{{ tx.amount }}
+            </span>
+          </div>
+          <div *ngIf="filteredTransactions.length === 0" class="no-data">No transactions for selected filters</div>
         </div>
       </div>
     </div>

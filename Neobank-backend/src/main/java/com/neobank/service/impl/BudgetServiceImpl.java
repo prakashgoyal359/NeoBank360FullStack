@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +84,7 @@ public class BudgetServiceImpl implements BudgetService {
 
         BigDecimal totalSpent = BigDecimal.ZERO;
         for (Budget budget : budgets) {
-            BigDecimal spent = calculateSpendingForCategory(user, budget.getCategory());
+            BigDecimal spent = calculateSpendingForCategory(user, budget.getCategory(), yearMonth);
             totalSpent = totalSpent.add(spent);
         }
 
@@ -102,11 +103,15 @@ public class BudgetServiceImpl implements BudgetService {
                 .build();
     }
 
-    private BigDecimal calculateSpendingForCategory(User user, String category) {
+    private BigDecimal calculateSpendingForCategory(User user, String category, YearMonth month) {
+        LocalDateTime start = month.atDay(1).atStartOfDay();
+        LocalDateTime end = month.plusMonths(1).atDay(1).atStartOfDay();
         return accountRepository.findByUser(user).stream()
                 .flatMap(account -> transactionRepository
                         .findByAccountOrderByTransactionDateDesc(account, Pageable.unpaged()).stream())
                 .filter(transaction -> category.equalsIgnoreCase(transaction.getCategory()))
+                .filter(transaction -> !transaction.getTransactionDate().isBefore(start)
+                        && transaction.getTransactionDate().isBefore(end))
                 .map(transaction -> transaction.getAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
@@ -124,10 +129,15 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     private BudgetDTO mapBudget(Budget budget) {
+        YearMonth month = budget.getBudgetMonth();
+        LocalDateTime start = month.atDay(1).atStartOfDay();
+        LocalDateTime end = month.plusMonths(1).atDay(1).atStartOfDay();
         BigDecimal spent = accountRepository.findByUser(budget.getUser()).stream()
                 .flatMap(account -> transactionRepository
                         .findByAccountOrderByTransactionDateDesc(account, Pageable.unpaged()).stream())
                 .filter(transaction -> budget.getCategory().equalsIgnoreCase(transaction.getCategory()))
+                .filter(transaction -> !transaction.getTransactionDate().isBefore(start)
+                        && transaction.getTransactionDate().isBefore(end))
                 .map(transaction -> transaction.getAmount())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

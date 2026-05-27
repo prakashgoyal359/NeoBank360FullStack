@@ -80,6 +80,10 @@
   color: #1a1a2e;
 }
 
+.dark-mode .user-name {
+  color: #ffffff;
+}
+
 .btn-logout {
   padding: 0.5rem 1rem;
   background: #ef4444;
@@ -293,6 +297,48 @@
 .dark-mode .transactions-section,
 .dark-mode .chart-section {
   background: #16213e;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.btn-text {
+  border: 0;
+  background: transparent;
+  color: #3b82f6;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tx-category {
+  font-size: 0.75rem;
+  color: #10b981;
+}
+
+.transaction-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.transaction-filters select,
+.transaction-filters input {
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+}
+
+.dark-mode .transaction-filters select,
+.dark-mode .transaction-filters input {
+  background: #0f3460;
+  border-color: #2a2a4a;
+  color: #e4e4e7;
 }
 
 .transactions-list {
@@ -1049,7 +1095,7 @@
 
 /* Bills List Modal */
 .modal-large {
-  max-width: 600px;
+  max-width: 820px;
 }
 
 .bills-list {

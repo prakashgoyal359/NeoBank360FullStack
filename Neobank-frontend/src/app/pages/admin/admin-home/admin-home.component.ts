@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterViewInit, ViewChild, ElementRef, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, registerables } from 'chart.js';
 import { Account, AccountOpeningResponse } from '../../../models/banking.model';
@@ -47,7 +47,10 @@ Chart.register(...registerables);
 
       <div class="charts-grid">
         <div class="chart-card">
-          <h3>User Status Distribution</h3>
+          <div class="chart-title-row">
+            <h3>User Status Distribution</h3>
+            <button class="refresh-btn" (click)="refresh.emit()">Refresh</button>
+          </div>
           <div class="pie-chart-container">
             <canvas #userStatusChart></canvas>
           </div>
@@ -80,6 +83,7 @@ Chart.register(...registerables);
 export class AdminHomeComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() accounts: Account[] = [];
   @Input() allApplications: AccountOpeningResponse[] = [];
+  @Output() refresh = new EventEmitter<void>();
   @ViewChild('userStatusChart') chartRef!: ElementRef;
   chart: Chart | null = null;
 

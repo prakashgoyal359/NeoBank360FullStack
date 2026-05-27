@@ -11,6 +11,8 @@ import com.neobank.exception.ResourceNotFoundException;
 import com.neobank.repository.*;
 import com.neobank.service.BillService;
 import com.neobank.service.RewardService;
+import com.neobank.service.NotificationService;
+import com.neobank.util.PaymentCategoryUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,7 @@ public class BillServiceImpl implements BillService {
     private final TransactionRepository transactionRepository;
     private final AccountRepository accountRepository;
     private final RewardService rewardService;
+    private final NotificationService notificationService;
 
     @Override
     public BillDTO createBill(Long userId, BillRequest request) {
@@ -39,12 +42,14 @@ public class BillServiceImpl implements BillService {
         Account account = accountRepository.findByUser(user).stream().findFirst()
                 .orElse(null);
 
+        String budgetCategory = PaymentCategoryUtil.normalizeBillCategory(request.getCategory());
+
         Bill bill = Bill.builder()
                 .user(user)
                 .account(account)
                 .billerName(request.getBillerName())
                 .billerAccountNumber("BILL-" + System.currentTimeMillis())
-                .category(request.getCategory())
+                .category(budgetCategory)
                 .billType(request.getCategory())
                 .amount(request.getAmount())
                 .dueDate(LocalDate.parse(request.getDueDate()))
@@ -123,7 +128,7 @@ public class BillServiceImpl implements BillService {
                 .transactionType(TransactionType.DEBIT)
                 .amount(bill.getAmount())
                 .description("Bill payment: " + bill.getBillerName())
-                .category(bill.getCategory())
+                .category(PaymentCategoryUtil.normalizeBillCategory(bill.getCategory()))
                 .balanceAfter(account.getBalance())
                 .referenceNumber("BILL" + System.currentTimeMillis())
                 .build());
@@ -136,6 +141,7 @@ public class BillServiceImpl implements BillService {
         // Add reward points for bill payment
         try {
             rewardService.addRewardPoints(userId, 10L, "Bill payment reward: " + bill.getBillerName());
+            notificationService.createNotification(userId, "Reward received", "You earned 10 reward points for paying " + bill.getBillerName());
         } catch (Exception e) {
             // Log but don't fail the payment if reward fails
             org.slf4j.LoggerFactory.getLogger(BillServiceImpl.class)
@@ -172,7 +178,7 @@ public class BillServiceImpl implements BillService {
                 .transactionType(TransactionType.DEBIT)
                 .amount(request.getAmount())
                 .description("Bill payment: " + request.getBillerName())
-                .category(request.getBillType() != null ? request.getBillType() : "Bill Payment")
+                .category(PaymentCategoryUtil.normalizeBillCategory(request.getBillType()))
                 .balanceAfter(account.getBalance())
                 .referenceNumber("BILL" + System.currentTimeMillis())
                 .build());
@@ -183,7 +189,7 @@ public class BillServiceImpl implements BillService {
                 .account(account)
                 .billerName(request.getBillerName())
                 .billerAccountNumber(request.getBillerAccountNumber())
-                .category("Bill Payment")
+                .category(PaymentCategoryUtil.normalizeBillCategory(request.getBillType()))
                 .billType(request.getBillType())
                 .amount(request.getAmount())
                 .dueDate(LocalDate.now())
@@ -196,6 +202,7 @@ public class BillServiceImpl implements BillService {
         // Add reward points for bill payment
         try {
             rewardService.addRewardPoints(userId, 10L, "Bill payment reward: " + request.getBillerName());
+            notificationService.createNotification(userId, "Reward received", "You earned 10 reward points for paying " + request.getBillerName());
         } catch (Exception e) {
             org.slf4j.LoggerFactory.getLogger(BillServiceImpl.class)
                     .warn("Failed to add reward points for bill payment: " + e.getMessage());

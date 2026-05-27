@@ -318,6 +318,11 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       color: #1a1a2e;
     }
 
+    .admin-loans-container .top-header,
+    .admin-loans-container .sidebar-footer {
+      display: none;
+    }
+
     .dark-mode {
       background: #1a1a2e;
       color: #e4e4e7;
@@ -363,7 +368,7 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
     /* Main Container */
     .main-container {
       display: flex;
-      min-height: calc(100vh - 70px);
+      min-height: auto;
     }
 
     /* Sidebar */

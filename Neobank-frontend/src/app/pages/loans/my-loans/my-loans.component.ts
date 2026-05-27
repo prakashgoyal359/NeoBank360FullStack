@@ -1,13 +1,16 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ThemeService } from '../../../services/theme.service';
 import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard } from '../../../services/loan.service';
 
 @Component({
   selector: 'app-my-loans',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, MatTableModule, MatPaginatorModule, MatSortModule],
   template: `
     <div class="my-loans-container" [class.dark-mode]="isDarkMode">
       <div class="page-header">
@@ -167,7 +170,9 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
               <h4>{{ emi.loanAccountNumber }}</h4>
               <span class="installment">EMI #{{ emi.installmentNumber }}</span>
             </div>
-            <span *ngIf="emi.isOverdue" class="overdue-badge">OVERDUE</span>
+            <span class="status-badge small" [ngClass]="getStatusClass(emi.status)">
+              {{ emi.status }}
+            </span>
           </div>
 
           <div class="emi-details">
@@ -207,36 +212,53 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
               <p><strong>EMI Amount:</strong> ₹{{ selectedLoanAccount?.emiAmount | number }}</p>
             </div>
 
-            <div class="schedule-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Due Date</th>
-                    <th>EMI</th>
-                    <th>Principal</th>
-                    <th>Interest</th>
-                    <th>Balance</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let repayment of repayments" [class.paid-row]="repayment.status === 'PAID'"
-                      [class.overdue-row]="repayment.status === 'OVERDUE'">
-                    <td>{{ repayment.installmentNumber }}</td>
-                    <td>{{ repayment.dueDate | date:'short' }}</td>
-                    <td>₹{{ repayment.emiAmount | number }}</td>
-                    <td>₹{{ repayment.principalComponent | number }}</td>
-                    <td>₹{{ repayment.interestComponent | number }}</td>
-                    <td>₹{{ repayment.remainingPrincipal | number }}</td>
-                    <td>
-                      <span class="status-badge small" [class]="getStatusClass(repayment.status)">
-                        {{ repayment.status }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
+            <div class="schedule-table mat-elevation-z1">
+              <table mat-table [dataSource]="repaymentsDataSource" matSort class="repayment-mat-table">
+                <ng-container matColumnDef="installmentNumber">
+                  <th mat-header-cell *matHeaderCellDef>#</th>
+                  <td mat-cell *matCellDef="let repayment">{{ repayment.installmentNumber }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="dueDate">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Due Date</th>
+                  <td mat-cell *matCellDef="let repayment">{{ repayment.dueDate | date:'mediumDate' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="emiAmount">
+                  <th mat-header-cell *matHeaderCellDef>EMI</th>
+                  <td mat-cell *matCellDef="let repayment">₹{{ repayment.emiAmount | number }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="principalComponent">
+                  <th mat-header-cell *matHeaderCellDef>Principal</th>
+                  <td mat-cell *matCellDef="let repayment">₹{{ repayment.principalComponent | number }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="interestComponent">
+                  <th mat-header-cell *matHeaderCellDef>Interest</th>
+                  <td mat-cell *matCellDef="let repayment">₹{{ repayment.interestComponent | number }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="remainingPrincipal">
+                  <th mat-header-cell *matHeaderCellDef>Balance</th>
+                  <td mat-cell *matCellDef="let repayment">₹{{ repayment.remainingPrincipal | number }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                  <td mat-cell *matCellDef="let repayment">
+                    <span class="status-badge small" [ngClass]="getStatusClass(repayment.status)">
+                      {{ repayment.status }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="repaymentColumns"></tr>
+                <tr mat-row *matRowDef="let repayment; columns: repaymentColumns"
+                    [class.paid-row]="repayment.status === 'PAID'"
+                    [class.overdue-row]="repayment.status === 'OVERDUE'"></tr>
               </table>
+              <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 60]" showFirstLastButtons></mat-paginator>
             </div>
           </div>
         </div>
@@ -660,28 +682,45 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
 
     .schedule-table {
       overflow-x: auto;
+      border-radius: 10px;
+      background: white;
     }
 
-    table {
+    .legacy-hidden { display: none; }
+
+    .dark-mode .schedule-table { background: #101a33; }
+
+    table,
+    .repayment-mat-table {
       width: 100%;
       border-collapse: collapse;
+      background: transparent;
     }
 
-    th, td {
+    th, td,
+    .mat-mdc-header-cell,
+    .mat-mdc-cell {
       padding: 0.75rem;
       text-align: left;
       border-bottom: 1px solid #e2e8f0;
     }
 
-    th {
+    th,
+    .mat-mdc-header-cell {
       background: #f8fafc;
       font-weight: 600;
       color: #334155;
       font-size: 0.85rem;
     }
 
-    .dark-mode th { background: #1e293b; color: #e4e4e7; }
-    .dark-mode td { border-color: #2a2a4a; color: #e4e4e7; }
+    .dark-mode th,
+    .dark-mode .mat-mdc-header-cell { background: #1e293b; color: #e4e4e7; }
+    .dark-mode td,
+    .dark-mode .mat-mdc-cell { border-color: #2a2a4a; color: #e4e4e7; }
+    .dark-mode .mat-mdc-paginator {
+      background: #101a33;
+      color: #e4e4e7;
+    }
 
     .paid-row td { color: #059669 !important; }
     .overdue-row td { color: #dc2626 !important; }
@@ -709,6 +748,28 @@ export class MyLoansComponent implements OnInit {
   showScheduleModal = false;
   selectedLoanAccount: LoanAccount | null = null;
   repayments: LoanRepayment[] = [];
+  repaymentsDataSource = new MatTableDataSource<LoanRepayment>([]);
+  repaymentColumns = [
+    'installmentNumber',
+    'dueDate',
+    'emiAmount',
+    'principalComponent',
+    'interestComponent',
+    'remainingPrincipal',
+    'status',
+  ];
+
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator | undefined) {
+    if (paginator) {
+      this.repaymentsDataSource.paginator = paginator;
+    }
+  }
+
+  @ViewChild(MatSort) set sort(sort: MatSort | undefined) {
+    if (sort) {
+      this.repaymentsDataSource.sort = sort;
+    }
+  }
 
   constructor(
     private loanService: LoanService,
@@ -764,6 +825,7 @@ export class MyLoansComponent implements OnInit {
     this.loanService.getRepayments(account.id).subscribe({
       next: (data) => {
         this.repayments = data;
+        this.repaymentsDataSource.data = data;
         this.showScheduleModal = true;
         this.cdr.detectChanges();
       },

@@ -9,6 +9,7 @@ import { ThemeService } from '../../services/theme.service';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 import { LoansApplyComponent } from '../loans/loans-apply/loans-apply.component';
 import { MyLoansComponent } from '../loans/my-loans/my-loans.component';
+import { LoanService } from '../../services/loan.service';
 import {
   Account,
   Transaction,
@@ -40,6 +41,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   transactions: Transaction[] = [];
   selectedAccount: Account | null = null;
   user: any = null;
+  showTransactionsModal = false;
+  transactionCategoryFilter = '';
+  transactionMonthFilter = new Date().toISOString().slice(0, 7);
 
   // Theme
   isDarkMode = false;
@@ -162,11 +166,18 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   showCreateBillForm = false;
 
-  // Budget Categories
+  // Budget Categories shared with bill and EMI transactions
   budgetCategories = [
-    'Groceries', 'Utilities', 'Rent', 'Entertainment', 'Transfer',
-    'Shopping', 'Subscription', 'Travel', 'Education', 'Insurance',
-    'Recharge', 'Other'
+    'Bill Payment',
+    'Recharge Payment',
+    'Card Payment',
+    'EMI Payment',
+    'Insurance Payment',
+    'Travel Payment',
+    'Transfer',
+    'Shopping',
+    'Subscription',
+    'Other',
   ];
 
   constructor(
@@ -175,6 +186,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     public themeService: ThemeService,
     private cdr: ChangeDetectorRef,
+    private loanService: LoanService,
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
   }
@@ -278,9 +290,48 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   loadNotifications(): void {
     this.bankingService.getNotifications().subscribe({
       next: (notifications) => {
-        this.notifications = notifications;
-        this.unreadCount = notifications.filter(n => !n.isRead).length;
-        this.cdr.detectChanges();
+        const generated: Notification[] = [];
+        const now = new Date();
+        const soon = new Date();
+        soon.setDate(now.getDate() + 3);
+
+        this.upcomingBills.forEach((bill) => {
+          const due = new Date(bill.dueDate);
+          if (bill.status === 'PENDING' && due <= soon) {
+            generated.push({
+              title: due < now ? 'Bill overdue' : 'Upcoming bill',
+              message: `${bill.billerName} ${bill.category} bill of ₹${bill.amount} is due on ${bill.dueDate}`,
+              isRead: false,
+              createdAt: new Date().toISOString(),
+            });
+          }
+        });
+
+        this.loanService.getMyRepayments().subscribe({
+          next: (repayments) => {
+            repayments
+              .filter((emi) => emi.status === 'PENDING' || emi.status === 'OVERDUE')
+              .forEach((emi) => {
+                const due = new Date(emi.dueDate);
+                if (due <= soon) {
+                  generated.push({
+                    title: due < now ? 'EMI overdue' : 'Upcoming EMI',
+                    message: `Loan EMI #${emi.installmentNumber} of ₹${emi.emiAmount} is due on ${emi.dueDate}`,
+                    isRead: false,
+                    createdAt: new Date().toISOString(),
+                  });
+                }
+              });
+            this.notifications = [...generated, ...notifications];
+            this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+            this.cdr.detectChanges();
+          },
+          error: () => {
+            this.notifications = [...generated, ...notifications];
+            this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+            this.cdr.detectChanges();
+          },
+        });
       },
       error: (error) => console.error('Error loading notifications:', error),
     });
@@ -303,7 +354,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.transactions.forEach((tx) => {
       if (tx.transactionType !== 'DEPOSIT' && tx.transactionType !== 'CREDIT') {
-        const category = tx.category || tx.description || 'Other';
+        const category = tx.category || 'Other';
         const current = categoryMap.get(category) || 0;
         categoryMap.set(category, current + tx.amount);
         this.totalSpent += tx.amount;
@@ -408,6 +459,52 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chart.update();
   }
 
+  refreshDashboardCharts(): void {
+    if (this.selectedAccount) {
+      this.loadTransactions(this.selectedAccount.id);
+    } else {
+      this.processChartData();
+    }
+    this.loadBills();
+    this.loadBudgetAnalytics();
+  }
+
+  get recentTransactions(): Transaction[] {
+    return this.transactions.slice(0, 5);
+  }
+
+  get transactionCategories(): string[] {
+    return Array.from(new Set(this.transactions.map((tx) => tx.category || 'Other'))).sort();
+  }
+
+  get filteredTransactions(): Transaction[] {
+    return this.transactions.filter((tx) => {
+      const txMonth = tx.transactionDate?.slice(0, 7);
+      const matchesMonth = !this.transactionMonthFilter || txMonth === this.transactionMonthFilter;
+      const matchesCategory = !this.transactionCategoryFilter || (tx.category || 'Other') === this.transactionCategoryFilter;
+      return matchesMonth && matchesCategory;
+    });
+  }
+
+  openTransactionsModal(): void {
+    this.showTransactionsModal = true;
+  }
+
+  closeTransactionsModal(): void {
+    this.showTransactionsModal = false;
+  }
+
+  mapBillTypeToBudgetCategory(type: string): string {
+    const normalized = (type || '').toUpperCase().replace(/\s+/g, '_');
+    if (['ELECTRICITY', 'WATER', 'GAS', 'LPG', 'GAS_LPG'].includes(normalized)) return 'Bill Payment';
+    if (['BROADBAND', 'INTERNET', 'MOBILE', 'DTH'].includes(normalized)) return 'Recharge Payment';
+    if (['CREDIT_CARD', 'CARD'].includes(normalized)) return 'Card Payment';
+    if (['LOAN', 'LOAN_EMI', 'EMI'].includes(normalized)) return 'EMI Payment';
+    if (normalized === 'INSURANCE') return 'Insurance Payment';
+    if (['METRO', 'BUS', 'TRAIN', 'TRAVEL'].includes(normalized)) return 'Travel Payment';
+    return type || 'Other';
+  }
+
   toggleAccountNumber(): void {
     this.showAccountNumber = !this.showAccountNumber;
   }
@@ -485,7 +582,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       billerName: this.selectedBillType,
       billerAccountNumber: 'BILL' + Date.now(),
       amount: parseFloat(this.billAmount),
-      billType: this.billReason,
+      billType: this.mapBillTypeToBudgetCategory(this.selectedBillType || this.billReason),
     };
 
     this.bankingService.payBill(request).subscribe({
@@ -673,7 +770,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const request = {
       billerName: this.newBillBillerName,
-      category: this.newBillCategory,
+      category: this.mapBillTypeToBudgetCategory(this.newBillCategory),
       amount: parseFloat(this.newBillAmount),
       dueDate: this.newBillDueDate,
       description: this.newBillDescription,
@@ -707,6 +804,7 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
         this.loadBills();
         this.loadRewards();
         this.loadUserData();
+        this.loadBudgetAnalytics();
       },
       error: (error) => {
         alert('Failed to pay bill: ' + (error.error?.message || error.message));
@@ -727,7 +825,11 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     this.showRewardPopup = false;
   }
 
-  markAsRead(notificationId: number): void {
+  markAsRead(notificationId?: number): void {
+    if (!notificationId) {
+      return;
+    }
+
     this.bankingService.markNotificationAsRead(notificationId).subscribe({
       next: () => {
         this.loadNotifications();

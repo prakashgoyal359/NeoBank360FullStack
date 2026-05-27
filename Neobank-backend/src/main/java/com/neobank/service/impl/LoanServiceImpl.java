@@ -10,7 +10,9 @@ import com.neobank.exception.ResourceNotFoundException;
 import com.neobank.repository.*;
 import com.neobank.repository.UserRepository;
 import com.neobank.service.LoanService;
+import com.neobank.service.NotificationService;
 import com.neobank.util.EmiCalculatorUtil;
+import com.neobank.util.PaymentCategoryUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +35,9 @@ public class LoanServiceImpl implements LoanService {
     private final LoanAccountRepository loanAccountRepository;
     private final LoanRepaymentRepository loanRepaymentRepository;
     private final UserRepository userRepository;
+    private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
+    private final NotificationService notificationService;
 
     private static final DateTimeFormatter ACCOUNT_NUMBER_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
@@ -380,10 +385,20 @@ public class LoanServiceImpl implements LoanService {
             throw new BadRequestException("This installment has already been paid");
         }
 
+        Account bankAccount = accountRepository.findByUser(repayment.getLoanAccount().getUser()).stream().findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Linked bank account not found"));
+        BigDecimal payableAmount = repayment.getEmiAmount()
+                .add(repayment.getPenaltyAmount() != null ? repayment.getPenaltyAmount() : BigDecimal.ZERO);
+        if (bankAccount.getBalance().compareTo(payableAmount) < 0) {
+            throw new BadRequestException("Insufficient balance to pay EMI");
+        }
+        bankAccount.setBalance(bankAccount.getBalance().subtract(payableAmount));
+        accountRepository.save(bankAccount);
+
         repayment.setStatus(RepaymentStatus.PAID);
-        repayment.setPaidAmount(repayment.getEmiAmount());
+        repayment.setPaidAmount(payableAmount);
         repayment.setPaidDate(LocalDateTime.now());
-        repayment.setPaymentReference("LOAN-TXN-" + System.currentTimeMillis());
+        repayment.setPaymentReference("EMI" + System.currentTimeMillis());
 
         // Update remaining principal on loan account
         LoanAccount loanAccount = repayment.getLoanAccount();
@@ -398,6 +413,19 @@ public class LoanServiceImpl implements LoanService {
 
         loanRepaymentRepository.save(repayment);
         loanAccountRepository.save(loanAccount);
+
+        transactionRepository.save(Transaction.builder()
+                .account(bankAccount)
+                .transactionType(TransactionType.DEBIT)
+                .amount(payableAmount)
+                .description("Loan EMI payment: " + loanAccount.getLoanAccountNumber())
+                .category(PaymentCategoryUtil.EMI_PAYMENT)
+                .balanceAfter(bankAccount.getBalance())
+                .referenceNumber(repayment.getPaymentReference())
+                .build());
+
+        notificationService.createNotification(loanAccount.getUser().getId(), "EMI payment successful",
+                "EMI #" + repayment.getInstallmentNumber() + " paid for loan " + loanAccount.getLoanAccountNumber());
 
         return mapRepaymentToDTO(repayment);
     }

@@ -30,6 +30,12 @@ export class BankingService {
   constructor(private http: HttpClient) {}
 
   // Account Opening
+  checkAadhaarExists(aadhaarNumber: string): Observable<{ exists: boolean; message: string }> {
+    return this.http.get<{ exists: boolean; message: string }>(
+      `${this.apiUrl}/accounts/kyc/aadhaar/${aadhaarNumber}/exists`,
+    );
+  }
+
   openAccount(
     request: AccountOpeningRequest,
     aadhaarFile: File,

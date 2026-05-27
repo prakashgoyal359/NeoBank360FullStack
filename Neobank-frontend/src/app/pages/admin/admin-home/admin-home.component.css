@@ -67,6 +67,26 @@
   font-size: 1.1rem;
 }
 
+.chart-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.chart-title-row h3 {
+  margin: 0;
+}
+
+.refresh-btn {
+  border: 0;
+  background: transparent;
+  color: #3b82f6;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .pie-chart-container {
   position: relative;
   height: 250px;

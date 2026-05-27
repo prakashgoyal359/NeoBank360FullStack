@@ -19,6 +19,9 @@ public class AccountOpeningController {
 
     private final AccountOpeningService accountOpeningService;
 
+    private final com.neobank.repository.AccountOpeningFormRepository formRepository;
+    private final com.neobank.repository.UserRepository userRepository;
+
     @PostMapping(value = "/open", consumes = { "multipart/form-data" })
     public ResponseEntity<AccountOpeningResponse> openAccount(
             @RequestPart("data") @Valid AccountOpeningRequest request,
@@ -26,6 +29,15 @@ public class AccountOpeningController {
             @RequestPart("panFile") MultipartFile panFile,
             @RequestPart(value = "photoFile", required = false) MultipartFile photoFile) {
         return ResponseEntity.ok(accountOpeningService.submitApplication(request, aadhaarFile, panFile, photoFile));
+    }
+
+    @GetMapping("/kyc/aadhaar/{aadhaarNumber}/exists")
+    public ResponseEntity<java.util.Map<String, Object>> aadhaarExists(@PathVariable String aadhaarNumber) {
+        boolean exists = formRepository.findByAadhaarNumber(aadhaarNumber).isPresent()
+                || userRepository.findByAadhaarNumber(aadhaarNumber).isPresent();
+        return ResponseEntity.ok(java.util.Map.of(
+                "exists", exists,
+                "message", exists ? "This Aadhaar number user already exists" : "Aadhaar number is available"));
     }
 
     @GetMapping("/pending")

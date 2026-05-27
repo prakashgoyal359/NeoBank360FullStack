@@ -1,2 +1,3 @@
-2026/05/10-15:47:50.549 48f8 Creating DB C:\Users\MONU\Documents\NeoBank360_New\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Sync Data\LevelDB since it was missing.
-2026/05/10-15:47:50.565 48f8 Reusing MANIFEST C:\Users\MONU\Documents\NeoBank360_New\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/05/23-11:52:09.022 5f7c Reusing MANIFEST C:\Users\MONU\Documents\NeoBank360_New\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Sync Data\LevelDB/MANIFEST-000001
+2026/05/23-11:52:09.034 5f7c Recovering log #3
+2026/05/23-11:52:09.035 5f7c Reusing old log C:\Users\MONU\Documents\NeoBank360_New\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Sync Data\LevelDB/000003.log 

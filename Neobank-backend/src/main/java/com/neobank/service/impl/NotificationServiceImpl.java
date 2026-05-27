@@ -29,6 +29,7 @@ public class NotificationServiceImpl implements NotificationService {
                 .user(user)
                 .title(title)
                 .message(message)
+                .notificationType(resolveNotificationType(title, message))
                 .isRead(false)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -88,5 +89,19 @@ public class NotificationServiceImpl implements NotificationService {
         }
 
         notificationRepository.delete(notification);
+    }
+
+    private String resolveNotificationType(String title, String message) {
+        String text = ((title == null ? "" : title) + " " + (message == null ? "" : message)).toLowerCase();
+        if (text.contains("reward")) {
+            return "REWARD";
+        }
+        if (text.contains("emi") || text.contains("loan")) {
+            return "LOAN";
+        }
+        if (text.contains("bill")) {
+            return "BILL";
+        }
+        return "GENERAL";
     }
 }
