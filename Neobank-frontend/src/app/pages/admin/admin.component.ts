@@ -12,6 +12,10 @@ import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminProfileComponent } from './admin-profile/admin-profile.component';
 import { AdminSettingsComponent } from './admin-settings/admin-settings.component';
 import { AdminLoansComponent } from './admin-loans/admin-loans.component';
+import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
+import { PendingApprovalsComponent } from './pending-approvals/pending-approvals.component';
+import { UserManagementComponent } from './user-management/user-management.component';
+import { SystemHealthComponent } from './system-health/system-health.component';
 import { Account, AccountOpeningResponse } from '../../models/banking.model';
 import { LoanService } from '../../services/loan.service';
 
@@ -28,6 +32,10 @@ import { LoanService } from '../../services/loan.service';
     AdminProfileComponent,
     AdminSettingsComponent,
     AdminLoansComponent,
+    AdminDashboardComponent,
+    PendingApprovalsComponent,
+    UserManagementComponent,
+    SystemHealthComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css'],

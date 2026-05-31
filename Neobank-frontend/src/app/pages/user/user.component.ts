@@ -9,6 +9,7 @@ import { ThemeService } from '../../services/theme.service';
 import { ThemeToggleComponent } from '../../components/theme-toggle/theme-toggle.component';
 import { LoansApplyComponent } from '../loans/loans-apply/loans-apply.component';
 import { MyLoansComponent } from '../loans/my-loans/my-loans.component';
+import { InsightsDashboardComponent } from '../insights/dashboard/insights-dashboard.component';
 import { LoanService } from '../../services/loan.service';
 import {
   Account,
@@ -26,7 +27,7 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, ThemeToggleComponent, LoansApplyComponent, MyLoansComponent],
+  imports: [CommonModule, FormsModule, ThemeToggleComponent, LoansApplyComponent, MyLoansComponent, InsightsDashboardComponent],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
 })

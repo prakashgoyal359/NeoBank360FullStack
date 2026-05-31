@@ -15,4 +15,5 @@ public class UserDTO {
     private String role;
     private Boolean isActive;
     private Boolean isApproved;
+    private java.time.LocalDateTime createdAt;
 }

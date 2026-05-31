@@ -11,5 +11,5 @@ public interface UserService {
 
     void deleteUser(Long userId);
 
-    void toggleUserStatus(Long userId, boolean active);
+    UserDTO toggleUserStatus(Long userId, boolean active, Long actingAdminId);
 }

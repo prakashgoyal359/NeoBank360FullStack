@@ -38,6 +38,38 @@
           <span class="nav-text">Users</span>
         </button>
         <button
+          [class.active]="activeSection === 'analytics'"
+          (click)="onSectionChange('analytics'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">BI</span>
+          <span class="nav-text">Analytics</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'user-management'"
+          (click)="onSectionChange('user-management'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">CTRL</span>
+          <span class="nav-text">User Controls</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'pending-approvals'"
+          (click)="onSectionChange('pending-approvals'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">APV</span>
+          <span class="nav-text">Approvals</span>
+        </button>
+        <button
+          [class.active]="activeSection === 'system-health'"
+          (click)="onSectionChange('system-health'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">UP</span>
+          <span class="nav-text">System Health</span>
+        </button>
+        <button
           [class.active]="activeSection === 'pending'"
           (click)="onSectionChange('pending'); closeMobileMenu()"
           class="nav-item"
@@ -90,6 +122,10 @@
       ></app-admin-home>
 
       <app-admin-users *ngIf="activeSection === 'users'" [accounts]="accounts"></app-admin-users>
+      <app-admin-dashboard *ngIf="activeSection === 'analytics'"></app-admin-dashboard>
+      <app-user-management *ngIf="activeSection === 'user-management'"></app-user-management>
+      <app-pending-approvals *ngIf="activeSection === 'pending-approvals'"></app-pending-approvals>
+      <app-system-health *ngIf="activeSection === 'system-health'"></app-system-health>
 
       <app-admin-pending
         *ngIf="activeSection === 'pending'"
