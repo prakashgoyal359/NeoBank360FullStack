@@ -18,6 +18,7 @@ import { UserManagementComponent } from './user-management/user-management.compo
 import { SystemHealthComponent } from './system-health/system-health.component';
 import { Account, AccountOpeningResponse } from '../../models/banking.model';
 import { LoanService } from '../../services/loan.service';
+import { PendingApproval } from '../../services/admin-dashboard.service';
 
 @Component({
   selector: 'app-admin',
@@ -51,6 +52,9 @@ export class AdminComponent implements OnInit {
   mobileMenuOpen = false;
   showAdminNotifications = false;
   pendingLoanApplicationsCount = 0;
+  loanReviewApplicationId: number | null = null;
+  accountNotificationReadCount = 0;
+  loanNotificationReadCount = 0;
 
   // Deposit functionality
   searchQuery = '';
@@ -74,6 +78,7 @@ export class AdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.getUser();
+    this.loadAdminNotificationReadState();
     this.refreshTheme();
     this.loadData();
   }
@@ -92,7 +97,40 @@ export class AdminComponent implements OnInit {
   }
 
   get adminNotificationCount(): number {
-    return this.pendingApplications.length + this.pendingLoanApplicationsCount;
+    return (this.isAccountNotificationUnread() ? this.pendingApplications.length : 0)
+      + (this.isLoanNotificationUnread() ? this.pendingLoanApplicationsCount : 0);
+  }
+
+  loadAdminNotificationReadState(): void {
+    this.accountNotificationReadCount = Number(localStorage.getItem('adminAccountNotificationReadCount') || 0);
+    this.loanNotificationReadCount = Number(localStorage.getItem('adminLoanNotificationReadCount') || 0);
+  }
+
+  isAccountNotificationUnread(): boolean {
+    return this.pendingApplications.length > 0 && this.pendingApplications.length > this.accountNotificationReadCount;
+  }
+
+  isLoanNotificationUnread(): boolean {
+    return this.pendingLoanApplicationsCount > 0 && this.pendingLoanApplicationsCount > this.loanNotificationReadCount;
+  }
+
+  markAdminNotificationAsRead(type: 'accounts' | 'loans'): void {
+    if (type === 'accounts') {
+      this.accountNotificationReadCount = this.pendingApplications.length;
+      localStorage.setItem('adminAccountNotificationReadCount', String(this.accountNotificationReadCount));
+    } else {
+      this.loanNotificationReadCount = this.pendingLoanApplicationsCount;
+      localStorage.setItem('adminLoanNotificationReadCount', String(this.loanNotificationReadCount));
+    }
+    this.cdr.detectChanges();
+  }
+
+  markAllAdminNotificationsAsRead(): void {
+    this.accountNotificationReadCount = this.pendingApplications.length;
+    this.loanNotificationReadCount = this.pendingLoanApplicationsCount;
+    localStorage.setItem('adminAccountNotificationReadCount', String(this.accountNotificationReadCount));
+    localStorage.setItem('adminLoanNotificationReadCount', String(this.loanNotificationReadCount));
+    this.cdr.detectChanges();
   }
 
   loadAllApplications(): void {
@@ -213,6 +251,12 @@ export class AdminComponent implements OnInit {
     if (section === 'home') {
       this.loadData();
     }
+    this.cdr.detectChanges();
+  }
+
+  reviewLoanApproval(approval: PendingApproval): void {
+    this.loanReviewApplicationId = approval.id;
+    this.activeSection = 'loans';
     this.cdr.detectChanges();
   }
 

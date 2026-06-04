@@ -124,7 +124,10 @@
       <app-admin-users *ngIf="activeSection === 'users'" [accounts]="accounts"></app-admin-users>
       <app-admin-dashboard *ngIf="activeSection === 'analytics'"></app-admin-dashboard>
       <app-user-management *ngIf="activeSection === 'user-management'"></app-user-management>
-      <app-pending-approvals *ngIf="activeSection === 'pending-approvals'"></app-pending-approvals>
+      <app-pending-approvals
+        *ngIf="activeSection === 'pending-approvals'"
+        (review)="reviewLoanApproval($event)"
+      ></app-pending-approvals>
       <app-system-health *ngIf="activeSection === 'system-health'"></app-system-health>
 
       <app-admin-pending
@@ -182,7 +185,10 @@
         </div>
       </div>
 
-      <app-admin-loans *ngIf="activeSection === 'loans'"></app-admin-loans>
+      <app-admin-loans
+        *ngIf="activeSection === 'loans'"
+        [reviewApplicationId]="loanReviewApplicationId"
+      ></app-admin-loans>
 
       <app-admin-profile *ngIf="activeSection === 'profile'"></app-admin-profile>
 
@@ -197,15 +203,21 @@
         <button class="close-btn" (click)="showAdminNotifications = false">x</button>
       </div>
       <div class="modal-body">
-        <div class="notification-item unread" *ngIf="pendingApplications.length > 0">
+        <div class="notifications-header" *ngIf="adminNotificationCount > 0">
+          <button class="btn-text" (click)="markAllAdminNotificationsAsRead()">Mark all as read</button>
+        </div>
+        <div class="notification-item" [class.unread]="isAccountNotificationUnread()" *ngIf="pendingApplications.length > 0">
           <div class="notification-title">Account opening requests</div>
           <div class="notification-message">{{ pendingApplications.length }} user account opening request(s) pending approval.</div>
+          <button class="btn-text" *ngIf="isAccountNotificationUnread()" (click)="markAdminNotificationAsRead('accounts')">Mark as read</button>
         </div>
-        <div class="notification-item unread" *ngIf="pendingLoanApplicationsCount > 0">
+        <div class="notification-item" [class.unread]="isLoanNotificationUnread()" *ngIf="pendingLoanApplicationsCount > 0">
           <div class="notification-title">Loan approval requests</div>
           <div class="notification-message">{{ pendingLoanApplicationsCount }} loan application(s) pending approval.</div>
+          <button class="btn-text" *ngIf="isLoanNotificationUnread()" (click)="markAdminNotificationAsRead('loans')">Mark as read</button>
         </div>
-        <div *ngIf="adminNotificationCount === 0" class="no-data">No pending admin notifications</div>
+        <div *ngIf="pendingApplications.length === 0 && pendingLoanApplicationsCount === 0" class="no-data">No pending admin notifications</div>
+        <div *ngIf="pendingApplications.length + pendingLoanApplicationsCount > 0 && adminNotificationCount === 0" class="no-data">All admin notifications are read</div>
       </div>
     </div>
   </div>

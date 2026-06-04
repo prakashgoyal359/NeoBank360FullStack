@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../services/theme.service';
@@ -162,7 +162,12 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
               <p>No {{ appTab }} applications</p>
             </div>
 
-            <div *ngFor="let app of getCurrentApplications()" class="application-card">
+            <div
+              *ngFor="let app of getCurrentApplications()"
+              class="application-card"
+              [attr.id]="'loan-application-' + app.id"
+              [class.review-target]="app.id === reviewApplicationId"
+            >
               <div class="app-header">
                 <div class="app-info">
                   <h3>{{ app.userName }}</h3>
@@ -190,9 +195,12 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
                 </div>
               </div>
 
-              <div *ngIf="appTab === 'pending'" class="app-actions">
+              <div class="app-actions">
+                <button class="btn-review" (click)="openApplicationReview(app)">Review</button>
+                <ng-container *ngIf="appTab === 'pending'">
                 <button class="btn-approve" (click)="openDecisionModal(app, 'APPROVED')">Approve</button>
                 <button class="btn-reject" (click)="openDecisionModal(app, 'REJECTED')">Reject</button>
+                </ng-container>
               </div>
 
               <div *ngIf="app.status === 'REJECTED' && app.rejectionReason" class="rejection-reason">
@@ -305,6 +313,68 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
               <button class="btn-primary" [class.approve]="decisionType === 'APPROVED'" [class.reject]="decisionType === 'REJECTED'" (click)="submitDecision()">
                 Confirm {{ decisionType }}
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Application Review Modal -->
+      <div *ngIf="showApplicationReviewModal" class="modal-overlay" (click)="closeApplicationReview()">
+        <div class="modal-content modal-wide" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3>Loan Application Review</h3>
+            <button class="close-btn" (click)="closeApplicationReview()">Ã—</button>
+          </div>
+          <div class="modal-body" *ngIf="reviewApplication">
+            <div class="review-hero">
+              <div>
+                <span class="eyebrow">Application</span>
+                <h4>{{ reviewApplication.applicationNumber }}</h4>
+                <p>{{ reviewApplication.productName }} • {{ formatLoanType(reviewApplication.loanType) }}</p>
+              </div>
+              <span class="status-badge review-status" [class.active]="reviewApplication.status === 'APPROVED'">{{ reviewApplication.status }}</span>
+            </div>
+
+            <div class="review-grid">
+              <div class="review-group">
+                <h5>Applicant Details</h5>
+                <p><strong>Name:</strong> {{ reviewApplication.userName }}</p>
+                <p><strong>Email:</strong> {{ reviewApplication.userEmail }}</p>
+                <p><strong>User ID:</strong> {{ reviewApplication.userId }}</p>
+                <p><strong>Applied:</strong> {{ reviewApplication.appliedAt | date:'medium' }}</p>
+              </div>
+              <div class="review-group">
+                <h5>Loan Request</h5>
+                <p><strong>Product:</strong> {{ reviewApplication.productName }}</p>
+                <p><strong>Type:</strong> {{ formatLoanType(reviewApplication.loanType) }}</p>
+                <p><strong>Amount:</strong> ₹{{ reviewApplication.requestedAmount | number }}</p>
+                <p><strong>Tenure:</strong> {{ reviewApplication.requestedTenure }} months</p>
+              </div>
+              <div class="review-group">
+                <h5>Income & Employment</h5>
+                <p><strong>Monthly Income:</strong> ₹{{ reviewApplication.monthlyIncome || 0 | number }}</p>
+                <p><strong>Declared Income:</strong> ₹{{ reviewApplication.income || 0 | number }}</p>
+                <p><strong>Employer:</strong> {{ reviewApplication.employerName || 'Not provided' }}</p>
+                <p><strong>Designation:</strong> {{ reviewApplication.designation || 'Not provided' }}</p>
+              </div>
+              <div class="review-group">
+                <h5>Credit Exposure</h5>
+                <p><strong>Existing EMIs:</strong> ₹{{ reviewApplication.existingEmis || 0 | number }}</p>
+                <p><strong>Status:</strong> {{ reviewApplication.status }}</p>
+                <p><strong>Processed By:</strong> {{ reviewApplication.processedByName || 'Pending' }}</p>
+                <p><strong>Processed At:</strong> {{ reviewApplication.processedAt ? (reviewApplication.processedAt | date:'medium') : 'Pending' }}</p>
+              </div>
+            </div>
+
+            <div class="review-note" *ngIf="reviewApplication.adminRemarks || reviewApplication.rejectionReason">
+              <p *ngIf="reviewApplication.adminRemarks"><strong>Admin Remarks:</strong> {{ reviewApplication.adminRemarks }}</p>
+              <p *ngIf="reviewApplication.rejectionReason"><strong>Rejection Reason:</strong> {{ reviewApplication.rejectionReason }}</p>
+            </div>
+
+            <div class="modal-actions" *ngIf="reviewApplication.status === 'PENDING'">
+              <button class="btn-secondary" (click)="closeApplicationReview()">Close</button>
+              <button class="btn-primary approve" (click)="openDecisionFromReview('APPROVED')">Approve</button>
+              <button class="btn-primary reject" (click)="openDecisionFromReview('REJECTED')">Reject</button>
             </div>
           </div>
         </div>
@@ -625,6 +695,11 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
+    .application-card.review-target {
+      border: 2px solid #fbbf24;
+      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.18), 0 16px 35px rgba(0, 0, 0, 0.18);
+    }
+
     .dark-mode .application-card { background: #16213e; }
 
     .app-header {
@@ -668,7 +743,7 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       gap: 1rem;
     }
 
-    .btn-approve, .btn-reject {
+    .btn-review, .btn-approve, .btn-reject {
       padding: 0.75rem 1.5rem;
       border: none;
       border-radius: 8px;
@@ -676,6 +751,8 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       cursor: pointer;
     }
 
+    .btn-review { background: #2563eb; color: white; }
+    .btn-review:hover { background: #1d4ed8; }
     .btn-approve { background: #10b981; color: white; }
     .btn-approve:hover { background: #059669; }
     .btn-reject { background: #ef4444; color: white; }
@@ -723,6 +800,10 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       max-width: 500px;
       max-height: 90vh;
       overflow-y: auto;
+    }
+
+    .modal-content.modal-wide {
+      max-width: 860px;
     }
 
     .dark-mode .modal-content { background: #16213e; }
@@ -835,15 +916,78 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
     .application-summary p { margin: 0.25rem 0; }
     .dark-mode .application-summary p { color: #e4e4e7; }
 
+    .review-hero {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: #eff6ff;
+      margin-bottom: 1rem;
+    }
+
+    .dark-mode .review-hero { background: #0f3460; }
+    .review-hero h4 { margin: 0.25rem 0; color: #1e293b; font-size: 1.35rem; }
+    .review-hero p { margin: 0; color: #64748b; }
+    .dark-mode .review-hero h4 { color: #f8fafc; }
+    .dark-mode .review-hero p { color: #bfdbfe; }
+    .eyebrow { color: #2563eb; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
+    .review-status { align-self: center; }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .review-group {
+      padding: 1rem;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .dark-mode .review-group {
+      background: #1e293b;
+      border-color: #2a2a4a;
+    }
+
+    .review-group h5 {
+      margin: 0 0 0.75rem;
+      color: #1e40af;
+      font-size: 1rem;
+    }
+
+    .dark-mode .review-group h5 { color: #93c5fd; }
+    .review-group p { margin: 0.4rem 0; color: #334155; }
+    .dark-mode .review-group p { color: #e4e4e7; }
+
+    .review-note {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 12px;
+      background: #fffbeb;
+      color: #92400e;
+    }
+
+    .dark-mode .review-note {
+      background: #78350f;
+      color: #fde68a;
+    }
+
     @media (max-width: 768px) {
       .sidebar { display: none; }
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
       .app-details-grid { grid-template-columns: repeat(2, 1fr); }
+      .review-grid { grid-template-columns: 1fr; }
       .form-row { grid-template-columns: 1fr; }
     }
   `]
 })
-export class AdminLoansComponent implements OnInit {
+export class AdminLoansComponent implements OnInit, OnChanges {
+  @Input() reviewApplicationId: number | null = null;
+
   isDarkMode = false;
   username = '';
 
@@ -862,7 +1006,9 @@ export class AdminLoansComponent implements OnInit {
   productForm: LoanProductRequest = this.getEmptyProductForm();
 
   showDecisionModal = false;
+  showApplicationReviewModal = false;
   selectedApplication: LoanApplication | null = null;
+  reviewApplication: LoanApplication | null = null;
   decisionType: 'APPROVED' | 'REJECTED' = 'APPROVED';
   decisionRemarks = '';
   rejectionReason = '';
@@ -886,6 +1032,12 @@ export class AdminLoansComponent implements OnInit {
     this.loadDashboard();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reviewApplicationId'] && this.reviewApplicationId) {
+      this.openReviewTarget();
+    }
+  }
+
   loadProducts(): void {
     this.loanService.getAllProducts().subscribe({
       next: (data) => { this.products = data; this.cdr.detectChanges(); },
@@ -895,7 +1047,11 @@ export class AdminLoansComponent implements OnInit {
 
   loadApplications(): void {
     this.loanService.getPendingApplications().subscribe({
-      next: (data) => { this.pendingApplications = data; this.cdr.detectChanges(); }
+      next: (data) => {
+        this.pendingApplications = data;
+        this.cdr.detectChanges();
+        this.scrollToReviewTarget();
+      }
     });
     this.loanService.getApprovedApplications().subscribe({
       next: (data) => { this.approvedApplications = data; this.cdr.detectChanges(); }
@@ -910,6 +1066,29 @@ export class AdminLoansComponent implements OnInit {
       next: (data) => { this.dashboard = data; this.cdr.detectChanges(); },
       error: (err) => console.error('Error loading dashboard:', err)
     });
+  }
+
+  openReviewTarget(): void {
+    this.activeSection = 'applications';
+    this.appTab = 'pending';
+    this.loadApplications();
+    this.scrollToReviewTarget();
+  }
+
+  scrollToReviewTarget(): void {
+    if (!this.reviewApplicationId) {
+      return;
+    }
+
+    setTimeout(() => {
+      document
+        .getElementById(`loan-application-${this.reviewApplicationId}`)
+        ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const reviewTarget = this.pendingApplications.find((app) => app.id === this.reviewApplicationId);
+      if (reviewTarget && !this.showApplicationReviewModal) {
+        this.openApplicationReview(reviewTarget);
+      }
+    }, 150);
   }
 
   getCurrentApplications(): LoanApplication[] {
@@ -1060,6 +1239,27 @@ export class AdminLoansComponent implements OnInit {
     this.decisionError = '';
     this.showDecisionModal = true;
     this.cdr.detectChanges();
+  }
+
+  openApplicationReview(app: LoanApplication): void {
+    this.reviewApplication = app;
+    this.showApplicationReviewModal = true;
+    this.cdr.detectChanges();
+  }
+
+  closeApplicationReview(): void {
+    this.showApplicationReviewModal = false;
+    this.reviewApplication = null;
+    this.cdr.detectChanges();
+  }
+
+  openDecisionFromReview(type: 'APPROVED' | 'REJECTED'): void {
+    if (!this.reviewApplication) {
+      return;
+    }
+    const app = this.reviewApplication;
+    this.closeApplicationReview();
+    this.openDecisionModal(app, type);
   }
 
   closeDecisionModal(): void {

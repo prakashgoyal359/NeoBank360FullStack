@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AdminDashboardService, PendingApproval } from '../../../services/admin-dashboard.service';
 
@@ -17,7 +17,17 @@ import { AdminDashboardService, PendingApproval } from '../../../services/admin-
         </select>
       </div>
       <table>
-        <thead><tr><th>Applicant</th><th>Module</th><th>Product</th><th>Amount</th><th>Applied</th><th>Status</th></tr></thead>
+        <thead>
+          <tr>
+            <th>Applicant</th>
+            <th>Module</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Applied</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
         <tbody>
           <tr *ngFor="let item of approvals">
             <td>{{ item.applicantName }}</td>
@@ -26,8 +36,9 @@ import { AdminDashboardService, PendingApproval } from '../../../services/admin-
             <td>₹{{ item.requestedAmount | number }}</td>
             <td>{{ item.applicationDate | date:'medium' }}</td>
             <td><span class="chip pending">{{ item.status }}</span></td>
+            <td><button class="review-btn" (click)="review.emit(item)">Review</button></td>
           </tr>
-          <tr *ngIf="approvals.length === 0"><td colspan="6" class="empty">No pending approvals</td></tr>
+          <tr *ngIf="approvals.length === 0"><td colspan="7" class="empty">No pending approvals</td></tr>
         </tbody>
       </table>
     </section>
@@ -42,13 +53,24 @@ import { AdminDashboardService, PendingApproval } from '../../../services/admin-
     th { color: #bfdbfe; }
     .chip { border-radius: 999px; padding: .25rem .7rem; font-size: .8rem; font-weight: 800; }
     .pending { background: rgba(251,191,36,.18); color: #fbbf24; }
+    .review-btn { background: #2563eb; color: white; border: 0; border-radius: 8px; padding: .55rem .9rem; font-weight: 800; cursor: pointer; }
+    .review-btn:hover { background: #1d4ed8; }
     .empty { text-align: center; color: #a8bddf; }
   `],
 })
 export class PendingApprovalsComponent implements OnInit {
+  @Output() review = new EventEmitter<PendingApproval>();
+
   approvals: PendingApproval[] = [];
   moduleFilter = '';
+
   constructor(private service: AdminDashboardService) {}
-  ngOnInit(): void { this.load(); }
-  load(): void { this.service.getPendingApprovals(this.moduleFilter).subscribe((data) => this.approvals = data); }
+
+  ngOnInit(): void {
+    this.load();
+  }
+
+  load(): void {
+    this.service.getPendingApprovals(this.moduleFilter).subscribe((data) => this.approvals = data);
+  }
 }
