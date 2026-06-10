@@ -1,24 +1,33 @@
 <div class="admin-layout" [class.dark-mode]="themeService.isDarkMode()">
   <!-- Top Header -->
+
   <header class="top-header">
     <div class="header-left">
       <h1 class="logo">NeoBank Admin</h1>
     </div>
+
     <div class="header-right">
       <button class="notification-btn" (click)="showAdminNotifications = true">
         <span class="notification-icon">🔔</span>
-        <span class="notification-badge" *ngIf="adminNotificationCount > 0">{{ adminNotificationCount }}</span>
+
+        <span class="notification-badge" *ngIf="adminNotificationCount > 0">{{
+          adminNotificationCount
+        }}</span>
       </button>
+
       <div class="user-info">
         <span class="user-name">{{ user?.username || 'Admin' }}</span>
       </div>
+
       <app-theme-toggle></app-theme-toggle>
+
       <button class="btn-logout" (click)="onLogout()">Logout</button>
     </div>
   </header>
 
   <div class="main-container">
     <!-- Sidebar -->
+
     <aside class="sidebar">
       <nav class="sidebar-nav">
         <button
@@ -27,92 +36,114 @@
           class="nav-item"
         >
           <span class="nav-icon">🏠</span>
+
           <span class="nav-text">Home</span>
         </button>
+
         <button
           [class.active]="activeSection === 'users'"
           (click)="onSectionChange('users'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">👥</span>
+
           <span class="nav-text">Users</span>
         </button>
+
         <button
           [class.active]="activeSection === 'analytics'"
           (click)="onSectionChange('analytics'); closeMobileMenu()"
           class="nav-item"
         >
-          <span class="nav-icon">BI</span>
+          <span class="nav-icon">📉</span>
+
           <span class="nav-text">Analytics</span>
         </button>
+
         <button
           [class.active]="activeSection === 'user-management'"
           (click)="onSectionChange('user-management'); closeMobileMenu()"
           class="nav-item"
         >
-          <span class="nav-icon">CTRL</span>
+          <span class="nav-icon">👥</span>
+
           <span class="nav-text">User Controls</span>
         </button>
+
         <button
           [class.active]="activeSection === 'pending-approvals'"
           (click)="onSectionChange('pending-approvals'); closeMobileMenu()"
           class="nav-item"
         >
-          <span class="nav-icon">APV</span>
+          <span class="nav-icon">☑️</span>
+
           <span class="nav-text">Approvals</span>
         </button>
+
         <button
           [class.active]="activeSection === 'system-health'"
           (click)="onSectionChange('system-health'); closeMobileMenu()"
           class="nav-item"
         >
-          <span class="nav-icon">UP</span>
+          <span class="nav-icon">💚</span>
+
           <span class="nav-text">System Health</span>
         </button>
+
         <button
           [class.active]="activeSection === 'pending'"
           (click)="onSectionChange('pending'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">⏳</span>
+
           <span class="nav-text">Pending</span>
         </button>
+
         <button
           [class.active]="activeSection === 'deposit'"
           (click)="onSectionChange('deposit'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">💰</span>
+
           <span class="nav-text">Deposit</span>
         </button>
+
         <button
           [class.active]="activeSection === 'loans'"
           (click)="onSectionChange('loans'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">🏦</span>
+
           <span class="nav-text">Loans</span>
         </button>
+
         <button
           [class.active]="activeSection === 'profile'"
           (click)="onSectionChange('profile'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">👤</span>
+
           <span class="nav-text">Profile</span>
         </button>
+
         <button
           [class.active]="activeSection === 'settings'"
           (click)="onSectionChange('settings'); closeMobileMenu()"
           class="nav-item"
         >
           <span class="nav-icon">⚙️</span>
+
           <span class="nav-text">Settings</span>
         </button>
       </nav>
     </aside>
 
     <!-- Main Content -->
+
     <main class="content-area">
       <app-admin-home
         *ngIf="activeSection === 'home'"
@@ -122,12 +153,16 @@
       ></app-admin-home>
 
       <app-admin-users *ngIf="activeSection === 'users'" [accounts]="accounts"></app-admin-users>
+
       <app-admin-dashboard *ngIf="activeSection === 'analytics'"></app-admin-dashboard>
+
       <app-user-management *ngIf="activeSection === 'user-management'"></app-user-management>
+
       <app-pending-approvals
         *ngIf="activeSection === 'pending-approvals'"
         (review)="reviewLoanApproval($event)"
       ></app-pending-approvals>
+
       <app-system-health *ngIf="activeSection === 'system-health'"></app-system-health>
 
       <app-admin-pending
@@ -158,24 +193,34 @@
               <thead>
                 <tr>
                   <th>User</th>
+
                   <th>Email</th>
+
                   <th>Account Number</th>
+
                   <th>Current Balance</th>
+
                   <th>Action</th>
                 </tr>
               </thead>
+
               <tbody>
                 <tr *ngFor="let account of filteredAccounts">
                   <td>{{ account.userName || 'N/A' }}</td>
+
                   <td>{{ account.email || 'N/A' }}</td>
+
                   <td>{{ account.accountNumber }}</td>
+
                   <td>₹{{ account.balance | number }}</td>
+
                   <td>
                     <button class="btn btn-deposit" (click)="openDepositModal(account)">
                       Deposit
                     </button>
                   </td>
                 </tr>
+
                 <tr *ngIf="filteredAccounts.length === 0">
                   <td colspan="5" class="empty-state">No users found</td>
                 </tr>
@@ -196,59 +241,150 @@
     </main>
   </div>
 
-  <div class="modal-overlay" *ngIf="showAdminNotifications" (click)="showAdminNotifications = false">
+  <div
+    class="modal-overlay"
+    *ngIf="showAdminNotifications"
+    (click)="showAdminNotifications = false"
+  >
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Admin Notifications</h3>
+
         <button class="close-btn" (click)="showAdminNotifications = false">x</button>
       </div>
+
       <div class="modal-body">
         <div class="notifications-header" *ngIf="adminNotificationCount > 0">
-          <button class="btn-text" (click)="markAllAdminNotificationsAsRead()">Mark all as read</button>
+          <button class="btn-text" (click)="markAllAdminNotificationsAsRead()">
+            Mark all as read
+          </button>
         </div>
-        <div class="notification-item" [class.unread]="isAccountNotificationUnread()" *ngIf="pendingApplications.length > 0">
+
+        <div
+          class="notification-item"
+          [class.unread]="isAccountNotificationUnread()"
+          *ngIf="pendingApplications.length > 0"
+        >
           <div class="notification-title">Account opening requests</div>
-          <div class="notification-message">{{ pendingApplications.length }} user account opening request(s) pending approval.</div>
-          <button class="btn-text" *ngIf="isAccountNotificationUnread()" (click)="markAdminNotificationAsRead('accounts')">Mark as read</button>
+
+          <div class="notification-message">
+            {{ pendingApplications.length }} user account opening request(s) pending approval.
+          </div>
+
+          <button
+            class="btn-text"
+            *ngIf="isAccountNotificationUnread()"
+            (click)="markAdminNotificationAsRead('accounts')"
+          >
+            Mark as read
+          </button>
         </div>
-        <div class="notification-item" [class.unread]="isLoanNotificationUnread()" *ngIf="pendingLoanApplicationsCount > 0">
+
+        <div
+          class="notification-item"
+          [class.unread]="isLoanNotificationUnread()"
+          *ngIf="pendingLoanApplicationsCount > 0"
+        >
           <div class="notification-title">Loan approval requests</div>
-          <div class="notification-message">{{ pendingLoanApplicationsCount }} loan application(s) pending approval.</div>
-          <button class="btn-text" *ngIf="isLoanNotificationUnread()" (click)="markAdminNotificationAsRead('loans')">Mark as read</button>
+
+          <div class="notification-message">
+            {{ pendingLoanApplicationsCount }} loan application(s) pending approval.
+          </div>
+
+          <button
+            class="btn-text"
+            *ngIf="isLoanNotificationUnread()"
+            (click)="markAdminNotificationAsRead('loans')"
+          >
+            Mark as read
+          </button>
         </div>
-        <div *ngIf="pendingApplications.length === 0 && pendingLoanApplicationsCount === 0" class="no-data">No pending admin notifications</div>
-        <div *ngIf="pendingApplications.length + pendingLoanApplicationsCount > 0 && adminNotificationCount === 0" class="no-data">All admin notifications are read</div>
+
+        <div
+          *ngIf="pendingApplications.length === 0 && pendingLoanApplicationsCount === 0"
+          class="no-data"
+        >
+          No pending admin notifications
+        </div>
+
+        <div
+          *ngIf="
+            pendingApplications.length + pendingLoanApplicationsCount > 0 &&
+            adminNotificationCount === 0
+          "
+          class="no-data"
+        >
+          All admin notifications are read
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Deposit Modal -->
+
   <div class="modal-overlay" *ngIf="showDepositModal" (click)="closeDepositModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Deposit Amount</h3>
+
         <button class="close-btn" (click)="closeDepositModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-group">
           <label>Account Number</label>
-          <input type="text" [value]="selectedAccountForDeposit?.accountNumber" readonly class="form-input" />
+
+          <input
+            type="text"
+            [value]="selectedAccountForDeposit?.accountNumber"
+            readonly
+            class="form-input"
+          />
         </div>
+
         <div class="form-group">
           <label>Account Holder</label>
-          <input type="text" [value]="selectedAccountForDeposit?.userName || 'N/A'" readonly class="form-input" />
+
+          <input
+            type="text"
+            [value]="selectedAccountForDeposit?.userName || 'N/A'"
+            readonly
+            class="form-input"
+          />
         </div>
+
         <div class="form-group">
           <label>Current Balance</label>
-          <input type="text" [value]="'₹' + (selectedAccountForDeposit?.balance || 0)" readonly class="form-input" />
+
+          <input
+            type="text"
+            [value]="'₹' + (selectedAccountForDeposit?.balance || 0)"
+            readonly
+            class="form-input"
+          />
         </div>
+
         <div class="form-group">
           <label>Deposit Amount</label>
-          <input type="number" [(ngModel)]="depositAmount" placeholder="Enter amount to deposit" class="form-input" min="1" />
+
+          <input
+            type="number"
+            [(ngModel)]="depositAmount"
+            placeholder="Enter amount to deposit"
+            class="form-input"
+            min="1"
+          />
         </div>
+
         <div *ngIf="depositError" class="error-message">{{ depositError }}</div>
+
         <div *ngIf="depositSuccess" class="success-message">{{ depositSuccess }}</div>
-        <button class="btn btn-primary" (click)="submitDeposit()" [disabled]="!depositAmount || depositAmount <= 0">
+
+        <button
+          class="btn btn-primary"
+          (click)="submitDeposit()"
+          [disabled]="!depositAmount || depositAmount <= 0"
+        >
           Deposit Amount
         </button>
       </div>

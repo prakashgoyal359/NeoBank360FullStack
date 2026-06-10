@@ -1,99 +1,176 @@
 <div class="user-dashboard" [class.dark-mode]="themeService.isDarkMode()">
   <!-- Top Header -->
+
   <header class="top-header">
     <div class="header-left">
       <h1 class="logo">NeoBank360</h1>
     </div>
+
     <div class="header-right">
       <button class="notification-btn" (click)="openNotificationsModal()">
         <span class="notification-icon">🔔</span>
+
         <span class="notification-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
       </button>
+
       <div class="user-info">
         <span class="user-name">{{ user?.username || 'User' }}</span>
       </div>
+
       <app-theme-toggle></app-theme-toggle>
+
       <button class="btn-logout" (click)="logout()">Logout</button>
     </div>
   </header>
 
   <div class="main-container">
     <!-- Sidebar -->
+
     <aside class="sidebar">
       <nav class="sidebar-nav">
-        <button class="nav-item" [class.active]="activeSection === 'home'" (click)="setActiveSection('home')">
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'home'"
+          (click)="setActiveSection('home')"
+        >
           <span class="nav-icon">🏠</span>
+
           <span class="nav-text">Home</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'budget'" (click)="setActiveSection('budget')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'budget'"
+          (click)="setActiveSection('budget')"
+        >
           <span class="nav-icon">📊</span>
+
           <span class="nav-text">Budget</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'insights'" (click)="setActiveSection('insights')">
-          <span class="nav-icon">BI</span>
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'insights'"
+          (click)="setActiveSection('insights')"
+        >
+          <span class="nav-icon">📈</span>
+
           <span class="nav-text">Insights</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'bills'" (click)="setActiveSection('bills')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'bills'"
+          (click)="setActiveSection('bills')"
+        >
           <span class="nav-icon">💰</span>
+
           <span class="nav-text">Bills</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'rewards'" (click)="setActiveSection('rewards')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'rewards'"
+          (click)="setActiveSection('rewards')"
+        >
           <span class="nav-icon">🎁</span>
+
           <span class="nav-text">Rewards</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'loans-apply'" (click)="setActiveSection('loans-apply')">
-          <span class="nav-icon">ðŸ¦</span>
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'loans-apply'"
+          (click)="setActiveSection('loans-apply')"
+        >
+          <span class="nav-icon">📝</span>
+
           <span class="nav-text">Apply Loan</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'my-loans' || activeSection === 'loans'" (click)="setActiveSection('my-loans')">
-          <span class="nav-icon">ðŸ“…</span>
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'my-loans' || activeSection === 'loans'"
+          (click)="setActiveSection('my-loans')"
+        >
+          <span class="nav-icon">🏦</span>
+
           <span class="nav-text">My Loans</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'transfer'" (click)="setActiveSection('transfer')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'transfer'"
+          (click)="setActiveSection('transfer')"
+        >
           <span class="nav-icon">↗️</span>
+
           <span class="nav-text">Transfer</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'settings'" (click)="setActiveSection('settings')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'settings'"
+          (click)="setActiveSection('settings')"
+        >
           <span class="nav-icon">⚙️</span>
+
           <span class="nav-text">Settings</span>
         </button>
-        <button class="nav-item" [class.active]="activeSection === 'profile'" (click)="setActiveSection('profile')">
+
+        <button
+          class="nav-item"
+          [class.active]="activeSection === 'profile'"
+          (click)="setActiveSection('profile')"
+        >
           <span class="nav-icon">👤</span>
+
           <span class="nav-text">Profile</span>
         </button>
       </nav>
     </aside>
 
     <!-- Main Content -->
+
     <main class="content-area">
       <!-- Home Section -->
+
       <div *ngIf="activeSection === 'home'" class="section">
         <!-- My Account Card -->
+
         <div class="account-card" *ngIf="selectedAccount">
           <div class="account-header">
             <h2>My Account</h2>
           </div>
+
           <div class="account-details">
             <div class="account-number">
               <span class="label">Account Number</span>
+
               <div class="value-row">
                 <span class="value">{{ maskAccountNumber(selectedAccount.accountNumber) }}</span>
+
                 <button class="toggle-btn" (click)="toggleAccountNumber()">
                   {{ showAccountNumber ? '👁️' : '👁️‍🗨️' }}
                 </button>
               </div>
             </div>
+
             <div class="account-balance">
               <span class="label">Balance</span>
+
               <div class="value-row">
                 <span class="value">₹{{ formatBalance(selectedAccount.balance) }}</span>
+
                 <button class="toggle-btn" (click)="toggleBalance()">
                   {{ showBalance ? '👁️' : '👁️‍🗨️' }}
                 </button>
               </div>
             </div>
+
             <div class="account-type">
               <span class="label">Account Type</span>
+
               <span class="value">{{ selectedAccount.accountType }}</span>
             </div>
           </div>
@@ -101,114 +178,197 @@
 
         <div class="home-grid">
           <!-- Recent Transactions -->
+
           <div class="transactions-section">
             <div class="section-title-row">
               <h3>Recent Transactions</h3>
-              <button class="btn-text" (click)="openTransactionsModal()" *ngIf="transactions.length > 5">Show All</button>
+
+              <button
+                class="btn-text"
+                (click)="openTransactionsModal()"
+                *ngIf="transactions.length > 5"
+              >
+                Show All
+              </button>
             </div>
+
             <div class="transactions-list">
               <div *ngFor="let tx of recentTransactions" class="transaction-item">
                 <div class="tx-info">
                   <span class="tx-desc">{{ tx.description }}</span>
+
                   <span class="tx-category">{{ tx.category || 'Other' }}</span>
-                  <span class="tx-date">{{ tx.transactionDate | date:'short' }}</span>
+
+                  <span class="tx-date">{{ tx.transactionDate | date: 'short' }}</span>
                 </div>
-                <span class="tx-amount" [class.positive]="tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'" [class.negative]="tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'">
-                  {{ (tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT') ? '+' : '-' }}₹{{ tx.amount }}
+
+                <span
+                  class="tx-amount"
+                  [class.positive]="
+                    tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'
+                  "
+                  [class.negative]="
+                    tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'
+                  "
+                >
+                  {{
+                    tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT' ? '+' : '-'
+                  }}₹{{ tx.amount }}
                 </span>
               </div>
+
               <div *ngIf="transactions.length === 0" class="no-data">No transactions yet</div>
             </div>
           </div>
 
           <!-- Chart Section -->
+
           <div class="chart-section">
             <div class="section-title-row">
               <h3>Spending Overview</h3>
+
               <button class="btn-text" (click)="refreshDashboardCharts()">Refresh</button>
             </div>
+
             <div class="chart-container">
               <div class="pie-chart-wrapper">
                 <canvas #spendingChart></canvas>
               </div>
+
               <div class="chart-summary" *ngIf="totalSpent > 0">
                 <span>Total Spent: ₹{{ totalSpent }}</span>
               </div>
+
               <div *ngIf="totalSpent === 0" class="no-data">No spending data</div>
             </div>
           </div>
         </div>
 
         <!-- Budget Analytics Summary -->
+
         <div class="budget-summary" *ngIf="budgetAnalytics">
           <div class="section-title-row">
             <h3>Budget Overview - {{ selectedBudgetMonth }}</h3>
+
             <button class="btn-text" (click)="loadBudgetAnalytics()">Refresh</button>
           </div>
+
           <div class="budget-stats">
             <div class="budget-stat">
               <span class="stat-label">Total Budget</span>
+
               <span class="stat-value">₹{{ budgetAnalytics.totalBudget }}</span>
             </div>
+
             <div class="budget-stat">
               <span class="stat-label">Total Spent</span>
+
               <span class="stat-value spent">₹{{ budgetAnalytics.totalSpent }}</span>
             </div>
+
             <div class="budget-stat">
               <span class="stat-label">Remaining</span>
+
               <span class="stat-value remaining">₹{{ budgetAnalytics.remaining }}</span>
             </div>
+
             <div class="budget-stat">
               <span class="stat-label">Utilization</span>
-              <span class="stat-value" [class.warning]="budgetAnalytics.utilizationPercentage >= 75 && budgetAnalytics.utilizationPercentage < 100" [class.danger]="budgetAnalytics.utilizationPercentage >= 100">
-                {{ budgetAnalytics.utilizationPercentage | number:'1.0-0' }}%
+
+              <span
+                class="stat-value"
+                [class.warning]="
+                  budgetAnalytics.utilizationPercentage >= 75 &&
+                  budgetAnalytics.utilizationPercentage < 100
+                "
+                [class.danger]="budgetAnalytics.utilizationPercentage >= 100"
+              >
+                {{ budgetAnalytics.utilizationPercentage | number: '1.0-0' }}%
               </span>
             </div>
           </div>
-          <div class="budget-chart-container" *ngIf="budgetAnalytics.budgets && budgetAnalytics.budgets.length > 0">
+
+          <div
+            class="budget-chart-container"
+            *ngIf="budgetAnalytics.budgets && budgetAnalytics.budgets.length > 0"
+          >
             <canvas #budgetChart></canvas>
           </div>
+
           <button class="btn-secondary" (click)="openBudgetModal()">Create Budget</button>
         </div>
       </div>
 
       <!-- Budget Section -->
+
       <div *ngIf="activeSection === 'budget'" class="section">
         <h2>Budget Management</h2>
+
         <div class="budget-controls">
-          <input type="month" [(ngModel)]="selectedBudgetMonth" (change)="loadBudgetAnalytics()" class="month-input">
+          <input
+            type="month"
+            [(ngModel)]="selectedBudgetMonth"
+            (change)="loadBudgetAnalytics()"
+            class="month-input"
+          />
+
           <button class="btn-primary" (click)="openBudgetModal()">Create Budget</button>
         </div>
 
         <div class="budget-analytics" *ngIf="budgetAnalytics">
           <div class="analytics-card">
             <h4>Total Budget</h4>
+
             <p class="amount">₹{{ budgetAnalytics.totalBudget }}</p>
           </div>
+
           <div class="analytics-card">
             <h4>Total Spent</h4>
+
             <p class="amount spent">₹{{ budgetAnalytics.totalSpent }}</p>
           </div>
+
           <div class="analytics-card">
             <h4>Remaining</h4>
+
             <p class="amount remaining">₹{{ budgetAnalytics.remaining }}</p>
           </div>
+
           <div class="analytics-card">
             <h4>Utilization</h4>
-            <p class="amount" [class.warning]="budgetAnalytics.utilizationPercentage >= 75 && budgetAnalytics.utilizationPercentage < 100" [class.danger]="budgetAnalytics.utilizationPercentage >= 100">
-              {{ budgetAnalytics.utilizationPercentage | number:'1.0-0' }}%
+
+            <p
+              class="amount"
+              [class.warning]="
+                budgetAnalytics.utilizationPercentage >= 75 &&
+                budgetAnalytics.utilizationPercentage < 100
+              "
+              [class.danger]="budgetAnalytics.utilizationPercentage >= 100"
+            >
+              {{ budgetAnalytics.utilizationPercentage | number: '1.0-0' }}%
             </p>
           </div>
         </div>
 
         <div class="budget-list" *ngIf="budgets.length > 0">
           <h3>Your Budgets</h3>
+
           <div class="budget-item" *ngFor="let budget of budgets">
             <div class="budget-category">{{ budget.category }}</div>
+
             <div class="budget-amounts">
               <span>₹{{ budget.spent || 0 }} / ₹{{ budget.limitAmount }}</span>
+
               <div class="progress-bar">
-                <div class="progress" [style.width.%]="budget.utilizationPercentage || 0" [class.warning]="(budget.utilizationPercentage || 0) >= 75 && (budget.utilizationPercentage || 0) < 100" [class.danger]="(budget.utilizationPercentage || 0) >= 100"></div>
+                <div
+                  class="progress"
+                  [style.width.%]="budget.utilizationPercentage || 0"
+                  [class.warning]="
+                    (budget.utilizationPercentage || 0) >= 75 &&
+                    (budget.utilizationPercentage || 0) < 100
+                  "
+                  [class.danger]="(budget.utilizationPercentage || 0) >= 100"
+                ></div>
               </div>
             </div>
           </div>
@@ -216,84 +376,121 @@
       </div>
 
       <!-- Pay Bills Section -->
+
       <div *ngIf="activeSection === 'bills'" class="section">
         <h2>Bills Management</h2>
+
         <div class="bills-actions">
           <button class="btn-primary" (click)="openBillsListModal()">View All Bills</button>
+
           <button class="btn-secondary" (click)="showCreateBillForm = true">Create New Bill</button>
         </div>
 
         <!-- Upcoming Bills Reminders -->
+
         <div class="bills-reminders" *ngIf="upcomingBills.length > 0">
           <h3>Upcoming Bills (Due within 3 days)</h3>
+
           <div class="reminder-card" *ngFor="let bill of upcomingBills">
             <div class="reminder-info">
               <span class="biller-name">{{ bill.billerName }}</span>
+
               <span class="due-date">Due: {{ bill.dueDate | date }}</span>
             </div>
+
             <span class="bill-amount">₹{{ bill.amount }}</span>
+
             <button class="btn-pay" (click)="payExistingBill(bill.id!)">Pay Now</button>
           </div>
         </div>
 
         <!-- Overdue Bills -->
+
         <div class="bills-overdue" *ngIf="overdueBills.length > 0">
           <h3>Overdue Bills</h3>
+
           <div class="overdue-card" *ngFor="let bill of overdueBills">
             <div class="overdue-info">
               <span class="biller-name">{{ bill.billerName }}</span>
+
               <span class="due-date">Was due: {{ bill.dueDate | date }}</span>
             </div>
+
             <span class="bill-amount">₹{{ bill.amount }}</span>
+
             <button class="btn-pay" (click)="payExistingBill(bill.id!)">Pay Now</button>
           </div>
         </div>
 
         <div class="bills-grid">
-          <button *ngFor="let bill of billCategories" class="bill-item" (click)="openBillModal(bill.type)">
+          <button
+            *ngFor="let bill of billCategories"
+            class="bill-item"
+            (click)="openBillModal(bill.type)"
+          >
             <span class="bill-icon">{{ bill.icon }}</span>
+
             <span class="bill-name">{{ bill.name }}</span>
           </button>
         </div>
 
         <!-- Create Bill Form -->
+
         <div *ngIf="showCreateBillForm" class="create-bill-form">
           <h3>Create New Bill</h3>
+
           <div class="form-group">
             <label>Biller Name</label>
-            <input type="text" [(ngModel)]="newBillBillerName" placeholder="Enter biller name">
+
+            <input type="text" [(ngModel)]="newBillBillerName" placeholder="Enter biller name" />
           </div>
+
           <div class="form-group">
             <label>Category</label>
+
             <select [(ngModel)]="newBillCategory">
-              <option *ngFor="let cat of billCategoriesForCreate" [value]="cat.value">{{ cat.name }}</option>
+              <option *ngFor="let cat of billCategoriesForCreate" [value]="cat.value">
+                {{ cat.name }}
+              </option>
             </select>
           </div>
+
           <div class="form-group">
             <label>Amount</label>
-            <input type="number" [(ngModel)]="newBillAmount" placeholder="Enter amount">
+
+            <input type="number" [(ngModel)]="newBillAmount" placeholder="Enter amount" />
           </div>
+
           <div class="form-group">
             <label>Due Date</label>
-            <input type="date" [(ngModel)]="newBillDueDate">
+
+            <input type="date" [(ngModel)]="newBillDueDate" />
           </div>
+
           <div class="form-group">
             <label>Description (Optional)</label>
+
             <textarea [(ngModel)]="newBillDescription" placeholder="Enter description"></textarea>
           </div>
+
           <button class="btn-primary" (click)="createBill()">Create Bill</button>
+
           <button class="btn-secondary" (click)="showCreateBillForm = false">Cancel</button>
         </div>
       </div>
 
       <!-- Rewards Section -->
+
       <div *ngIf="activeSection === 'rewards'" class="section">
         <h2>My Rewards</h2>
+
         <div class="rewards-dashboard">
           <div class="reward-card">
             <div class="reward-icon">🎁</div>
+
             <div class="reward-info">
               <span class="reward-label">Points Balance</span>
+
               <span class="reward-value">{{ reward?.pointsBalance || 0 }}</span>
             </div>
           </div>
@@ -301,55 +498,78 @@
 
         <div class="reward-history" *ngIf="rewardHistory.length > 0">
           <h3>Reward History</h3>
+
           <div class="history-item" *ngFor="let history of rewardHistory">
             <span class="history-description">{{ history.description || 'Reward' }}</span>
-            <span class="history-points positive">
-              +{{ history.pointsEarned }} points
-            </span>
+
+            <span class="history-points positive"> +{{ history.pointsEarned }} points </span>
+
             <span class="history-date">{{ history.earnedAt | date }}</span>
           </div>
         </div>
-        <div *ngIf="rewardHistory.length === 0" class="no-data">No reward history yet. Pay bills to earn rewards!</div>
+
+        <div *ngIf="rewardHistory.length === 0" class="no-data">
+          No reward history yet. Pay bills to earn rewards!
+        </div>
       </div>
 
       <app-loans-apply *ngIf="activeSection === 'loans-apply'"></app-loans-apply>
-      <app-my-loans *ngIf="activeSection === 'my-loans' || activeSection === 'loans'"></app-my-loans>
+
+      <app-my-loans
+        *ngIf="activeSection === 'my-loans' || activeSection === 'loans'"
+      ></app-my-loans>
+
       <app-insights-dashboard *ngIf="activeSection === 'insights'"></app-insights-dashboard>
 
       <!-- Transfer Section -->
+
       <div *ngIf="activeSection === 'transfer'" class="section">
         <h2>Transfer Money</h2>
+
         <button class="btn-primary btn-large" (click)="openTransferModal()">New Transfer</button>
       </div>
 
       <!-- Settings Section -->
+
       <div *ngIf="activeSection === 'settings'" class="section">
         <h2>Settings</h2>
+
         <button class="btn-primary" (click)="openSettingsModal()">Change Password</button>
       </div>
 
       <!-- Profile Section -->
+
       <div *ngIf="activeSection === 'profile'" class="section">
         <h2>My Profile</h2>
+
         <div class="profile-card">
           <div class="profile-row">
             <span class="label">Username</span>
+
             <span class="value">{{ user?.username }}</span>
           </div>
+
           <div class="profile-row">
             <span class="label">Email</span>
+
             <span class="value">{{ user?.email }}</span>
           </div>
+
           <div class="profile-row">
             <span class="label">Role</span>
+
             <span class="value">{{ user?.role }}</span>
           </div>
+
           <div class="profile-row" *ngIf="selectedAccount">
             <span class="label">Account Number</span>
+
             <span class="value">{{ selectedAccount.accountNumber }}</span>
           </div>
+
           <div class="profile-row" *ngIf="selectedAccount">
             <span class="label">Balance</span>
+
             <span class="value">₹{{ selectedAccount.balance }}</span>
           </div>
         </div>
@@ -358,29 +578,47 @@
   </div>
 
   <!-- Transfer Modal -->
+
   <div class="modal-overlay" *ngIf="showTransferModal" (click)="closeTransferModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Transfer Money</h3>
+
         <button class="close-btn" (click)="closeTransferModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-group">
           <label>Account Number</label>
-          <input type="text" [(ngModel)]="transferAccountNumber" placeholder="Enter account number">
+
+          <input
+            type="text"
+            [(ngModel)]="transferAccountNumber"
+            placeholder="Enter account number"
+          />
         </div>
+
         <div class="form-group">
           <label>Amount</label>
-          <input type="number" [(ngModel)]="transferAmount" placeholder="Enter amount">
+
+          <input type="number" [(ngModel)]="transferAmount" placeholder="Enter amount" />
         </div>
+
         <div class="form-group">
           <label>Reason for Transfer</label>
+
           <select [(ngModel)]="transferReason">
             <option value="">Select reason</option>
+
             <option *ngFor="let reason of transferReasons" [value]="reason">{{ reason }}</option>
           </select>
         </div>
-        <button class="btn-primary" (click)="submitTransfer()" [disabled]="!transferAccountNumber || !transferAmount || !transferReason">
+
+        <button
+          class="btn-primary"
+          (click)="submitTransfer()"
+          [disabled]="!transferAccountNumber || !transferAmount || !transferReason"
+        >
           Transfer
         </button>
       </div>
@@ -388,25 +626,37 @@
   </div>
 
   <!-- Bill Payment Modal -->
+
   <div class="modal-overlay" *ngIf="showBillModal" (click)="closeBillModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Pay {{ selectedBillType }}</h3>
+
         <button class="close-btn" (click)="closeBillModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-group">
           <label>Amount</label>
-          <input type="number" [(ngModel)]="billAmount" placeholder="Enter amount">
+
+          <input type="number" [(ngModel)]="billAmount" placeholder="Enter amount" />
         </div>
+
         <div class="form-group">
           <label>Reason for Payment</label>
+
           <select [(ngModel)]="billReason">
             <option value="">Select reason</option>
+
             <option *ngFor="let reason of billReasons" [value]="reason">{{ reason }}</option>
           </select>
         </div>
-        <button class="btn-primary" (click)="submitBillPayment()" [disabled]="!billAmount || !billReason">
+
+        <button
+          class="btn-primary"
+          (click)="submitBillPayment()"
+          [disabled]="!billAmount || !billReason"
+        >
           Pay Bill
         </button>
       </div>
@@ -414,81 +664,131 @@
   </div>
 
   <!-- Settings Modal -->
+
   <div class="modal-overlay" *ngIf="showSettingsModal" (click)="closeSettingsModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Change Password</h3>
+
         <button class="close-btn" (click)="closeSettingsModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-group">
           <label>Old Password</label>
-          <input type="password" [(ngModel)]="oldPassword" placeholder="Enter old password">
+
+          <input type="password" [(ngModel)]="oldPassword" placeholder="Enter old password" />
         </div>
+
         <div class="form-group">
           <label>New Password</label>
-          <input type="password" [(ngModel)]="newPassword" placeholder="Enter new password">
+
+          <input type="password" [(ngModel)]="newPassword" placeholder="Enter new password" />
         </div>
+
         <div class="form-group">
           <label>Confirm Password</label>
-          <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm new password">
+
+          <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm new password" />
         </div>
+
         <div *ngIf="passwordError" class="error-message">{{ passwordError }}</div>
+
         <div *ngIf="passwordSuccess" class="success-message">{{ passwordSuccess }}</div>
+
         <button class="btn-primary" (click)="changePassword()">Change Password</button>
       </div>
     </div>
   </div>
 
   <!-- Budget Modal -->
+
   <div class="modal-overlay" *ngIf="showBudgetModal" (click)="closeBudgetModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Create Budget</h3>
+
         <button class="close-btn" (click)="closeBudgetModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="form-group">
           <label>Category</label>
+
           <select [(ngModel)]="budgetCategory">
             <option value="">Select category</option>
+
             <option *ngFor="let cat of budgetCategories" [value]="cat">{{ cat }}</option>
           </select>
         </div>
+
         <div class="form-group">
           <label>Budget Month</label>
-          <input type="month" [(ngModel)]="selectedBudgetMonth">
+
+          <input type="month" [(ngModel)]="selectedBudgetMonth" />
         </div>
+
         <div class="form-group">
           <label>Limit Amount</label>
-          <input type="number" [(ngModel)]="budgetLimit" placeholder="Enter limit amount">
+
+          <input type="number" [(ngModel)]="budgetLimit" placeholder="Enter limit amount" />
         </div>
+
         <div *ngIf="budgetError" class="error-message">{{ budgetError }}</div>
+
         <div *ngIf="budgetSuccess" class="success-message">{{ budgetSuccess }}</div>
-        <button class="btn-primary" (click)="createBudget()" [disabled]="!budgetCategory || !budgetLimit">Create Budget</button>
+
+        <button
+          class="btn-primary"
+          (click)="createBudget()"
+          [disabled]="!budgetCategory || !budgetLimit"
+        >
+          Create Budget
+        </button>
       </div>
     </div>
   </div>
 
   <!-- Bills List Modal -->
+
   <div class="modal-overlay" *ngIf="showBillsModal" (click)="closeBillsListModal()">
     <div class="modal-content modal-large" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>My Bills</h3>
+
         <button class="close-btn" (click)="closeBillsListModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="bills-list">
           <div class="bill-list-item" *ngFor="let bill of bills">
             <div class="bill-info">
               <span class="bill-name">{{ bill.billerName }}</span>
+
               <span class="bill-category">{{ bill.category }}</span>
+
               <span class="bill-due">Due: {{ bill.dueDate | date }}</span>
             </div>
+
             <span class="bill-amount">₹{{ bill.amount }}</span>
-            <span class="bill-status" [class.paid]="bill.status === 'PAID'" [class.overdue]="bill.status === 'OVERDUE'" [class.pending]="bill.status === 'PENDING'">{{ bill.status }}</span>
-            <button *ngIf="bill.status === 'PENDING'" class="btn-pay" (click)="payExistingBill(bill.id!)">Pay</button>
+
+            <span
+              class="bill-status"
+              [class.paid]="bill.status === 'PAID'"
+              [class.overdue]="bill.status === 'OVERDUE'"
+              [class.pending]="bill.status === 'PENDING'"
+              >{{ bill.status }}</span
+            >
+
+            <button
+              *ngIf="bill.status === 'PENDING'"
+              class="btn-pay"
+              (click)="payExistingBill(bill.id!)"
+            >
+              Pay
+            </button>
           </div>
+
           <div *ngIf="bills.length === 0" class="no-data">No bills found</div>
         </div>
       </div>
@@ -496,54 +796,90 @@
   </div>
 
   <!-- Notifications Modal -->
+
   <div class="modal-overlay" *ngIf="showTransactionsModal" (click)="closeTransactionsModal()">
     <div class="modal-content modal-large" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Monthly Transactions</h3>
+
         <button class="close-btn" (click)="closeTransactionsModal()">x</button>
       </div>
+
       <div class="modal-body">
         <div class="transaction-filters">
-          <input type="month" [(ngModel)]="transactionMonthFilter" class="month-input">
+          <input type="month" [(ngModel)]="transactionMonthFilter" class="month-input" />
+
           <select [(ngModel)]="transactionCategoryFilter">
             <option value="">All Categories</option>
-            <option *ngFor="let category of transactionCategories" [value]="category">{{ category }}</option>
+
+            <option *ngFor="let category of transactionCategories" [value]="category">
+              {{ category }}
+            </option>
           </select>
         </div>
+
         <div class="transactions-list">
           <div *ngFor="let tx of filteredTransactions" class="transaction-item">
             <div class="tx-info">
               <span class="tx-desc">{{ tx.description }}</span>
+
               <span class="tx-category">{{ tx.category || 'Other' }}</span>
-              <span class="tx-date">{{ tx.transactionDate | date:'short' }}</span>
+
+              <span class="tx-date">{{ tx.transactionDate | date: 'short' }}</span>
             </div>
-            <span class="tx-amount" [class.positive]="tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'" [class.negative]="tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'">
-              {{ (tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT') ? '+' : '-' }}₹{{ tx.amount }}
+
+            <span
+              class="tx-amount"
+              [class.positive]="tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT'"
+              [class.negative]="
+                tx.transactionType === 'DEBIT' || tx.transactionType === 'WITHDRAWAL'
+              "
+            >
+              {{
+                tx.transactionType === 'CREDIT' || tx.transactionType === 'DEPOSIT' ? '+' : '-'
+              }}₹{{ tx.amount }}
             </span>
           </div>
-          <div *ngIf="filteredTransactions.length === 0" class="no-data">No transactions for selected filters</div>
+
+          <div *ngIf="filteredTransactions.length === 0" class="no-data">
+            No transactions for selected filters
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Notifications Modal -->
+
   <div class="modal-overlay" *ngIf="showNotificationsModal" (click)="closeNotificationsModal()">
     <div class="modal-content" (click)="$event.stopPropagation()">
       <div class="modal-header">
         <h3>Notifications</h3>
+
         <button class="close-btn" (click)="closeNotificationsModal()">✕</button>
       </div>
+
       <div class="modal-body">
         <div class="notifications-header">
-          <button class="btn-text" (click)="markAllAsRead()" *ngIf="unreadCount > 0">Mark all as read</button>
+          <button class="btn-text" (click)="markAllAsRead()" *ngIf="unreadCount > 0">
+            Mark all as read
+          </button>
         </div>
+
         <div class="notifications-list">
-          <div class="notification-item" *ngFor="let notification of notifications" [class.unread]="!notification.isRead" (click)="markAsRead(notification.id!)">
+          <div
+            class="notification-item"
+            *ngFor="let notification of notifications"
+            [class.unread]="!notification.isRead"
+            (click)="markAsRead(notification.id!)"
+          >
             <div class="notification-title">{{ notification.title }}</div>
+
             <div class="notification-message">{{ notification.message }}</div>
-            <div class="notification-date">{{ notification.createdAt | date:'short' }}</div>
+
+            <div class="notification-date">{{ notification.createdAt | date: 'short' }}</div>
           </div>
+
           <div *ngIf="notifications.length === 0" class="no-data">No notifications</div>
         </div>
       </div>
@@ -551,24 +887,35 @@
   </div>
 
   <!-- Reward Popup -->
+
   <div class="reward-popup-overlay" *ngIf="showRewardPopup" (click)="closeRewardPopup()">
     <div class="reward-popup" (click)="$event.stopPropagation()">
       <button class="reward-close-btn" (click)="closeRewardPopup()">✕</button>
+
       <div class="reward-animation">
         <div class="reward-icon">🎉</div>
+
         <div class="reward-particles">
           <span>✨</span>
+
           <span>⭐</span>
+
           <span>🎊</span>
+
           <span>💫</span>
         </div>
       </div>
+
       <h2>Reward Earned!</h2>
+
       <p class="reward-message">You earned</p>
+
       <div class="reward-points">
         <span class="points-value">+{{ rewardPoints }}</span>
+
         <span class="points-label">Points</span>
       </div>
+
       <p class="reward-submessage">Keep paying bills to earn more rewards!</p>
     </div>
   </div>
