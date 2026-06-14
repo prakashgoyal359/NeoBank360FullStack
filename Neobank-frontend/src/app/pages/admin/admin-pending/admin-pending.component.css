@@ -587,3 +587,33 @@
 :host-context(.dark-mode) .approve-info p {
   color: #e4e4e7;
 }
+
+
+/* Comprehensive Responsive Breakpoints - Admin Pending Component */
+
+@media (max-width: 374px) {
+  .pending-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+  .card { padding: 0.75rem; }
+  h2 { font-size: 1rem; }
+}
+
+@media (min-width: 425px) and (max-width: 639px) {
+  .pending-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .card { padding: 1rem; }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .pending-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .pending-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .pending-grid { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  button { min-height: 48px; }
+}

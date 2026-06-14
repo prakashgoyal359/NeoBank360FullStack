@@ -1,8 +1,21 @@
 <div class="user-dashboard" [class.dark-mode]="themeService.isDarkMode()">
+  <!-- Mobile Menu Overlay -->
+  <div class="sidebar-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+
   <!-- Top Header -->
 
   <header class="top-header">
     <div class="header-left">
+      <button
+        class="hamburger-menu"
+        (click)="toggleMobileMenu()"
+        [class.active]="mobileMenuOpen"
+        title="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <h1 class="logo">NeoBank360</h1>
     </div>
 
@@ -26,7 +39,7 @@
   <div class="main-container">
     <!-- Sidebar -->
 
-    <aside class="sidebar">
+    <aside class="sidebar" [class.open]="mobileMenuOpen">
       <nav class="sidebar-nav">
         <button
           class="nav-item"

@@ -1,8 +1,21 @@
 <div class="admin-layout" [class.dark-mode]="themeService.isDarkMode()">
+  <!-- Mobile Menu Overlay -->
+  <div class="sidebar-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+
   <!-- Top Header -->
 
   <header class="top-header">
     <div class="header-left">
+      <button
+        class="hamburger-menu"
+        (click)="toggleMobileMenu()"
+        [class.active]="mobileMenuOpen"
+        title="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
       <h1 class="logo">NeoBank Admin</h1>
     </div>
 
@@ -28,7 +41,7 @@
   <div class="main-container">
     <!-- Sidebar -->
 
-    <aside class="sidebar">
+    <aside class="sidebar" [class.open]="mobileMenuOpen">
       <nav class="sidebar-nav">
         <button
           [class.active]="activeSection === 'home'"
@@ -88,6 +101,16 @@
           <span class="nav-icon">💚</span>
 
           <span class="nav-text">System Health</span>
+        </button>
+
+        <button
+          [class.active]="activeSection === 'system-logs'"
+          (click)="onSectionChange('system-logs'); closeMobileMenu()"
+          class="nav-item"
+        >
+          <span class="nav-icon">🧾</span>
+
+          <span class="nav-text">Audit Logs</span>
         </button>
 
         <button
@@ -164,6 +187,8 @@
       ></app-pending-approvals>
 
       <app-system-health *ngIf="activeSection === 'system-health'"></app-system-health>
+
+      <app-system-logs *ngIf="activeSection === 'system-logs'"></app-system-logs>
 
       <app-admin-pending
         *ngIf="activeSection === 'pending'"

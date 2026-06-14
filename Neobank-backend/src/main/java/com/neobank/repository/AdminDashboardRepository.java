@@ -34,6 +34,18 @@ public interface AdminDashboardRepository extends JpaRepository<User, Long> {
         java.time.LocalDateTime getTransactionDate();
     }
 
+    interface AnalyticsPointProjection {
+        String getLabel();
+        BigDecimal getValue();
+        BigDecimal getSecondaryValue();
+    }
+
+    interface TrendProjection {
+        String getMonthKey();
+        BigDecimal getTotalIncome();
+        BigDecimal getTotalExpense();
+    }
+
     long countByIsActiveTrue();
 
     @Query("SELECT COUNT(la) FROM LoanAccount la")
@@ -44,6 +56,48 @@ public interface AdminDashboardRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(la) FROM LoanApplication la WHERE la.status = 'PENDING'")
     long countPendingLoanApprovals();
+
+    @Query("SELECT COUNT(la) FROM LoanApplication la WHERE la.status = 'APPROVED'")
+    long countApprovedLoanApprovals();
+
+    @Query("SELECT COUNT(la) FROM LoanApplication la WHERE la.status = 'REJECTED'")
+    long countRejectedLoanApprovals();
+
+    @Query("""
+            SELECT COALESCE(SUM(la.disbursedAmount), 0)
+            FROM LoanAccount la
+            """)
+    BigDecimal totalDisbursed();
+
+    @Query("""
+            SELECT COALESCE(SUM(la.remainingPrincipal), 0)
+            FROM LoanAccount la
+            WHERE la.status = 'ACTIVE'
+            """)
+    BigDecimal totalOutstandingPrincipal();
+
+    @Query("""
+            SELECT COUNT(t)
+            FROM Transaction t
+            WHERE t.transactionDate >= :startDate
+            """)
+    long countTransactionsSince(@Param("startDate") java.time.LocalDateTime startDate);
+
+    @Query("""
+            SELECT COALESCE(SUM(CASE WHEN t.transactionType = 'CREDIT' THEN t.amount ELSE 0 END), 0)
+            FROM Transaction t
+            WHERE t.transactionDate >= :startDate
+              AND t.account.isActive = true
+            """)
+    BigDecimal totalCreditSince(@Param("startDate") java.time.LocalDateTime startDate);
+
+    @Query("""
+            SELECT COALESCE(SUM(CASE WHEN t.transactionType = 'DEBIT' THEN t.amount ELSE 0 END), 0)
+            FROM Transaction t
+            WHERE t.transactionDate >= :startDate
+              AND t.account.isActive = true
+            """)
+    BigDecimal totalDebitSince(@Param("startDate") java.time.LocalDateTime startDate);
 
     @Query("""
             SELECT COALESCE(SUM(CASE WHEN t.transactionType = 'CREDIT' THEN t.amount ELSE 0 END), 0)
@@ -58,6 +112,68 @@ public interface AdminDashboardRepository extends JpaRepository<User, Long> {
             WHERE t.account.isActive = true
             """)
     BigDecimal totalPlatformExpense();
+
+    @Query(value = """
+            SELECT DATE_FORMAT(t.transaction_date, '%Y-%m-%d') AS monthKey,
+                   COALESCE(SUM(CASE WHEN t.transaction_type = 'CREDIT' THEN t.amount ELSE 0 END), 0) AS totalIncome,
+                   COALESCE(SUM(CASE WHEN t.transaction_type = 'DEBIT' THEN t.amount ELSE 0 END), 0) AS totalExpense
+            FROM transactions t
+            JOIN accounts a ON a.id = t.account_id
+            WHERE a.is_active = true
+              AND t.transaction_date >= :startDate
+            GROUP BY DATE_FORMAT(t.transaction_date, '%Y-%m-%d')
+            ORDER BY monthKey
+            """, nativeQuery = true)
+    List<TrendProjection> findTransactionTrendSince(@Param("startDate") java.time.LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT COALESCE(t.category, 'Other') AS label,
+                   COALESCE(SUM(t.amount), 0) AS value,
+                   COUNT(t.id) AS secondaryValue
+            FROM transactions t
+            JOIN accounts a ON a.id = t.account_id
+            WHERE a.is_active = true
+              AND t.transaction_type = 'DEBIT'
+              AND t.transaction_date >= :startDate
+            GROUP BY COALESCE(t.category, 'Other')
+            ORDER BY value DESC
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findTransactionCategoryBreakdownSince(@Param("startDate") java.time.LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT la.status AS label,
+                   COUNT(la.id) AS value,
+                   COALESCE(SUM(la.requested_amount), 0) AS secondaryValue
+            FROM loan_applications la
+            GROUP BY la.status
+            ORDER BY label
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findLoanStatusDistribution();
+
+    @Query(value = """
+            SELECT la.status AS label,
+                   COUNT(la.id) AS value,
+                   COALESCE(SUM(la.remaining_principal), 0) AS secondaryValue
+            FROM loan_accounts la
+            GROUP BY la.status
+            ORDER BY label
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findLoanAccountStatusDistribution();
+
+    @Query(value = """
+            SELECT (
+                SELECT COUNT(*)
+                FROM loan_applications la
+                WHERE la.processed_at IS NOT NULL
+                  AND la.processed_at >= :startDate
+            ) + (
+                SELECT COUNT(*)
+                FROM account_opening_forms aof
+                WHERE aof.submitted_at >= :startDate
+                   OR (aof.approved_at IS NOT NULL AND aof.approved_at >= :startDate)
+            ) AS auditEvents
+            """, nativeQuery = true)
+    long countDerivedAuditEventsSince(@Param("startDate") java.time.LocalDateTime startDate);
 
     @Query(value = """
             SELECT la.id AS id,

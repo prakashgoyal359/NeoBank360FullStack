@@ -1,4 +1,13 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,17 +36,26 @@ Chart.register(...registerables);
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, FormsModule, ThemeToggleComponent, LoansApplyComponent, MyLoansComponent, InsightsDashboardComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ThemeToggleComponent,
+    LoansApplyComponent,
+    MyLoansComponent,
+    InsightsDashboardComponent,
+  ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css'],
 })
 export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('spendingChart') spendingChartRef!: ElementRef;
-  @ViewChild('budgetChart') budgetChartRef!: ElementRef;
+  @ViewChild('spendingChart', { static: false }) spendingChartRef?: ElementRef;
+  @ViewChild('budgetChart', { static: false }) budgetChartRef?: ElementRef;
   chart: Chart | null = null;
   budgetChart: Chart | null = null;
 
   activeSection: string = 'home';
+  mobileMenuOpen = false;
+
   accounts: Account[] = [];
   transactions: Transaction[] = [];
   selectedAccount: Account | null = null;
@@ -190,6 +208,10 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     private loanService: LoanService,
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
+    effect(() => {
+      this.isDarkMode = this.themeService.isDarkMode();
+      this.updateDashboardChartTheme();
+    });
   }
 
   ngOnInit(): void {
@@ -257,13 +279,13 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
           next: (upcoming) => {
             this.upcomingBills = upcoming;
             this.cdr.detectChanges();
-          }
+          },
         });
         this.bankingService.getOverdueBills().subscribe({
           next: (overdue) => {
             this.overdueBills = overdue;
             this.cdr.detectChanges();
-          }
+          },
         });
         this.cdr.detectChanges();
       },
@@ -324,12 +346,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
               });
             this.notifications = [...generated, ...notifications];
-            this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+            this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
             this.cdr.detectChanges();
           },
           error: () => {
             this.notifications = [...generated, ...notifications];
-            this.unreadCount = this.notifications.filter(n => !n.isRead).length;
+            this.unreadCount = this.notifications.filter((n) => !n.isRead).length;
             this.cdr.detectChanges();
           },
         });
@@ -372,6 +394,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 6);
 
+    this.cdr.markForCheck();
+
     // Wait for the view to be ready then create or update chart
     setTimeout(() => {
       if (!this.chart) {
@@ -379,22 +403,37 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       } else {
         this.updateChart();
       }
+      this.cdr.detectChanges();
     }, 200);
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.initChart(), 100);
+    if (this.activeSection === 'home' && this.chartData.length > 0) {
+      setTimeout(() => {
+        this.initChart();
+        this.cdr.detectChanges();
+      }, 100);
+    }
   }
 
   ngOnDestroy(): void {
     if (this.chart) {
       this.chart.destroy();
     }
+    if (this.budgetChart) {
+      this.budgetChart.destroy();
+    }
   }
 
   initChart(): void {
     try {
       console.log('Initializing chart, spendingChartRef:', this.spendingChartRef);
+
+      // Destroy existing chart if present
+      if (this.chart) {
+        this.chart.destroy();
+        this.chart = null;
+      }
 
       if (!this.spendingChartRef) {
         console.log('Chart ref not found');
@@ -420,32 +459,19 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
       this.chart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: this.chartData.map(item => item.category),
-          datasets: [{
-            data: this.chartData.map(item => item.amount),
-            backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
-            borderWidth: 2,
-            borderColor: '#ffffff'
-          }]
+          labels: this.chartData.map((item) => item.category),
+          datasets: [
+            {
+              data: this.chartData.map((item) => item.amount),
+              backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'],
+              borderWidth: 2,
+              borderColor: this.themeService.isDarkMode() ? '#16213e' : '#ffffff',
+            },
+          ],
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '60%',
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                usePointStyle: true,
-                padding: 20,
-                font: {
-                  size: 12
-                }
-              }
-            }
-          }
-        }
+        options: this.chartOptions('doughnut'),
       });
+      this.cdr.detectChanges();
       console.log('Chart initialized successfully with data:', this.chartData);
     } catch (error) {
       console.error('Error initializing chart:', error);
@@ -455,8 +481,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   updateChart(): void {
     if (!this.chart) return;
 
-    this.chart.data.labels = this.chartData.map(item => item.category);
-    this.chart.data.datasets[0].data = this.chartData.map(item => item.amount);
+    this.chart.data.labels = this.chartData.map((item) => item.category);
+    this.chart.data.datasets[0].data = this.chartData.map((item) => item.amount);
     this.chart.update();
   }
 
@@ -482,7 +508,9 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.transactions.filter((tx) => {
       const txMonth = tx.transactionDate?.slice(0, 7);
       const matchesMonth = !this.transactionMonthFilter || txMonth === this.transactionMonthFilter;
-      const matchesCategory = !this.transactionCategoryFilter || (tx.category || 'Other') === this.transactionCategoryFilter;
+      const matchesCategory =
+        !this.transactionCategoryFilter ||
+        (tx.category || 'Other') === this.transactionCategoryFilter;
       return matchesMonth && matchesCategory;
     });
   }
@@ -497,7 +525,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
   mapBillTypeToBudgetCategory(type: string): string {
     const normalized = (type || '').toUpperCase().replace(/\s+/g, '_');
-    if (['ELECTRICITY', 'WATER', 'GAS', 'LPG', 'GAS_LPG'].includes(normalized)) return 'Bill Payment';
+    if (['ELECTRICITY', 'WATER', 'GAS', 'LPG', 'GAS_LPG'].includes(normalized))
+      return 'Bill Payment';
     if (['BROADBAND', 'INTERNET', 'MOBILE', 'DTH'].includes(normalized)) return 'Recharge Payment';
     if (['CREDIT_CARD', 'CARD'].includes(normalized)) return 'Card Payment';
     if (['LOAN', 'LOAN_EMI', 'EMI'].includes(normalized)) return 'EMI Payment';
@@ -537,7 +566,12 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   submitTransfer(): void {
-    if (!this.transferAccountNumber || !this.transferAmount || !this.transferReason || !this.selectedAccount) {
+    if (
+      !this.transferAccountNumber ||
+      !this.transferAmount ||
+      !this.transferReason ||
+      !this.selectedAccount
+    ) {
       return;
     }
 
@@ -647,6 +681,17 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   // Navigation
   setActiveSection(section: string): void {
     this.activeSection = section;
+    this.closeMobileMenu();
+  }
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen = !this.mobileMenuOpen;
+    this.cdr.detectChanges();
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen = false;
+    this.cdr.detectChanges();
   }
 
   // Budget Management
@@ -733,15 +778,56 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         ],
       },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
+      options: this.chartOptions(),
+    });
+  }
+
+  chartOptions(type?: string): any {
+    const dark = this.themeService.isDarkMode();
+    const textColor = dark ? '#dbeafe' : '#334155';
+    const gridColor = dark ? 'rgba(148, 163, 184, 0.18)' : 'rgba(100, 116, 139, 0.18)';
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: type === 'doughnut' ? '60%' : undefined,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: textColor,
+            usePointStyle: true,
+            padding: 20,
+            font: { size: 12 },
           },
         },
+        tooltip: {
+          backgroundColor: dark ? '#0f172a' : '#ffffff',
+          titleColor: textColor,
+          bodyColor: textColor,
+          borderColor: gridColor,
+          borderWidth: 1,
+        },
       },
+      ...(type !== 'doughnut' && {
+        scales: {
+          x: { ticks: { color: textColor }, grid: { color: gridColor } },
+          y: { beginAtZero: true, ticks: { color: textColor }, grid: { color: gridColor } },
+        },
+      }),
+    };
+  }
+
+  updateDashboardChartTheme(): void {
+    [this.chart, this.budgetChart].forEach((chart) => {
+      if (!chart) return;
+      const chartType = (chart.config as any).type || (chart.config as any)._config?.type;
+      chart.options = this.chartOptions(chartType);
+      if (chartType === 'doughnut') {
+        chart.data.datasets.forEach((dataset: any) => {
+          dataset.borderColor = this.themeService.isDarkMode() ? '#16213e' : '#ffffff';
+        });
+      }
+      chart.update();
     });
   }
 

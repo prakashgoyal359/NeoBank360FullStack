@@ -34,9 +34,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    const token = localStorage.getItem('token');
-    console.log('AuthService.getToken - Retrieved token:', token ? 'Present' : 'Missing');
-    return token;
+    return localStorage.getItem('token');
   }
 
   getUser(): any {
@@ -45,10 +43,7 @@ export class AuthService {
   }
 
   setToken(token: string): void {
-    console.log('AuthService.setToken - Setting token:', token);
     localStorage.setItem('token', token);
-    const stored = localStorage.getItem('token');
-    console.log('AuthService.setToken - Token stored and verified:', stored);
   }
 
   setUser(user: any): void {

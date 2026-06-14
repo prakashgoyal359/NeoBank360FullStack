@@ -16,6 +16,7 @@ import { AdminDashboardComponent } from './dashboard/admin-dashboard.component';
 import { PendingApprovalsComponent } from './pending-approvals/pending-approvals.component';
 import { UserManagementComponent } from './user-management/user-management.component';
 import { SystemHealthComponent } from './system-health/system-health.component';
+import { SystemLogsComponent } from './system-logs/system-logs.component';
 import { Account, AccountOpeningResponse } from '../../models/banking.model';
 import { LoanService } from '../../services/loan.service';
 import { PendingApproval } from '../../services/admin-dashboard.service';
@@ -37,6 +38,7 @@ import { PendingApproval } from '../../services/admin-dashboard.service';
     PendingApprovalsComponent,
     UserManagementComponent,
     SystemHealthComponent,
+    SystemLogsComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css'],

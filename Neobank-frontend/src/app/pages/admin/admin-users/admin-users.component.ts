@@ -1,15 +1,16 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Account } from '../../../models/banking.model';
 import { BankingService } from '../../../services/banking.service';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-admin-users',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="users-container">
+    <div class="users-container" [class.dark-mode]="isDarkMode">
       <div class="users-header">
         <h2>Users Management</h2>
         <div class="search-box">
@@ -115,8 +116,18 @@ import { BankingService } from '../../../services/banking.service';
 export class AdminUsersComponent {
   @Input() accounts: Account[] = [];
   searchQuery: string = '';
+  isDarkMode = false;
 
-  constructor(private bankingService: BankingService) {}
+  constructor(
+    private bankingService: BankingService,
+    private cdr: ChangeDetectorRef,
+    private themeService: ThemeService,
+  ) {
+    effect(() => {
+      this.isDarkMode = this.themeService.isDarkMode();
+      this.cdr.detectChanges();
+    });
+  }
 
   // Edit modal
   showEditModal = false;
@@ -126,7 +137,7 @@ export class AdminUsersComponent {
     email: '',
     accountType: 'SAVINGS' as 'SAVINGS' | 'CURRENT',
     balance: 0,
-    isActive: true
+    isActive: true,
   };
 
   get filteredUsers(): Account[] {
@@ -145,7 +156,7 @@ export class AdminUsersComponent {
       email: user.email || '',
       accountType: user.accountType,
       balance: user.balance,
-      isActive: user.isActive ?? true
+      isActive: user.isActive ?? true,
     };
     this.showEditModal = true;
   }
@@ -157,31 +168,33 @@ export class AdminUsersComponent {
 
   saveUser(): void {
     if (this.selectedUser) {
-      this.bankingService.updateAccount(
-        this.selectedUser.id,
-        this.editForm.accountType,
-        this.editForm.isActive,
-        this.editForm.balance,
-        this.editForm.userName,
-        this.editForm.email
-      ).subscribe({
-        next: (updatedAccount) => {
-          // Update the account in the list
-          const index = this.accounts.findIndex(a => a.id === this.selectedUser!.id);
-          if (index !== -1) {
-            this.accounts[index] = {
-              ...this.accounts[index],
-              accountType: updatedAccount.accountType,
-              isActive: updatedAccount.isActive
-            };
-          }
-          alert('User account updated successfully!');
-          this.closeEditModal();
-        },
-        error: (error) => {
-          alert('Failed to update user: ' + (error.error?.message || error.message));
-        }
-      });
+      this.bankingService
+        .updateAccount(
+          this.selectedUser.id,
+          this.editForm.accountType,
+          this.editForm.isActive,
+          this.editForm.balance,
+          this.editForm.userName,
+          this.editForm.email,
+        )
+        .subscribe({
+          next: (updatedAccount) => {
+            // Update the account in the list
+            const index = this.accounts.findIndex((a) => a.id === this.selectedUser!.id);
+            if (index !== -1) {
+              this.accounts[index] = {
+                ...this.accounts[index],
+                accountType: updatedAccount.accountType,
+                isActive: updatedAccount.isActive,
+              };
+            }
+            alert('User account updated successfully!');
+            this.closeEditModal();
+          },
+          error: (error) => {
+            alert('Failed to update user: ' + (error.error?.message || error.message));
+          },
+        });
     }
   }
 }

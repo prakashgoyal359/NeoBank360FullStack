@@ -11,6 +11,65 @@ export interface AdminDashboardStats {
   platformSavingsRate: number;
 }
 
+export interface AnalyticsPoint {
+  label: string;
+  value: number;
+  secondaryValue: number;
+}
+
+export interface TrendEntry {
+  monthLabel: string;
+  totalIncome: number;
+  totalExpense: number;
+}
+
+export interface AdminAdvancedAnalytics {
+  period: '7D' | '30D' | 'YTD';
+  transactionVolume: number;
+  transactionAmount: number;
+  creditAmount: number;
+  debitAmount: number;
+  totalDisbursed: number;
+  outstandingPrincipal: number;
+  pendingLoans: number;
+  approvedLoans: number;
+  rejectedLoans: number;
+  auditEvents: number;
+  transactionTrend: TrendEntry[];
+  transactionCategoryBreakdown: AnalyticsPoint[];
+  loanStatusDistribution: AnalyticsPoint[];
+}
+
+export interface TransactionAnalytics {
+  period: string;
+  dailyVolumes: TrendEntry[];
+  averageTicketSize: number;
+  totalInflow: number;
+  totalOutflow: number;
+  totalTransactions: number;
+}
+
+export interface LoanAnalytics {
+  pending: number;
+  approved: number;
+  rejected: number;
+  npaRatio: number;
+  loanDistribution: AnalyticsPoint[];
+}
+
+export interface SystemAuditLog {
+  id: number;
+  endpoint: string;
+  httpMethod: string;
+  responseStatus: number;
+  executionTimeMs: number;
+  actingUserId?: number;
+  actingUsername?: string;
+  eventType: string;
+  eventTimestamp: string;
+  errorMessage?: string;
+}
+
 export interface PendingApproval {
   id: number;
   module: string;
@@ -68,6 +127,20 @@ export class AdminDashboardService {
     return this.http.get<AdminDashboardStats>(`${this.apiUrl}/dashboard`);
   }
 
+  getAdvancedAnalytics(period: '7D' | '30D' | 'YTD' = '30D'): Observable<AdminAdvancedAnalytics> {
+    const params = new HttpParams().set('period', period);
+    return this.http.get<AdminAdvancedAnalytics>(`${this.apiUrl}/analytics/advanced`, { params });
+  }
+
+  getTransactionAnalytics(period: '7D' | '30D' | 'YTD' = '30D'): Observable<TransactionAnalytics> {
+    const params = new HttpParams().set('period', period);
+    return this.http.get<TransactionAnalytics>(`${this.apiUrl}/analytics/transactions`, { params });
+  }
+
+  getLoanAnalytics(): Observable<LoanAnalytics> {
+    return this.http.get<LoanAnalytics>(`${this.apiUrl}/analytics/loans`);
+  }
+
   getPendingApprovals(module = ''): Observable<PendingApproval[]> {
     const params = module ? new HttpParams().set('module', module) : undefined;
     return this.http.get<PendingApproval[]>(`${this.apiUrl}/pending-approvals`, { params });
@@ -91,5 +164,25 @@ export class AdminDashboardService {
   getUserActivity(userId: number, page = 0, size = 10): Observable<PageResponse<UserActivity>> {
     const params = new HttpParams().set('page', page).set('size', size);
     return this.http.get<PageResponse<UserActivity>>(`${this.apiUrl}/users/${userId}/activity`, { params });
+  }
+
+  getSystemLogs(filters: {
+    search?: string;
+    endpoint?: string;
+    username?: string;
+    from?: string;
+    to?: string;
+    page?: number;
+    size?: number;
+  }): Observable<PageResponse<SystemAuditLog>> {
+    let params = new HttpParams()
+      .set('page', filters.page ?? 0)
+      .set('size', filters.size ?? 20);
+    if (filters.search?.trim()) params = params.set('search', filters.search.trim());
+    if (filters.endpoint?.trim()) params = params.set('endpoint', filters.endpoint.trim());
+    if (filters.username?.trim()) params = params.set('username', filters.username.trim());
+    if (filters.from) params = params.set('from', filters.from);
+    if (filters.to) params = params.set('to', filters.to);
+    return this.http.get<PageResponse<SystemAuditLog>>(`${this.apiUrl}/system-logs`, { params });
   }
 }

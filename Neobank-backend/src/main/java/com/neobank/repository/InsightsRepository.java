@@ -20,6 +20,12 @@ public interface InsightsRepository extends JpaRepository<Transaction, Long> {
         BigDecimal getTotalExpense();
     }
 
+    interface AnalyticsPointProjection {
+        String getLabel();
+        BigDecimal getValue();
+        BigDecimal getSecondaryValue();
+    }
+
     @Query("""
             SELECT COALESCE(SUM(t.amount), 0)
             FROM Transaction t
@@ -43,4 +49,102 @@ public interface InsightsRepository extends JpaRepository<Transaction, Long> {
             """, nativeQuery = true)
     List<MonthlyTrendProjection> findSixMonthTrend(@Param("userId") Long userId,
                                                    @Param("startDate") LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT COALESCE(t.category, 'Other') AS label,
+                   COALESCE(SUM(t.amount), 0) AS value,
+                   COUNT(t.id) AS secondaryValue
+            FROM transactions t
+            JOIN accounts a ON a.id = t.account_id
+            WHERE a.user_id = :userId
+              AND a.is_active = true
+              AND t.transaction_type = 'DEBIT'
+              AND t.transaction_date >= :startDate
+            GROUP BY COALESCE(t.category, 'Other')
+            ORDER BY value DESC
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findSpendingBreakdown(@Param("userId") Long userId,
+                                                         @Param("startDate") LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT b.category AS label,
+                   b.limit_amount AS value,
+                   COALESCE(SUM(CASE WHEN t.transaction_type = 'DEBIT' THEN t.amount ELSE 0 END), 0) AS secondaryValue
+            FROM budgets b
+            LEFT JOIN accounts a ON a.user_id = b.user_id AND a.is_active = true
+            LEFT JOIN transactions t ON t.account_id = a.id
+                 AND COALESCE(t.category, 'Other') = b.category
+                 AND DATE_FORMAT(t.transaction_date, '%Y-%m') = CAST(b.budget_month AS CHAR)
+            WHERE b.user_id = :userId
+              AND CAST(b.budget_month AS CHAR) = :monthKey
+            GROUP BY b.id, b.category, b.limit_amount
+            ORDER BY b.category
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findBudgetVsActual(@Param("userId") Long userId,
+                                                      @Param("monthKey") String monthKey);
+
+    @Query(value = """
+            SELECT DATE_FORMAT(t.transaction_date, '%Y-%m') AS label,
+                   COALESCE(SUM(CASE WHEN t.transaction_type = 'CREDIT' THEN t.amount ELSE -t.amount END), 0) AS value,
+                   0 AS secondaryValue
+            FROM transactions t
+            JOIN accounts a ON a.id = t.account_id
+            WHERE a.user_id = :userId
+              AND a.is_active = true
+              AND t.transaction_date >= :startDate
+            GROUP BY DATE_FORMAT(t.transaction_date, '%Y-%m')
+            ORDER BY label
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findMonthlyNetMovement(@Param("userId") Long userId,
+                                                          @Param("startDate") LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT DATE_FORMAT(rh.earned_at, '%Y-%m') AS label,
+                   COALESCE(SUM(rh.points_earned), 0) AS value,
+                   COUNT(rh.id) AS secondaryValue
+            FROM reward_history rh
+            JOIN rewards r ON r.id = rh.reward_id
+            WHERE r.user_id = :userId
+              AND rh.earned_at >= :startDate
+            GROUP BY DATE_FORMAT(rh.earned_at, '%Y-%m')
+            ORDER BY label
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findRewardGrowth(@Param("userId") Long userId,
+                                                    @Param("startDate") LocalDateTime startDate);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(a.balance), 0)
+            FROM accounts a
+            WHERE a.user_id = :userId
+              AND a.is_active = true
+            """, nativeQuery = true)
+    BigDecimal sumActiveAccountBalance(@Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT COALESCE(SUM(la.remaining_principal), 0)
+            FROM loan_accounts la
+            WHERE la.user_id = :userId
+              AND la.status = 'ACTIVE'
+            """, nativeQuery = true)
+    BigDecimal sumOutstandingLoans(@Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT COALESCE(MAX(r.points_balance), 0)
+            FROM rewards r
+            WHERE r.user_id = :userId
+            """, nativeQuery = true)
+    Long rewardBalance(@Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT DATE_FORMAT(lr.due_date, '%Y-%m') AS label,
+                   COALESCE(SUM(lr.remaining_principal), 0) AS value,
+                   COALESCE(SUM(lr.emi_amount), 0) AS secondaryValue
+            FROM loan_repayments lr
+            JOIN loan_accounts la ON la.id = lr.loan_account_id
+            WHERE la.user_id = :userId
+              AND lr.status IN ('PENDING', 'OVERDUE')
+            GROUP BY DATE_FORMAT(lr.due_date, '%Y-%m')
+            ORDER BY label
+            """, nativeQuery = true)
+    List<AnalyticsPointProjection> findLoanPayoffForecast(@Param("userId") Long userId);
 }

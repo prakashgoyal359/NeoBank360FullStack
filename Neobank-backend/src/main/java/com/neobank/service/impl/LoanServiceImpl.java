@@ -14,6 +14,8 @@ import com.neobank.service.NotificationService;
 import com.neobank.util.EmiCalculatorUtil;
 import com.neobank.util.PaymentCategoryUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +47,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "loanProducts", allEntries = true)
     public LoanProductDTO createLoanProduct(LoanProductRequest request, Long adminId) {
         validateLoanProductRequest(request);
 
@@ -72,6 +75,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "loanProducts", allEntries = true)
     public LoanProductDTO updateLoanProduct(Long id, LoanProductRequest request) {
         validateLoanProductRequest(request);
 
@@ -97,6 +101,7 @@ public class LoanServiceImpl implements LoanService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "loanProducts", allEntries = true)
     public void deleteLoanProduct(Long id) {
         LoanProduct product = loanProductRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Loan product not found"));
@@ -112,6 +117,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    @Cacheable(value = "loanProducts", key = "'all'")
     public List<LoanProductDTO> getAllLoanProducts() {
         return loanProductRepository.findAll().stream()
                 .map(this::mapProductToDTO)
@@ -119,6 +125,7 @@ public class LoanServiceImpl implements LoanService {
     }
 
     @Override
+    @Cacheable(value = "loanProducts", key = "'active'")
     public List<LoanProductDTO> getActiveLoanProducts() {
         return loanProductRepository.findByIsActiveTrue().stream()
                 .map(this::mapProductToDTO)

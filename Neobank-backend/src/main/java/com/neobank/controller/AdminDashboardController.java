@@ -1,9 +1,12 @@
 package com.neobank.controller;
 
 import com.neobank.dto.AdminDashboardDTO;
+import com.neobank.dto.AdminAdvancedAnalyticsDTO;
 import com.neobank.dto.PendingApprovalDTO;
 import com.neobank.dto.SystemHealthDTO;
 import com.neobank.dto.UserActivityDTO;
+import com.neobank.dto.TransactionAnalyticsDTO;
+import com.neobank.dto.LoanAnalyticsDTO;
 import com.neobank.security.SecurityUtils;
 import com.neobank.service.AdminDashboardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,6 +38,28 @@ public class AdminDashboardController {
     @Operation(summary = "Admin analytics dashboard", description = "ADMIN only KPI analytics generated from live database values")
     public ResponseEntity<AdminDashboardDTO> getDashboard() {
         return ResponseEntity.ok(adminDashboardService.getDashboard(securityUtils.getCurrentUser().getId()));
+    }
+
+    @GetMapping("/analytics/advanced")
+    @Operation(summary = "Advanced admin analytics", description = "ADMIN only transaction, loan, and derived audit analytics for 7D, 30D, or YTD")
+    public ResponseEntity<AdminAdvancedAnalyticsDTO> getAdvancedAnalytics(
+            @RequestParam(defaultValue = "30D") String period) {
+        return ResponseEntity.ok(adminDashboardService.getAdvancedAnalytics(period,
+                securityUtils.getCurrentUser().getId()));
+    }
+
+    @GetMapping("/analytics/transactions")
+    @Operation(summary = "Transaction analytics", description = "ADMIN only transaction analytics for 7D, 30D, or YTD")
+    public ResponseEntity<TransactionAnalyticsDTO> getTransactionAnalytics(
+            @RequestParam(defaultValue = "30D") String period) {
+        return ResponseEntity.ok(adminDashboardService.getTransactionAnalytics(period,
+                securityUtils.getCurrentUser().getId()));
+    }
+
+    @GetMapping("/analytics/loans")
+    @Operation(summary = "Loan analytics", description = "ADMIN only loan approval and NPA analytics")
+    public ResponseEntity<LoanAnalyticsDTO> getLoanAnalytics() {
+        return ResponseEntity.ok(adminDashboardService.getLoanAnalytics(securityUtils.getCurrentUser().getId()));
     }
 
     @GetMapping("/pending-approvals")

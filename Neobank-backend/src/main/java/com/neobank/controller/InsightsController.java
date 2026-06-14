@@ -1,6 +1,7 @@
 package com.neobank.controller;
 
 import com.neobank.dto.FinancialInsightsDTO;
+import com.neobank.dto.UserAdvancedAnalyticsDTO;
 import com.neobank.security.SecurityUtils;
 import com.neobank.service.InsightsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,5 +29,13 @@ public class InsightsController {
     public ResponseEntity<FinancialInsightsDTO> getInsights(@PathVariable Long userId) {
         Long requesterId = securityUtils.getCurrentUser().getId();
         return ResponseEntity.ok(insightsService.getFinancialInsights(userId, requesterId));
+    }
+
+    @GetMapping("/{userId}/advanced")
+    @PreAuthorize("isAuthenticated()")
+    @Operation(summary = "Get advanced financial insights", description = "Owner-only spending, budget, wealth, reward, and loan payoff analytics")
+    public ResponseEntity<UserAdvancedAnalyticsDTO> getAdvancedInsights(@PathVariable Long userId) {
+        Long requesterId = securityUtils.getCurrentUser().getId();
+        return ResponseEntity.ok(insightsService.getAdvancedInsights(userId, requesterId));
     }
 }

@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: neobank360-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: neobank360
+      MYSQL_USER: neobank360_user
+      MYSQL_PASSWORD: NeoBank360#
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - neobank360_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./Neobank-backend
+    container_name: neobank360-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/neobank360?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: neobank360_user
+      SPRING_DATASOURCE_PASSWORD: NeoBank360#
+      JWT_SECRET: neobank360secretkeyneobank360secretkeyneobank360secretkeyneobank360secretkey
+    ports:
+      - "8080:8080"
+    volumes:
+      - neobank360_uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./Neobank-frontend
+    container_name: neobank360-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  neobank360_mysql:
+  neobank360_uploads:
