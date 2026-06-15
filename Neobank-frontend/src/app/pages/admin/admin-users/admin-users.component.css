@@ -531,84 +531,14 @@
   }
 }
 
-/* Horizontal Scrolling for Tables on All Small Screens */
-
-/* Extra Small Mobile: 320px - 374px */
-@media (max-width: 374px) {
-  .users-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table {
-    min-width: 600px;
-  }
-
-  .mat-table {
-    min-width: 600px;
-  }
-}
-
-/* Small Mobile: 375px - 424px */
-@media (min-width: 375px) and (max-width: 424px) {
-  .users-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table {
-    min-width: 600px;
-  }
-
-  .mat-table {
-    min-width: 600px;
-  }
-}
-
-/* Medium Mobile: 425px - 639px */
-@media (min-width: 425px) and (max-width: 639px) {
-  .users-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table {
-    min-width: 500px;
-  }
-
-  .mat-table {
-    min-width: 500px;
-  }
-}
-
-/* Tablet: 640px - 767px */
-@media (min-width: 640px) and (max-width: 767px) {
-  .users-table-wrapper {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table {
-    min-width: 500px;
-  }
-
-  .mat-table {
-    min-width: 500px;
-  }
-}
-
-/* Tablet Large: 768px - 1023px */
-@media (min-width: 768px) and (max-width: 1023px) {
+/* Horizontal Scrolling for Tables on Tablet */
+@media (max-width: 1023px) {
   .table-container {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .mat-table-wrapper {
-    min-width: 500px;
-  }
-
-  .mat-table {
     min-width: 500px;
   }
 }

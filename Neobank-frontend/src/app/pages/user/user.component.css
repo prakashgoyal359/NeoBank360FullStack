@@ -1143,7 +1143,8 @@
     gap: 0.5rem;
   }
 
-  .user-name {
+  .user-name,
+  .nav-text {
     display: none;
   }
 
@@ -1170,14 +1171,6 @@
 
   .sidebar.open {
     left: 0;
-  }
-
-  .sidebar.open .nav-text {
-    display: inline-block;
-  }
-
-  .sidebar:not(.open) .nav-text {
-    display: none;
   }
 
   .sidebar-nav {

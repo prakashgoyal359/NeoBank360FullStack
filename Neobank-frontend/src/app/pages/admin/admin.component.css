@@ -764,7 +764,8 @@
     gap: 0.5rem;
   }
 
-  .user-name {
+  .user-name,
+  .nav-text {
     display: none;
   }
 
@@ -793,14 +794,6 @@
     left: 0;
   }
 
-  .sidebar.open .nav-text {
-    display: inline-block;
-  }
-
-  .sidebar:not(.open) .nav-text {
-    display: none;
-  }
-
   .sidebar-nav {
     flex-direction: column;
   }
@@ -816,24 +809,6 @@
 
   .main-container {
     flex-direction: column;
-  }
-
-  /* Horizontal Scrolling for Tables on Mobile */
-  .users-list,
-  .accounts-grid,
-  .deposits-table,
-  .loans-table,
-  .data-table {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table,
-  .accounts-table,
-  .deposits-list,
-  .loans-list {
-    min-width: 600px;
-    overflow-x: auto;
   }
 
   .content-area {
@@ -888,7 +863,8 @@
     font-size: 1.2rem;
   }
 
-  .user-name {
+  .user-name,
+  .nav-text {
     display: none;
   }
 
@@ -912,14 +888,6 @@
     left: 0;
   }
 
-  .sidebar.open .nav-text {
-    display: inline-block;
-  }
-
-  .sidebar:not(.open) .nav-text {
-    display: none;
-  }
-
   .nav-item {
     padding: 0.75rem 1.2rem;
     font-size: 0.95rem;
@@ -927,24 +895,6 @@
 
   .main-container {
     flex-direction: column;
-  }
-
-  /* Horizontal Scrolling for Tables on Mobile */
-  .users-list,
-  .accounts-grid,
-  .deposits-table,
-  .loans-table,
-  .data-table {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .users-table,
-  .accounts-table,
-  .deposits-list,
-  .loans-list {
-    min-width: 600px;
-    overflow-x: auto;
   }
 
   .content-area {
@@ -980,6 +930,15 @@
     display: none;
   }
 
+  .nav-text {
+    display: none;
+  }
+
+  .btn-logout {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.85rem;
+  }
+
   .sidebar {
     position: fixed;
     left: -100%;
@@ -995,14 +954,7 @@
 
   .sidebar.open {
     transform: translateX(0);
-  }
-
-  .sidebar.open .nav-text {
-    display: inline-block;
-  }
-
-  .sidebar:not(.open) .nav-text {
-    display: none;
+    left: auto;
   }
 
   .nav-item {
