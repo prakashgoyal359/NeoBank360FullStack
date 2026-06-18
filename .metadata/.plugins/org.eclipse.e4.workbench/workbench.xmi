@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_YOKecGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.e4.legacy.ide.application" contributorURI="platform:/plugin/org.eclipse.platform" selectedElement="_YOLskGjAEfGEMa9Dc8UN4g" bindingContexts="_YOPXfWjAEfGEMa9Dc8UN4g">
-  <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;workbench>&#xD;&#xA;&lt;mruList>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsService.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/InsightsService.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/InsightsService.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsServiceImpl.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/impl/InsightsServiceImpl.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/impl/InsightsServiceImpl.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsRepository.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/repository/InsightsRepository.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/repository/InsightsRepository.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.m2e.editor.MavenPomEditor&quot; name=&quot;pom.xml&quot; tooltip=&quot;Neobank-backend/pom.xml&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/pom.xml&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeoBank360Application.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;SecurityConfig.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/config/SecurityConfig.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/config/SecurityConfig.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;DataInitializer.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/config/DataInitializer.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/config/DataInitializer.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;AccountOpeningServiceImpl.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/impl/AccountOpeningServiceImpl.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/impl/AccountOpeningServiceImpl.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;AccountOpeningService.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/AccountOpeningService.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/AccountOpeningService.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;SpringBootPropertyEditor&quot; name=&quot;application.properties&quot; tooltip=&quot;Neobank-backend/src/main/resources/application.properties&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/resources/application.properties&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeobankBackendApplication.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeobankBackendApplication.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/NeobankBackendApplication.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;GlobalExceptionHandler.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/exception/GlobalExceptionHandler.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/exception/GlobalExceptionHandler.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;/mruList>&#xD;&#xA;&lt;/workbench>"/>
+  <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;workbench>&#xD;&#xA;&lt;mruList>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsControllerTest.java&quot; tooltip=&quot;Neobank-backend/src/test/java/com/neobank/controller/InsightsControllerTest.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/test/java/com/neobank/controller/InsightsControllerTest.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;LoanControllerTest.java&quot; tooltip=&quot;Neobank-backend/src/test/java/com/neobank/controller/LoanControllerTest.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/test/java/com/neobank/controller/LoanControllerTest.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsService.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/InsightsService.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/InsightsService.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsServiceImpl.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/impl/InsightsServiceImpl.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/impl/InsightsServiceImpl.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsRepository.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/repository/InsightsRepository.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/repository/InsightsRepository.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.m2e.editor.MavenPomEditor&quot; name=&quot;pom.xml&quot; tooltip=&quot;Neobank-backend/pom.xml&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/pom.xml&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeoBank360Application.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;SecurityConfig.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/config/SecurityConfig.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/config/SecurityConfig.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;DataInitializer.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/config/DataInitializer.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/config/DataInitializer.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;AccountOpeningServiceImpl.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/impl/AccountOpeningServiceImpl.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/impl/AccountOpeningServiceImpl.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;AccountOpeningService.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/service/AccountOpeningService.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/service/AccountOpeningService.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;SpringBootPropertyEditor&quot; name=&quot;application.properties&quot; tooltip=&quot;Neobank-backend/src/main/resources/application.properties&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/resources/application.properties&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeobankBackendApplication.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeobankBackendApplication.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/NeobankBackendApplication.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;file factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;GlobalExceptionHandler.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/exception/GlobalExceptionHandler.java&quot;>&#xD;&#xA;&lt;persistable path=&quot;/Neobank-backend/src/main/java/com/neobank/exception/GlobalExceptionHandler.java&quot;/>&#xD;&#xA;&lt;/file>&#xD;&#xA;&lt;/mruList>&#xD;&#xA;&lt;/workbench>"/>
   <tags>activeSchemeId:org.eclipse.ui.defaultAcceleratorConfiguration</tags>
   <children xsi:type="basic:TrimmedWindow" xmi:id="_YOLskGjAEfGEMa9Dc8UN4g" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.platform" selectedElement="_YOMToGjAEfGEMa9Dc8UN4g" label="%trimmedwindow.label.eclipseSDK" x="0" y="0" width="1024" height="768">
     <persistedState key="coolBarVisible" value="true"/>
@@ -82,10 +82,11 @@
           <tags>persp.editorOnboardingCommand:New$$$Ctrl+N</tags>
           <tags>persp.editorOnboardingCommand:Open Type$$$Ctrl+Shift+T</tags>
           <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTo2jAEfGEMa9Dc8UN4g" selectedElement="_YOMTr2jAEfGEMa9Dc8UN4g" horizontal="true">
-            <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTpGjAEfGEMa9Dc8UN4g" containerData="1576" selectedElement="_YOMTpWjAEfGEMa9Dc8UN4g">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTpGjAEfGEMa9Dc8UN4g" containerData="1882" selectedElement="_YOMTpWjAEfGEMa9Dc8UN4g">
               <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTpWjAEfGEMa9Dc8UN4g" containerData="6000" selectedElement="_YOMTpmjAEfGEMa9Dc8UN4g">
-                <children xsi:type="basic:PartStack" xmi:id="_YOMTpmjAEfGEMa9Dc8UN4g" elementId="left" containerData="6600" selectedElement="_YOMTp2jAEfGEMa9Dc8UN4g">
+                <children xsi:type="basic:PartStack" xmi:id="_YOMTpmjAEfGEMa9Dc8UN4g" elementId="left" containerData="6600" selectedElement="_YOMTqmjAEfGEMa9Dc8UN4g">
                   <tags>org.eclipse.e4.primaryNavigationStack</tags>
+                  <tags>active</tags>
                   <children xsi:type="advanced:Placeholder" xmi:id="_YOMTp2jAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.ui.PackageExplorer" ref="_YOOI6GjAEfGEMa9Dc8UN4g" closeable="true">
                     <tags>View</tags>
                     <tags>categoryTag:Java</tags>
@@ -98,7 +99,7 @@
                     <tags>View</tags>
                     <tags>categoryTag:General</tags>
                   </children>
-                  <children xsi:type="advanced:Placeholder" xmi:id="_YOMTqmjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.junit.ResultView" toBeRendered="false" ref="_YOOJSmjAEfGEMa9Dc8UN4g" closeable="true">
+                  <children xsi:type="advanced:Placeholder" xmi:id="_YOMTqmjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.junit.ResultView" ref="_YOOJSmjAEfGEMa9Dc8UN4g" closeable="true">
                     <tags>View</tags>
                     <tags>categoryTag:Java</tags>
                   </children>
@@ -117,8 +118,8 @@
                 </children>
               </children>
             </children>
-            <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTr2jAEfGEMa9Dc8UN4g" containerData="8424" selectedElement="_YOMTuWjAEfGEMa9Dc8UN4g">
-              <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTsGjAEfGEMa9Dc8UN4g" containerData="5696" selectedElement="_YOMTsWjAEfGEMa9Dc8UN4g" horizontal="true">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTr2jAEfGEMa9Dc8UN4g" containerData="8118" selectedElement="_YOMTuWjAEfGEMa9Dc8UN4g">
+              <children xsi:type="basic:PartSashContainer" xmi:id="_YOMTsGjAEfGEMa9Dc8UN4g" containerData="5669" selectedElement="_YOMTsWjAEfGEMa9Dc8UN4g" horizontal="true">
                 <children xsi:type="advanced:Placeholder" xmi:id="_YOMTsWjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.editorss" containerData="8729" ref="_YONi2GjAEfGEMa9Dc8UN4g"/>
                 <children xsi:type="basic:PartStack" xmi:id="_YOMTsmjAEfGEMa9Dc8UN4g" elementId="right" containerData="1271" selectedElement="_YOMTs2jAEfGEMa9Dc8UN4g">
                   <tags>org.eclipse.e4.secondaryNavigationStack</tags>
@@ -148,7 +149,7 @@
                   </children>
                 </children>
               </children>
-              <children xsi:type="basic:PartStack" xmi:id="_YOMTuWjAEfGEMa9Dc8UN4g" elementId="bottom" containerData="4304" selectedElement="_YOMTvmjAEfGEMa9Dc8UN4g">
+              <children xsi:type="basic:PartStack" xmi:id="_YOMTuWjAEfGEMa9Dc8UN4g" elementId="bottom" containerData="4331" selectedElement="_YOMTvmjAEfGEMa9Dc8UN4g">
                 <tags>org.eclipse.e4.secondaryDataStack</tags>
                 <children xsi:type="advanced:Placeholder" xmi:id="_YOMTumjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.views.ProblemView" ref="_YOOJBmjAEfGEMa9Dc8UN4g" closeable="true">
                   <tags>View</tags>
@@ -221,17 +222,26 @@
       <tags>categoryTag:Help</tags>
     </sharedElements>
     <sharedElements xsi:type="advanced:Area" xmi:id="_YONi2GjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.editorss" selectedElement="_YONi2WjAEfGEMa9Dc8UN4g">
-      <children xsi:type="basic:PartStack" xmi:id="_YONi2WjAEfGEMa9Dc8UN4g" elementId="org.eclipse.e4.primaryDataStack" selectedElement="_YONi2mjAEfGEMa9Dc8UN4g">
+      <children xsi:type="basic:PartStack" xmi:id="_YONi2WjAEfGEMa9Dc8UN4g" elementId="org.eclipse.e4.primaryDataStack" selectedElement="_n_adkGsZEfGw14e7AZiqww">
         <tags>EditorStack</tags>
         <tags>org.eclipse.e4.primaryDataStack</tags>
-        <tags>active</tags>
-        <tags>noFocus</tags>
         <children xsi:type="basic:Part" xmi:id="_YONi2mjAEfGEMa9Dc8UN4g" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="NeoBank360Application.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.svg" closeable="true">
-          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeoBank360Application.java&quot; partName=&quot;NeoBank360Application.java&quot; title=&quot;NeoBank360Application.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;526&quot; selectionTopPixel=&quot;0&quot;/>&#xD;&#xA;&lt;/editor>"/>
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;NeoBank360Application.java&quot; partName=&quot;NeoBank360Application.java&quot; title=&quot;NeoBank360Application.java&quot; tooltip=&quot;Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/Neobank-backend/src/main/java/com/neobank/NeoBank360Application.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;1095&quot; selectionTopPixel=&quot;0&quot;/>&#xD;&#xA;&lt;/editor>"/>
           <tags>Editor</tags>
           <tags>removeOnHide</tags>
           <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
-          <tags>active</tags>
+        </children>
+        <children xsi:type="basic:Part" xmi:id="_n_adkGsZEfGw14e7AZiqww" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="InsightsControllerTest.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.svg" closeable="true">
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;InsightsControllerTest.java&quot; partName=&quot;InsightsControllerTest.java&quot; title=&quot;InsightsControllerTest.java&quot; tooltip=&quot;Neobank-backend/src/test/java/com/neobank/controller/InsightsControllerTest.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/Neobank-backend/src/test/java/com/neobank/controller/InsightsControllerTest.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;0&quot; selectionOffset=&quot;1856&quot; selectionTopPixel=&quot;464&quot;/>&#xD;&#xA;&lt;/editor>"/>
+          <tags>Editor</tags>
+          <tags>removeOnHide</tags>
+          <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
+        </children>
+        <children xsi:type="basic:Part" xmi:id="_y3T0MGsZEfGw14e7AZiqww" elementId="org.eclipse.e4.ui.compatibility.editor" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityEditor" label="LoanControllerTest.java" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/obj16/jcu_obj.svg" closeable="true">
+          <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;editor id=&quot;org.eclipse.jdt.ui.CompilationUnitEditor&quot; name=&quot;LoanControllerTest.java&quot; partName=&quot;LoanControllerTest.java&quot; title=&quot;LoanControllerTest.java&quot; tooltip=&quot;Neobank-backend/src/test/java/com/neobank/controller/LoanControllerTest.java&quot;>&#xD;&#xA;&lt;input factoryID=&quot;org.eclipse.ui.part.FileEditorInputFactory&quot; path=&quot;/Neobank-backend/src/test/java/com/neobank/controller/LoanControllerTest.java&quot;/>&#xD;&#xA;&lt;editorState selectionHorizontalPixel=&quot;0&quot; selectionLength=&quot;1011&quot; selectionOffset=&quot;2978&quot; selectionTopPixel=&quot;1104&quot;/>&#xD;&#xA;&lt;/editor>"/>
+          <tags>Editor</tags>
+          <tags>removeOnHide</tags>
+          <tags>org.eclipse.jdt.ui.CompilationUnitEditor</tags>
         </children>
       </children>
     </sharedElements>
@@ -245,7 +255,7 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_YOOJAGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.ui.PackageExplorer"/>
+      <toolbar xmi:id="_YOOJAGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.ui.PackageExplorer" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_YOOJBGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.ui.TypeHierarchy" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Type Hierarchy" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/eview16/class_hi.svg" tooltip="" closeable="true">
       <persistedState key="originalCompatibilityViewClass" value="org.eclipse.jdt.internal.ui.typehierarchy.TypeHierarchyViewPart"/>
@@ -299,7 +309,7 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_YOOJD2jAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.console.ConsoleView"/>
+      <toolbar xmi:id="_YOOJD2jAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.console.ConsoleView" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_YOOJH2jAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.views.BookmarkView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Bookmarks" iconURI="platform:/plugin/org.eclipse.ui.ide/icons/full/eview16/bkmrk_nav.svg" tooltip="" closeable="true">
       <persistedState key="originalCompatibilityViewClass" value="org.eclipse.ui.internal.views.markers.BookmarksView"/>
@@ -323,7 +333,7 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_YOOJNWjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.views.ContentOutline"/>
+      <toolbar xmi:id="_YOOJNWjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.views.ContentOutline" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_YOOJRGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.texteditor.TemplatesView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Templates" iconURI="platform:/plugin/org.eclipse.jdt.ui/icons/full/eview16/templates.svg" tooltip="" closeable="true">
       <persistedState key="originalCompatibilityViewClass" value="org.eclipse.ui.texteditor.templates.TemplatesView"/>
@@ -364,8 +374,16 @@
     <sharedElements xsi:type="basic:Part" xmi:id="_YOOJSmjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.junit.ResultView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="JUnit" iconURI="platform:/plugin/org.eclipse.jdt.junit/icons/full/eview16/junit.svg" tooltip="" closeable="true">
       <persistedState key="originalCompatibilityViewClass" value="org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart"/>
       <persistedState key="originalCompatibilityViewBundle" value="org.eclipse.jdt.junit"/>
+      <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xD;&#xA;&lt;view failuresOnly=&quot;false&quot; ignoredOnly=&quot;false&quot; layout=&quot;1&quot; orientation=&quot;2&quot; ratio=&quot;500&quot; scroll=&quot;false&quot; sortingCriterion=&quot;1&quot; time=&quot;true&quot;/>"/>
       <tags>View</tags>
       <tags>categoryTag:Java</tags>
+      <tags>active</tags>
+      <tags>activeOnClose</tags>
+      <menus xmi:id="_evXOgGsZEfGw14e7AZiqww" elementId="org.eclipse.jdt.junit.ResultView">
+        <tags>ViewMenu</tags>
+        <tags>menuContribution:menu</tags>
+      </menus>
+      <toolbar xmi:id="_evXOgWsZEfGw14e7AZiqww" elementId="org.eclipse.jdt.junit.ResultView" visible="false"/>
     </sharedElements>
     <sharedElements xsi:type="basic:Part" xmi:id="_YOOJS2jAEfGEMa9Dc8UN4g" elementId="org.eclipse.ant.ui.views.AntView" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.e4.compatibility.CompatibilityView" label="Ant" iconURI="platform:/plugin/org.eclipse.ant.ui/icons/full/eview16/ant_view.svg" tooltip="" closeable="true">
       <persistedState key="originalCompatibilityViewClass" value="org.eclipse.ant.internal.ui.views.AntView"/>
@@ -383,7 +401,7 @@
         <tags>ViewMenu</tags>
         <tags>menuContribution:menu</tags>
       </menus>
-      <toolbar xmi:id="_YOOJYmjAEfGEMa9Dc8UN4g" elementId="org.springframework.ide.eclipse.boot.dash.views.BootDashView"/>
+      <toolbar xmi:id="_YOOJYmjAEfGEMa9Dc8UN4g" elementId="org.springframework.ide.eclipse.boot.dash.views.BootDashView" visible="false"/>
     </sharedElements>
     <trimBars xmi:id="_YOOJbmjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.main.toolbar" contributorURI="platform:/plugin/org.eclipse.platform">
       <children xsi:type="menu:ToolBar" xmi:id="_YOOJb2jAEfGEMa9Dc8UN4g" elementId="group.file" toBeRendered="false">
@@ -392,7 +410,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOJcWjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.workbench.file">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_YOOJeWjAEfGEMa9Dc8UN4g" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.svg" tooltip="Print" command="_YOZvK2jAEfGEMa9Dc8UN4g"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_VkVpYGsZEfGw14e7AZiqww" elementId="print" visible="false" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/print_edit.svg" tooltip="Print" command="_YOZvK2jAEfGEMa9Dc8UN4g"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOJfmjAEfGEMa9Dc8UN4g" elementId="group.edit" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -400,8 +418,8 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOJgGjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.workbench.edit">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_YOOJgmjAEfGEMa9Dc8UN4g" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.svg" tooltip="Undo" enabled="false" command="_YOZIGWjAEfGEMa9Dc8UN4g"/>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_YOOJg2jAEfGEMa9Dc8UN4g" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.svg" tooltip="Redo" enabled="false" command="_YOZInWjAEfGEMa9Dc8UN4g"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_VkW3gGsZEfGw14e7AZiqww" elementId="undo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/undo_edit.svg" tooltip="Undo" enabled="false" command="_YOZIGWjAEfGEMa9Dc8UN4g"/>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_VkXekGsZEfGw14e7AZiqww" elementId="redo" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/redo_edit.svg" tooltip="Redo" enabled="false" command="_YOZInWjAEfGEMa9Dc8UN4g"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOJhGjAEfGEMa9Dc8UN4g" elementId="additions" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -425,10 +443,7 @@
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOv7mjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.workbench.navigate">
         <tags>Draggable</tags>
-        <children xsi:type="menu:HandledToolItem" xmi:id="_YOOv9GjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.svg" tooltip="Pin Editor" type="Check" command="_YOZJpmjAEfGEMa9Dc8UN4g"/>
-      </children>
-      <children xsi:type="menu:ToolBar" xmi:id="_YOOv-WjAEfGEMa9Dc8UN4g" elementId="org.eclipse.jdt.ui.CompilationUnitEditor" visible="false">
-        <tags>Draggable</tags>
+        <children xsi:type="menu:HandledToolItem" xmi:id="_VkYFoGsZEfGw14e7AZiqww" elementId="org.eclipse.ui.window.pinEditor" iconURI="platform:/plugin/org.eclipse.ui/icons/full/etool16/pin_editor.svg" tooltip="Pin Editor" enabled="false" type="Check" command="_YOZJpmjAEfGEMa9Dc8UN4g"/>
       </children>
       <children xsi:type="menu:ToolBar" xmi:id="_YOOv-mjAEfGEMa9Dc8UN4g" elementId="group.editor" toBeRendered="false">
         <tags>toolbarSeparator</tags>
@@ -1505,18 +1520,18 @@
     <tags>View</tags>
     <tags>categoryTag:Other</tags>
   </descriptors>
-  <trimContributions xmi:id="_YOXT6mjAEfGEMa9Dc8UN4g" elementId="org.eclipse.ui.ide.application.trimcontribution.QuickAccess" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" toBeRendered="false" parentId="org.eclipse.ui.main.toolbar" positionInParent="last">
-    <children xsi:type="menu:ToolControl" xmi:id="_YOXT62jAEfGEMa9Dc8UN4g" elementId="Spacer Glue" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.LayoutModifierToolControl">
+  <trimContributions xmi:id="_2r10UF9tEeO-yojH_y4TJA" elementId="org.eclipse.ui.ide.application.trimcontribution.QuickAccess" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" toBeRendered="false" parentId="org.eclipse.ui.main.toolbar" positionInParent="last">
+    <children xsi:type="menu:ToolControl" xmi:id="_76uUAF9tEeO-yojH_y4TJA" elementId="Spacer Glue" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.LayoutModifierToolControl">
       <tags>glue</tags>
       <tags>move_after:PerspectiveSpacer</tags>
       <tags>SHOW_RESTORE_MENU</tags>
     </children>
-    <children xsi:type="menu:ToolControl" xmi:id="_YOXT7GjAEfGEMa9Dc8UN4g" elementId="SearchField" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.quickaccess.SearchField">
+    <children xsi:type="menu:ToolControl" xmi:id="_8tJPcF9tEeO-yojH_y4TJA" elementId="SearchField" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.ui.workbench/org.eclipse.ui.internal.quickaccess.SearchField">
       <tags>move_after:Spacer Glue</tags>
       <tags>HIDEABLE</tags>
       <tags>SHOW_RESTORE_MENU</tags>
     </children>
-    <children xsi:type="menu:ToolControl" xmi:id="_YOXT7WjAEfGEMa9Dc8UN4g" elementId="Search-PS Glue" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.LayoutModifierToolControl">
+    <children xsi:type="menu:ToolControl" xmi:id="_9LgmcF9tEeO-yojH_y4TJA" elementId="Search-PS Glue" contributorURI="platform:/plugin/org.eclipse.ui.ide.application" contributionURI="bundleclass://org.eclipse.e4.ui.workbench.renderers.swt/org.eclipse.e4.ui.workbench.renderers.swt.LayoutModifierToolControl">
       <tags>glue</tags>
       <tags>move_after:SearchField</tags>
       <tags>SHOW_RESTORE_MENU</tags>

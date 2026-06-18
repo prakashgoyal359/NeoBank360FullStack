@@ -19,7 +19,9 @@ public final class PaymentCategoryUtil {
             return BILL_PAYMENT;
         }
 
-        String normalized = category.trim().toUpperCase(Locale.ROOT).replace(" ", "_");
+        String normalized = category.trim().toUpperCase(Locale.ROOT)
+                .replace("/", "_")
+                .replace(" ", "_");
         return switch (normalized) {
             case "ELECTRICITY", "WATER", "GAS", "LPG", "GAS_LPG" -> BILL_PAYMENT;
             case "BROADBAND", "INTERNET", "MOBILE", "DTH", "RECHARGE" -> RECHARGE_PAYMENT;
