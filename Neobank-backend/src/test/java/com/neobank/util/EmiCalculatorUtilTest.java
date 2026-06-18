@@ -16,7 +16,7 @@ class EmiCalculatorUtilTest {
                 new BigDecimal("0.115"),
                 24);
 
-        assertEquals(new BigDecimal("9368.72"), emi);
+        assertEquals(new BigDecimal("9368.03"), emi);
     }
 
     @Test

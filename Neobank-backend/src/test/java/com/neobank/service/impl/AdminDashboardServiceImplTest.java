@@ -33,6 +33,9 @@ class AdminDashboardServiceImplTest {
 
         assertEquals(new BigDecimal("35.00"), dto.getPlatformSavingsRate());
         assertEquals(4L, dto.getTotalUsers());
+        assertEquals(3L, dto.getTotalActiveUsers());
+        assertEquals(2L, dto.getTotalLoans());
+        assertEquals(1L, dto.getPendingApprovals());
         assertEquals(20L, dto.getTotalTransactions());
         verify(auditLogService).log(1L, "VIEW_ADMIN_DASHBOARD", "ADMIN_DASHBOARD", "dashboard");
     }
@@ -48,5 +51,20 @@ class AdminDashboardServiceImplTest {
         AdminDashboardDTO dto = service.getDashboard(1L);
 
         assertEquals(BigDecimal.ZERO, dto.getPlatformSavingsRate());
+    }
+
+    @Test
+    void getDashboardTreatsNullIncomeAndExpenseAsZero() {
+        AdminDashboardRepository repository = mock(AdminDashboardRepository.class);
+        AuditLogService auditLogService = mock(AuditLogService.class);
+        when(repository.totalPlatformIncome()).thenReturn(null);
+        when(repository.totalPlatformExpense()).thenReturn(null);
+        AdminDashboardServiceImpl service = new AdminDashboardServiceImpl(repository, mock(JdbcTemplate.class),
+                auditLogService);
+
+        AdminDashboardDTO dto = service.getDashboard(2L);
+
+        assertEquals(BigDecimal.ZERO, dto.getPlatformSavingsRate());
+        verify(auditLogService).log(2L, "VIEW_ADMIN_DASHBOARD", "ADMIN_DASHBOARD", "dashboard");
     }
 }

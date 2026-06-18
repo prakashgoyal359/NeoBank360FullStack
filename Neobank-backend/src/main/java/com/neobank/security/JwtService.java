@@ -75,7 +75,7 @@ public class JwtService {
             log.debug("Token is valid and not expired: {}", isNotExpired);
             return isNotExpired;
         } catch (Exception e) {
-            log.debug("Token validation failed", e);
+            log.debug("Token validation failed: {}", e.getMessage());
             return false;
         }
     }

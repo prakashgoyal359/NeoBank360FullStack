@@ -20,8 +20,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,10 +56,19 @@ class AuthServiceImplTest {
                 .password("secret")
                 .build());
 
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(authenticationManager).authenticate(argThat(authentication ->
+                authentication instanceof UsernamePasswordAuthenticationToken
+                        && "user@test.com".equals(authentication.getPrincipal())
+                        && "secret".equals(authentication.getCredentials())));
+        verify(userDetailsService).loadUserByUsername("user@test.com");
+        verify(userRepository).findByUsername("user@test.com");
+        verify(jwtService).generateToken("user@test.com", "USER", 5L);
         assertEquals("jwt-token", response.getToken());
         assertEquals(5L, response.getUserId());
+        assertEquals("user@test.com", response.getUsername());
+        assertEquals("user@test.com", response.getEmail());
         assertEquals("USER", response.getRole());
+        assertEquals("Login successful", response.getMessage());
     }
 
     @Test
@@ -68,10 +78,12 @@ class AuthServiceImplTest {
         AuthServiceImpl service = new AuthServiceImpl(mock(UserRepository.class), mock(PasswordEncoder.class),
                 authenticationManager, mock(JwtService.class), mock(CustomUserDetailsService.class));
 
-        assertThrows(BadRequestException.class, () -> service.authenticate(LoginRequest.builder()
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> service.authenticate(LoginRequest.builder()
                 .username("bad@test.com")
                 .password("wrong")
                 .build()));
+
+        assertEquals("Invalid username or password", exception.getMessage());
     }
 
     @Test
@@ -93,11 +105,15 @@ class AuthServiceImplTest {
                 .build());
 
         verify(passwordEncoder).encode("password");
-        verify(userRepository).save(org.mockito.ArgumentMatchers.argThat(user ->
+        verify(userRepository).save(argThat(user ->
                 user.getUsername().equals("new@test.com")
+                        && user.getEmail().equals("new@test.com")
+                        && user.getFullName().equals("New User")
+                        && user.getMobileNumber().equals("9999999999")
+                        && user.getGender().equals("Male")
                         && user.getRole() == UserRole.USER
-                        && user.getIsActive()
-                        && user.getIsApproved()
+                        && Boolean.TRUE.equals(user.getIsActive())
+                        && Boolean.TRUE.equals(user.getIsApproved())
                         && user.getPasswordHash().equals("encoded")));
     }
 
@@ -109,13 +125,34 @@ class AuthServiceImplTest {
         AuthServiceImpl service = new AuthServiceImpl(userRepository, mock(PasswordEncoder.class),
                 mock(AuthenticationManager.class), mock(JwtService.class), mock(CustomUserDetailsService.class));
 
-        assertThrows(BadRequestException.class, () -> service.registerUser(RegisterRequest.builder()
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> service.registerUser(RegisterRequest.builder()
                 .email("existing@test.com")
                 .password("password")
                 .fullName("Existing User")
                 .mobileNumber("9999999999")
                 .build()));
 
-        verify(userRepository, org.mockito.Mockito.never()).save(any(User.class));
+        assertEquals("Email already registered", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void registerUserRejectsDuplicateUsernameBeforeEncodingPassword() {
+        UserRepository userRepository = mock(UserRepository.class);
+        PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        when(userRepository.findByUsername("existing@test.com")).thenReturn(Optional.of(User.builder().build()));
+        AuthServiceImpl service = new AuthServiceImpl(userRepository, passwordEncoder,
+                mock(AuthenticationManager.class), mock(JwtService.class), mock(CustomUserDetailsService.class));
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () -> service.registerUser(RegisterRequest.builder()
+                .email("existing@test.com")
+                .password("password")
+                .fullName("Existing User")
+                .mobileNumber("9999999999")
+                .build()));
+
+        assertEquals("Username already exists", exception.getMessage());
+        verify(passwordEncoder, never()).encode("password");
+        verify(userRepository, never()).save(any(User.class));
     }
 }
