@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -919,20 +919,48 @@ interface LoanDecision {
 
       .selected-product-preview h3 {
         margin: 0.75rem 0 0.35rem;
-        color: #e4e4e7;
+        color: #1e293b;
       }
 
       .selected-product-preview p {
         margin: 0;
-        color: #94a3b8;
+        color: #475569;
       }
 
       .preview-metrics {
         display: grid;
         min-width: 280px;
         gap: 0.5rem;
-        color: #dbeafe;
+        color: #1e40af;
         font-weight: 600;
+      }
+
+      .dark-mode .selected-product-preview h3 {
+        color: #e4e4e7;
+      }
+
+      .dark-mode .selected-product-preview p {
+        color: #94a3b8;
+      }
+
+      .dark-mode .preview-metrics {
+        color: #dbeafe;
+      }
+
+      .loan-apply-container,
+      .loan-form-card,
+      .selected-product-preview,
+      .review-section,
+      .emi-preview-card {
+        min-width: 0;
+      }
+
+      .loan-apply-container h2,
+      .selected-product-preview h3,
+      .selected-product-preview p,
+      .review-card p,
+      .form-hint {
+        overflow-wrap: anywhere;
       }
 
       @media (max-width: 768px) {
@@ -970,6 +998,50 @@ interface LoanDecision {
 
         .step-line {
           width: 30px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .loan-apply-container {
+          padding: 0.875rem;
+        }
+
+        .page-header h2 {
+          font-size: 1.6rem;
+        }
+
+        .step-indicator {
+          align-items: flex-start;
+          overflow-x: auto;
+          padding: 0.875rem;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .step {
+          min-width: 86px;
+        }
+
+        .step span {
+          font-size: 0.72rem;
+        }
+
+        .step-line {
+          flex: 0 0 24px;
+          margin-top: 19px;
+        }
+
+        .loan-form-card {
+          padding: 1rem;
+        }
+
+        .form-actions {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+          width: 100%;
         }
       }
     `,
@@ -1013,6 +1085,10 @@ export class LoansApplyComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
+    effect(() => {
+      this.isDarkMode = this.themeService.isDarkMode();
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnInit(): void {

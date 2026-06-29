@@ -42,6 +42,11 @@
     <!-- Sidebar -->
 
     <aside class="sidebar" [class.open]="mobileMenuOpen">
+      <button class="sidebar-close" type="button" (click)="closeMobileMenu()" title="Close menu">
+        <span></span>
+        <span></span>
+      </button>
+
       <nav class="sidebar-nav">
         <button
           [class.active]="activeSection === 'home'"

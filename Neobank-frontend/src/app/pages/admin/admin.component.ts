@@ -250,6 +250,9 @@ export class AdminComponent implements OnInit {
 
   onSectionChange(section: string): void {
     this.activeSection = section;
+    if (section === 'loans') {
+      this.loanReviewApplicationId = null;
+    }
     if (section === 'home') {
       this.loadData();
     }

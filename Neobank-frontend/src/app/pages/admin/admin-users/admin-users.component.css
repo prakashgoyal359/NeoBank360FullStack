@@ -533,12 +533,79 @@
 
 /* Horizontal Scrolling for Tables on Tablet */
 @media (max-width: 1023px) {
-  .table-container {
+  .table-container,
+  .users-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  .mat-table-wrapper {
-    min-width: 500px;
+  .mat-table-wrapper,
+  .users-table {
+    min-width: 920px;
+  }
+}
+
+/* Final responsive table/form hardening */
+.users-container,
+.users-table-wrapper {
+  min-width: 0;
+}
+
+.users-table-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.users-table {
+  min-width: 980px;
+}
+
+.users-table th,
+.users-table td {
+  white-space: nowrap;
+}
+
+.users-table td:nth-child(2),
+.users-table td:nth-child(3) {
+  white-space: normal;
+  min-width: 180px;
+  overflow-wrap: anywhere;
+}
+
+.users-table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.users-table-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.45);
+  border-radius: 999px;
+}
+
+@media (max-width: 767px) {
+  .users-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .search-box {
+    max-width: none;
+    margin-left: 0;
+  }
+
+  .modal-overlay {
+    padding: 1rem;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-height: calc(100vh - 2rem);
+  }
+
+  .modal-actions {
+    flex-direction: column;
   }
 }

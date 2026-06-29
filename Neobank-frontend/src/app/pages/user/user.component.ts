@@ -263,6 +263,8 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
   reward: { id: number; pointsBalance: number } | null = null;
 
   rewardHistory: { id: number; pointsEarned: number; description: string; earnedAt: string }[] = [];
+  showAllRewards = false;
+  rewardMonthFilter = '';
 
   // Notifications
 
@@ -461,13 +463,37 @@ export class UserComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.bankingService.getRewardHistory().subscribe({
       next: (history) => {
-        this.rewardHistory = history;
+        this.rewardHistory = [...history].sort(
+          (a, b) => new Date(b.earnedAt).getTime() - new Date(a.earnedAt).getTime(),
+        );
 
         this.cdr.detectChanges();
       },
 
       error: (error) => console.error('Error loading reward history:', error),
     });
+  }
+
+  get rewardMonthOptions(): string[] {
+    return Array.from(
+      new Set(
+        this.rewardHistory
+          .filter((history) => history.earnedAt)
+          .map((history) => history.earnedAt.slice(0, 7)),
+      ),
+    ).sort((a, b) => b.localeCompare(a));
+  }
+
+  get visibleRewardHistory(): { id: number; pointsEarned: number; description: string; earnedAt: string }[] {
+    const filtered = this.rewardMonthFilter
+      ? this.rewardHistory.filter((history) => history.earnedAt?.startsWith(this.rewardMonthFilter))
+      : this.rewardHistory;
+    return this.showAllRewards ? filtered : filtered.slice(0, 10);
+  }
+
+  toggleAllRewards(): void {
+    this.showAllRewards = !this.showAllRewards;
+    this.cdr.detectChanges();
   }
 
   loadNotifications(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -682,8 +682,18 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
 
     .schedule-table {
       overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       border-radius: 10px;
       background: white;
+    }
+
+    .schedule-table::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .schedule-table::-webkit-scrollbar-thumb {
+      background: rgba(96, 165, 250, 0.45);
+      border-radius: 999px;
     }
 
     .legacy-hidden { display: none; }
@@ -693,6 +703,7 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
     table,
     .repayment-mat-table {
       width: 100%;
+      min-width: 860px;
       border-collapse: collapse;
       background: transparent;
     }
@@ -733,6 +744,57 @@ import { LoanService, LoanAccount, LoanRepayment, LoanApplication, LoanDashboard
       .emi-details { grid-template-columns: repeat(2, 1fr); }
       .tabs { overflow-x: auto; }
       .tab { white-space: nowrap; }
+    }
+
+    @media (max-width: 640px) {
+      .my-loans-container {
+        padding: 0.875rem;
+      }
+
+      .page-header h2 {
+        font-size: 1.55rem;
+      }
+
+      .loan-card,
+      .application-card,
+      .emi-card {
+        padding: 1rem;
+      }
+
+      .loan-header,
+      .application-header,
+      .emi-header,
+      .modal-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .loan-details-grid,
+      .emi-details {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        gap: 0.25rem;
+        padding-bottom: 0.25rem;
+      }
+
+      .tab {
+        flex: 0 0 auto;
+        padding: 0.85rem 1rem;
+      }
+
+      .modal-overlay {
+        align-items: flex-start;
+        overflow-y: auto;
+        padding: 1rem;
+      }
+
+      .modal-content {
+        width: 100%;
+        max-height: calc(100vh - 2rem);
+      }
     }
   `]
 })
@@ -777,6 +839,10 @@ export class MyLoansComponent implements OnInit {
     private cdr: ChangeDetectorRef
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
+    effect(() => {
+      this.isDarkMode = this.themeService.isDarkMode();
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnInit(): void {

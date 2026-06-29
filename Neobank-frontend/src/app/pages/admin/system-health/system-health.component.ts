@@ -124,8 +124,28 @@ import { ThemeService } from '../../../services/theme.service';
         color: #f87171;
       }
       @media (max-width: 900px) {
+        .health {
+          padding: 1rem;
+        }
+        .title-row {
+          align-items: stretch;
+          flex-direction: column;
+          gap: 0.9rem;
+        }
+        button {
+          width: 100%;
+          min-height: 46px;
+        }
         .health-grid {
           grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 420px) {
+        .health {
+          padding: 0.875rem;
+        }
+        h2 {
+          font-size: 1.35rem;
         }
       }
     `,

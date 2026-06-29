@@ -1,8 +1,21 @@
 <div class="user-dashboard" [class.dark-mode]="themeService.isDarkMode()">
+  <div class="sidebar-overlay" [class.active]="mobileMenuOpen" (click)="closeMobileMenu()"></div>
+
   <!-- Top Header -->
 
   <header class="top-header">
     <div class="header-left">
+      <button
+        class="hamburger-menu"
+        (click)="toggleMobileMenu()"
+        [class.active]="mobileMenuOpen"
+        title="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <h1 class="logo">NeoBank360</h1>
     </div>
 
@@ -26,7 +39,12 @@
   <div class="main-container">
     <!-- Sidebar -->
 
-    <aside class="sidebar">
+    <aside class="sidebar" [class.open]="mobileMenuOpen">
+      <button class="sidebar-close" type="button" (click)="closeMobileMenu()" title="Close menu">
+        <span></span>
+        <span></span>
+      </button>
+
       <nav class="sidebar-nav">
         <button
           class="nav-item"
@@ -497,9 +515,29 @@
         </div>
 
         <div class="reward-history" *ngIf="rewardHistory.length > 0">
-          <h3>Reward History</h3>
+          <div class="reward-history-header">
+            <div>
+              <h3>Reward History</h3>
+              <p class="reward-history-subtitle">
+                {{ showAllRewards ? 'Showing filtered reward history' : 'Showing latest 10 rewards' }}
+              </p>
+            </div>
 
-          <div class="history-item" *ngFor="let history of rewardHistory">
+            <div class="reward-history-actions">
+              <select [(ngModel)]="rewardMonthFilter" class="reward-month-filter">
+                <option value="">All Months</option>
+                <option *ngFor="let month of rewardMonthOptions" [value]="month">
+                  {{ month }}
+                </option>
+              </select>
+
+              <button class="btn-small" type="button" (click)="toggleAllRewards()">
+                {{ showAllRewards ? 'Show Latest 10' : 'See All Rewards' }}
+              </button>
+            </div>
+          </div>
+
+          <div class="history-item" *ngFor="let history of visibleRewardHistory">
             <span class="history-description">{{ history.description || 'Reward' }}</span>
 
             <span class="history-points positive"> +{{ history.pointsEarned }} points </span>

@@ -23,48 +23,50 @@ import { ThemeService } from '../../../services/theme.service';
         </div>
         <input [(ngModel)]="search" (keyup.enter)="loadUsers()" placeholder="Search users" />
       </div>
-      <table mat-table [dataSource]="users" class="user-table">
-        <ng-container matColumnDef="id"
-          ><th mat-header-cell *matHeaderCellDef>User ID</th>
-          <td mat-cell *matCellDef="let user">{{ user.id }}</td></ng-container
-        >
-        <ng-container matColumnDef="fullName"
-          ><th mat-header-cell *matHeaderCellDef>Full Name</th>
-          <td mat-cell *matCellDef="let user">{{ user.fullName }}</td></ng-container
-        >
-        <ng-container matColumnDef="email"
-          ><th mat-header-cell *matHeaderCellDef>Email</th>
-          <td mat-cell *matCellDef="let user">{{ user.email }}</td></ng-container
-        >
-        <ng-container matColumnDef="role"
-          ><th mat-header-cell *matHeaderCellDef>Role</th>
-          <td mat-cell *matCellDef="let user">{{ user.role }}</td></ng-container
-        >
-        <ng-container matColumnDef="status"
-          ><th mat-header-cell *matHeaderCellDef>Status</th>
-          <td mat-cell *matCellDef="let user">
-            <span class="chip" [class.active]="user.isActive" [class.inactive]="!user.isActive">{{
-              user.isActive ? 'ACTIVE' : 'INACTIVE'
-            }}</span>
-          </td></ng-container
-        >
-        <ng-container matColumnDef="createdAt"
-          ><th mat-header-cell *matHeaderCellDef>Registered Date</th>
-          <td mat-cell *matCellDef="let user">
-            {{ user.createdAt | date: 'mediumDate' }}
-          </td></ng-container
-        >
-        <ng-container matColumnDef="actions"
-          ><th mat-header-cell *matHeaderCellDef>Actions</th>
-          <td mat-cell *matCellDef="let user">
-            <button (click)="toggleStatus(user)">
-              {{ user.isActive ? 'Deactivate' : 'Activate' }}</button
-            ><button class="ghost" (click)="loadActivity(user)">Activity</button>
-          </td></ng-container
-        >
-        <tr mat-header-row *matHeaderRowDef="columns"></tr>
-        <tr mat-row *matRowDef="let row; columns: columns"></tr>
-      </table>
+      <div class="table-scroll">
+        <table mat-table [dataSource]="users" class="user-table">
+          <ng-container matColumnDef="id"
+            ><th mat-header-cell *matHeaderCellDef>User ID</th>
+            <td mat-cell *matCellDef="let user">{{ user.id }}</td></ng-container
+          >
+          <ng-container matColumnDef="fullName"
+            ><th mat-header-cell *matHeaderCellDef>Full Name</th>
+            <td mat-cell *matCellDef="let user">{{ user.fullName }}</td></ng-container
+          >
+          <ng-container matColumnDef="email"
+            ><th mat-header-cell *matHeaderCellDef>Email</th>
+            <td mat-cell *matCellDef="let user">{{ user.email }}</td></ng-container
+          >
+          <ng-container matColumnDef="role"
+            ><th mat-header-cell *matHeaderCellDef>Role</th>
+            <td mat-cell *matCellDef="let user">{{ user.role }}</td></ng-container
+          >
+          <ng-container matColumnDef="status"
+            ><th mat-header-cell *matHeaderCellDef>Status</th>
+            <td mat-cell *matCellDef="let user">
+              <span class="chip" [class.active]="user.isActive" [class.inactive]="!user.isActive">{{
+                user.isActive ? 'ACTIVE' : 'INACTIVE'
+              }}</span>
+            </td></ng-container
+          >
+          <ng-container matColumnDef="createdAt"
+            ><th mat-header-cell *matHeaderCellDef>Registered Date</th>
+            <td mat-cell *matCellDef="let user">
+              {{ user.createdAt | date: 'mediumDate' }}
+            </td></ng-container
+          >
+          <ng-container matColumnDef="actions"
+            ><th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let user">
+              <button (click)="toggleStatus(user)">
+                {{ user.isActive ? 'Deactivate' : 'Activate' }}</button
+              ><button class="ghost" (click)="loadActivity(user)">Activity</button>
+            </td></ng-container
+          >
+          <tr mat-header-row *matHeaderRowDef="columns"></tr>
+          <tr mat-row *matRowDef="let row; columns: columns"></tr>
+        </table>
+      </div>
       <mat-paginator
         [length]="total"
         [pageSize]="pageSize"
@@ -123,10 +125,25 @@ import { ThemeService } from '../../../services/theme.service';
       }
       .user-table {
         width: 100%;
+        min-width: 920px;
         background: #ffffff;
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid #e5e7eb;
+      }
+      .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+      }
+      .table-scroll::-webkit-scrollbar {
+        height: 8px;
+      }
+      .table-scroll::-webkit-scrollbar-thumb {
+        background: rgba(59, 130, 246, 0.45);
+        border-radius: 999px;
       }
       .mat-mdc-header-cell {
         color: #374151;
@@ -269,6 +286,36 @@ import { ThemeService } from '../../../services/theme.service';
       }
       .users.dark-mode .empty {
         color: #a8bddf;
+      }
+      @media (max-width: 1023px) {
+        .users {
+          padding: 1rem;
+        }
+        .title-row {
+          align-items: stretch;
+          flex-direction: column;
+        }
+        input {
+          width: 100%;
+          min-width: 0;
+          font-size: 16px;
+        }
+        .activity {
+          overflow-x: auto;
+        }
+        .activity-row {
+          min-width: 720px;
+        }
+      }
+      @media (max-width: 640px) {
+        .users {
+          padding: 0.875rem;
+        }
+        .activity-row {
+          grid-template-columns: 1fr;
+          min-width: 0;
+          gap: 0.35rem;
+        }
       }
     `,
   ],

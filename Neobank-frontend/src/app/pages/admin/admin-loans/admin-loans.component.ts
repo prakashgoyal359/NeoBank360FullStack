@@ -1,10 +1,26 @@
-import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  effect,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ThemeService } from '../../../services/theme.service';
 import { ThemeToggleComponent } from '../../../components/theme-toggle/theme-toggle.component';
 import { AuthService } from '../../../services/auth.service';
-import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanApplicationRequest, LoanDecisionRequest, LoanDashboard } from '../../../services/loan.service';
+import {
+  LoanService,
+  LoanProduct,
+  LoanProductRequest,
+  LoanApplication,
+  LoanApplicationRequest,
+  LoanDecisionRequest,
+  LoanDashboard,
+} from '../../../services/loan.service';
 
 @Component({
   selector: 'app-admin-loans',
@@ -26,15 +42,27 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
         <!-- Sidebar -->
         <aside class="sidebar">
           <nav class="sidebar-nav">
-            <button class="nav-item" [class.active]="activeSection === 'products'" (click)="activeSection = 'products'">
+            <button
+              class="nav-item"
+              [class.active]="activeSection === 'products'"
+              (click)="activeSection = 'products'"
+            >
               <span class="nav-icon">📦</span>
               <span class="nav-text">Loan Products</span>
             </button>
-            <button class="nav-item" [class.active]="activeSection === 'applications'" (click)="activeSection = 'applications'; loadApplications()">
+            <button
+              class="nav-item"
+              [class.active]="activeSection === 'applications'"
+              (click)="activeSection = 'applications'; loadApplications()"
+            >
               <span class="nav-icon">📋</span>
               <span class="nav-text">Applications</span>
             </button>
-            <button class="nav-item" [class.active]="activeSection === 'dashboard'" (click)="activeSection = 'dashboard'">
+            <button
+              class="nav-item"
+              [class.active]="activeSection === 'dashboard'"
+              (click)="activeSection = 'dashboard'"
+            >
               <span class="nav-icon">📊</span>
               <span class="nav-text">Dashboard</span>
             </button>
@@ -120,8 +148,10 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
                 <tbody>
                   <tr *ngFor="let product of products">
                     <td>{{ product.productName }}</td>
-                    <td><span class="type-badge">{{ formatLoanType(product.loanType) }}</span></td>
-                    <td>{{ product.interestRate * 100 | number:'1.2-2' }}%</td>
+                    <td>
+                      <span class="type-badge">{{ formatLoanType(product.loanType) }}</span>
+                    </td>
+                    <td>{{ product.interestRate * 100 | number: '1.2-2' }}%</td>
                     <td>₹{{ product.minAmount | number }} - ₹{{ product.maxAmount | number }}</td>
                     <td>{{ product.minTenure }} - {{ product.maxTenure }} months</td>
                     <td>
@@ -130,8 +160,12 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
                       </span>
                     </td>
                     <td>
-                      <button class="btn-action" (click)="editProduct(product)">Edit</button>
-                      <button class="btn-action delete" (click)="deleteProduct(product)">Delete</button>
+                      <div class="product-actions">
+                        <button class="btn-action" (click)="editProduct(product)">Edit</button>
+                        <button class="btn-action delete" (click)="deleteProduct(product)">
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -147,13 +181,25 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
 
             <!-- Application Tabs -->
             <div class="tabs">
-              <button class="tab" [class.active]="appTab === 'pending'" (click)="appTab = 'pending'; loadApplications()">
+              <button
+                class="tab"
+                [class.active]="appTab === 'pending'"
+                (click)="appTab = 'pending'; loadApplications()"
+              >
                 Pending ({{ pendingApplications.length }})
               </button>
-              <button class="tab" [class.active]="appTab === 'approved'" (click)="appTab = 'approved'; loadApplications()">
+              <button
+                class="tab"
+                [class.active]="appTab === 'approved'"
+                (click)="appTab = 'approved'; loadApplications()"
+              >
                 Approved ({{ approvedApplications.length }})
               </button>
-              <button class="tab" [class.active]="appTab === 'rejected'" (click)="appTab = 'rejected'; loadApplications()">
+              <button
+                class="tab"
+                [class.active]="appTab === 'rejected'"
+                (click)="appTab = 'rejected'; loadApplications()"
+              >
                 Rejected ({{ rejectedApplications.length }})
               </button>
             </div>
@@ -198,12 +244,19 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
               <div class="app-actions">
                 <button class="btn-review" (click)="openApplicationReview(app)">Review</button>
                 <ng-container *ngIf="appTab === 'pending'">
-                <button class="btn-approve" (click)="openDecisionModal(app, 'APPROVED')">Approve</button>
-                <button class="btn-reject" (click)="openDecisionModal(app, 'REJECTED')">Reject</button>
+                  <button class="btn-approve" (click)="openDecisionModal(app, 'APPROVED')">
+                    Approve
+                  </button>
+                  <button class="btn-reject" (click)="openDecisionModal(app, 'REJECTED')">
+                    Reject
+                  </button>
                 </ng-container>
               </div>
 
-              <div *ngIf="app.status === 'REJECTED' && app.rejectionReason" class="rejection-reason">
+              <div
+                *ngIf="app.status === 'REJECTED' && app.rejectionReason"
+                class="rejection-reason"
+              >
                 <strong>Rejection Reason:</strong> {{ app.rejectionReason }}
               </div>
             </div>
@@ -235,7 +288,11 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
             </div>
             <div class="form-group">
               <label>Description</label>
-              <textarea [(ngModel)]="productForm.description" class="form-input" rows="3"></textarea>
+              <textarea
+                [(ngModel)]="productForm.description"
+                class="form-input"
+                rows="3"
+              ></textarea>
             </div>
             <div class="form-row">
               <div class="form-group">
@@ -250,11 +307,21 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
             <div class="form-row">
               <div class="form-group">
                 <label>Interest Rate (%)</label>
-                <input type="number" [(ngModel)]="productForm.interestRate" step="0.01" class="form-input" />
+                <input
+                  type="number"
+                  [(ngModel)]="productForm.interestRate"
+                  step="0.01"
+                  class="form-input"
+                />
               </div>
               <div class="form-group">
                 <label>Processing Fee (%)</label>
-                <input type="number" [(ngModel)]="productForm.processingFee" step="0.01" class="form-input" />
+                <input
+                  type="number"
+                  [(ngModel)]="productForm.processingFee"
+                  step="0.01"
+                  class="form-input"
+                />
               </div>
             </div>
             <div class="form-row">
@@ -269,7 +336,12 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
             </div>
             <div class="form-group">
               <label>Allowed Tenures (comma-separated)</label>
-              <input type="text" [(ngModel)]="productForm.allowedTenures" class="form-input" placeholder="12,24,36,48" />
+              <input
+                type="text"
+                [(ngModel)]="productForm.allowedTenures"
+                class="form-input"
+                placeholder="12,24,36,48"
+              />
             </div>
 
             <div *ngIf="formError" class="error-message">{{ formError }}</div>
@@ -298,19 +370,34 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
 
             <div class="form-group">
               <label>Remarks</label>
-              <textarea [(ngModel)]="decisionRemarks" class="form-input" rows="3" placeholder="Add your remarks..."></textarea>
+              <textarea
+                [(ngModel)]="decisionRemarks"
+                class="form-input"
+                rows="3"
+                placeholder="Add your remarks..."
+              ></textarea>
             </div>
 
             <div *ngIf="decisionType === 'REJECTED'" class="form-group">
               <label>Rejection Reason</label>
-              <textarea [(ngModel)]="rejectionReason" class="form-input" rows="3" placeholder="Enter rejection reason..."></textarea>
+              <textarea
+                [(ngModel)]="rejectionReason"
+                class="form-input"
+                rows="3"
+                placeholder="Enter rejection reason..."
+              ></textarea>
             </div>
 
             <div *ngIf="decisionError" class="error-message">{{ decisionError }}</div>
 
             <div class="modal-actions">
               <button class="btn-secondary" (click)="closeDecisionModal()">Cancel</button>
-              <button class="btn-primary" [class.approve]="decisionType === 'APPROVED'" [class.reject]="decisionType === 'REJECTED'" (click)="submitDecision()">
+              <button
+                class="btn-primary"
+                [class.approve]="decisionType === 'APPROVED'"
+                [class.reject]="decisionType === 'REJECTED'"
+                (click)="submitDecision()"
+              >
                 Confirm {{ decisionType }}
               </button>
             </div>
@@ -319,20 +406,31 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
       </div>
 
       <!-- Application Review Modal -->
-      <div *ngIf="showApplicationReviewModal" class="modal-overlay" (click)="closeApplicationReview()">
+      <div
+        *ngIf="showApplicationReviewModal"
+        class="modal-overlay"
+        (click)="closeApplicationReview()"
+      >
         <div class="modal-content modal-wide" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>Loan Application Review</h3>
-            <button class="close-btn" (click)="closeApplicationReview()">Ã—</button>
+            <button class="close-btn" (click)="closeApplicationReview()">X</button>
           </div>
           <div class="modal-body" *ngIf="reviewApplication">
             <div class="review-hero">
               <div>
                 <span class="eyebrow">Application</span>
                 <h4>{{ reviewApplication.applicationNumber }}</h4>
-                <p>{{ reviewApplication.productName }} • {{ formatLoanType(reviewApplication.loanType) }}</p>
+                <p>
+                  {{ reviewApplication.productName }} •
+                  {{ formatLoanType(reviewApplication.loanType) }}
+                </p>
               </div>
-              <span class="status-badge review-status" [class.active]="reviewApplication.status === 'APPROVED'">{{ reviewApplication.status }}</span>
+              <span
+                class="status-badge review-status"
+                [class.active]="reviewApplication.status === 'APPROVED'"
+                >{{ reviewApplication.status }}</span
+              >
             </div>
 
             <div class="review-grid">
@@ -341,7 +439,7 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
                 <p><strong>Name:</strong> {{ reviewApplication.userName }}</p>
                 <p><strong>Email:</strong> {{ reviewApplication.userEmail }}</p>
                 <p><strong>User ID:</strong> {{ reviewApplication.userId }}</p>
-                <p><strong>Applied:</strong> {{ reviewApplication.appliedAt | date:'medium' }}</p>
+                <p><strong>Applied:</strong> {{ reviewApplication.appliedAt | date: 'medium' }}</p>
               </div>
               <div class="review-group">
                 <h5>Loan Request</h5>
@@ -352,641 +450,992 @@ import { LoanService, LoanProduct, LoanProductRequest, LoanApplication, LoanAppl
               </div>
               <div class="review-group">
                 <h5>Income & Employment</h5>
-                <p><strong>Monthly Income:</strong> ₹{{ reviewApplication.monthlyIncome || 0 | number }}</p>
-                <p><strong>Declared Income:</strong> ₹{{ reviewApplication.income || 0 | number }}</p>
-                <p><strong>Employer:</strong> {{ reviewApplication.employerName || 'Not provided' }}</p>
-                <p><strong>Designation:</strong> {{ reviewApplication.designation || 'Not provided' }}</p>
+                <p>
+                  <strong>Monthly Income:</strong> ₹{{
+                    reviewApplication.monthlyIncome || 0 | number
+                  }}
+                </p>
+                <p>
+                  <strong>Declared Income:</strong> ₹{{ reviewApplication.income || 0 | number }}
+                </p>
+                <p>
+                  <strong>Employer:</strong> {{ reviewApplication.employerName || 'Not provided' }}
+                </p>
+                <p>
+                  <strong>Designation:</strong>
+                  {{ reviewApplication.designation || 'Not provided' }}
+                </p>
               </div>
               <div class="review-group">
                 <h5>Credit Exposure</h5>
-                <p><strong>Existing EMIs:</strong> ₹{{ reviewApplication.existingEmis || 0 | number }}</p>
+                <p>
+                  <strong>Existing EMIs:</strong> ₹{{
+                    reviewApplication.existingEmis || 0 | number
+                  }}
+                </p>
                 <p><strong>Status:</strong> {{ reviewApplication.status }}</p>
-                <p><strong>Processed By:</strong> {{ reviewApplication.processedByName || 'Pending' }}</p>
-                <p><strong>Processed At:</strong> {{ reviewApplication.processedAt ? (reviewApplication.processedAt | date:'medium') : 'Pending' }}</p>
+                <p>
+                  <strong>Processed By:</strong>
+                  {{ reviewApplication.processedByName || 'Pending' }}
+                </p>
+                <p>
+                  <strong>Processed At:</strong>
+                  {{
+                    reviewApplication.processedAt
+                      ? (reviewApplication.processedAt | date: 'medium')
+                      : 'Pending'
+                  }}
+                </p>
               </div>
             </div>
 
-            <div class="review-note" *ngIf="reviewApplication.adminRemarks || reviewApplication.rejectionReason">
-              <p *ngIf="reviewApplication.adminRemarks"><strong>Admin Remarks:</strong> {{ reviewApplication.adminRemarks }}</p>
-              <p *ngIf="reviewApplication.rejectionReason"><strong>Rejection Reason:</strong> {{ reviewApplication.rejectionReason }}</p>
+            <div
+              class="review-note"
+              *ngIf="reviewApplication.adminRemarks || reviewApplication.rejectionReason"
+            >
+              <p *ngIf="reviewApplication.adminRemarks">
+                <strong>Admin Remarks:</strong> {{ reviewApplication.adminRemarks }}
+              </p>
+              <p *ngIf="reviewApplication.rejectionReason">
+                <strong>Rejection Reason:</strong> {{ reviewApplication.rejectionReason }}
+              </p>
             </div>
 
             <div class="modal-actions" *ngIf="reviewApplication.status === 'PENDING'">
               <button class="btn-secondary" (click)="closeApplicationReview()">Close</button>
-              <button class="btn-primary approve" (click)="openDecisionFromReview('APPROVED')">Approve</button>
-              <button class="btn-primary reject" (click)="openDecisionFromReview('REJECTED')">Reject</button>
+              <button class="btn-primary approve" (click)="openDecisionFromReview('APPROVED')">
+                Approve
+              </button>
+              <button class="btn-primary reject" (click)="openDecisionFromReview('REJECTED')">
+                Reject
+              </button>
             </div>
           </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .admin-loans-container {
-      min-height: 100vh;
-      background: #f5f7fa;
-      color: #1a1a2e;
-    }
-
-    .admin-loans-container .top-header,
-    .admin-loans-container .sidebar-footer {
-      display: none;
-    }
-
-    .dark-mode {
-      background: #1a1a2e;
-      color: #e4e4e7;
-    }
-
-    /* Header */
-    .top-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background: white;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .dark-mode .top-header {
-      background: #16213e;
-    }
-
-    .logo { font-size: 1.5rem; font-weight: 700; color: #3b82f6; }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .user-name { font-weight: 600; color: #1a1a2e; }
-    .dark-mode .user-name { color: #e4e4e7; }
-
-    .btn-logout {
-      padding: 0.5rem 1rem;
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    /* Main Container */
-    .main-container {
-      display: flex;
-      min-height: auto;
-    }
-
-    /* Sidebar */
-    .sidebar {
-      width: 250px;
-      background: white;
-      padding: 2rem 0;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-    }
-
-    .dark-mode .sidebar {
-      background: #16213e;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 1.5rem;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 1rem;
-      color: #64748b;
-      text-align: left;
-      transition: all 0.3s ease;
-    }
-
-    .nav-item:hover {
-      background: #f1f5f9;
-      color: #3b82f6;
-    }
-
-    .nav-item.active {
-      background: #eff6ff;
-      color: #3b82f6;
-      border-left: 4px solid #3b82f6;
-    }
-
-    .dark-mode .nav-item:hover {
-      background: #1e293b;
-      color: #60a5fa;
-    }
-
-    .dark-mode .nav-item.active {
-      background: #1e3a8a;
-      color: #60a5fa;
-    }
-
-    .nav-icon { font-size: 1.25rem; }
-
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 1rem;
-      border-top: 1px solid #e2e8f0;
-    }
-
-    .dark-mode .sidebar-footer { border-color: #2a2a4a; }
-
-    /* Content Area */
-    .content-area {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
-    }
-
-    .section h2 {
-      margin: 0 0 1.5rem;
-      color: #1e293b;
-    }
-
-    .dark-mode .section h2 { color: #e4e4e7; }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .dark-mode .stat-card { background: #16213e; }
-
-    .stat-icon { font-size: 2.5rem; }
-
-    .stat-value {
-      display: block;
-      font-size: 2rem;
-      font-weight: 700;
-      color: #3b82f6;
-    }
-
-    .stat-label {
-      color: #64748b;
-      font-size: 0.9rem;
-    }
-
-    .dark-mode .stat-label { color: #94a3b8; }
-
-    /* Table */
-    .products-table {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .dark-mode .products-table { background: #16213e; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #f8fafc;
-      padding: 1rem;
-      text-align: left;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .dark-mode th {
-      background: #0f3460;
-      color: #e4e4e7;
-    }
-
-    td {
-      padding: 1rem;
-      border-top: 1px solid #e2e8f0;
-      color: #334155;
-    }
-
-    .dark-mode td {
-      border-color: #2a2a4a;
-      color: #e4e4e7;
-    }
-
-    .type-badge {
-      background: #dbeafe;
-      color: #1e40af;
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .dark-mode .type-badge {
-      background: #1e3a8a;
-      color: #60a5fa;
-    }
-
-    .status-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      background: #fee2e2;
-      color: #dc2626;
-    }
-
-    .status-badge.active {
-      background: #d1fae5;
-      color: #059669;
-    }
-
-    .dark-mode .status-badge {
-      background: #7f1d1d;
-      color: #f87171;
-    }
-
-    .dark-mode .status-badge.active {
-      background: #064e3b;
-      color: #34d399;
-    }
-
-    .btn-action {
-      padding: 0.4rem 0.8rem;
-      margin-right: 0.5rem;
-      background: #e2e8f0;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-
-    .btn-action:hover { background: #cbd5e1; }
-    .btn-action.delete { background: #fee2e2; color: #dc2626; }
-    .btn-action.delete:hover { background: #fecaca; }
-
-    .dark-mode .btn-action { background: #374151; color: #e4e4e7; }
-    .dark-mode .btn-action:hover { background: #4b5563; }
-    .dark-mode .btn-action.delete { background: #7f1d1d; color: #f87171; }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 2px solid #e2e8f0;
-    }
-
-    .dark-mode .tabs { border-color: #2a2a4a; }
-
-    .tab {
-      padding: 1rem 1.5rem;
-      background: none;
-      border: none;
-      font-size: 1rem;
-      color: #64748b;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-    }
-
-    .tab:hover { color: #3b82f6; }
-    .tab.active {
-      color: #3b82f6;
-      border-bottom-color: #3b82f6;
-    }
-
-    .dark-mode .tab { color: #94a3b8; }
-    .dark-mode .tab:hover,
-    .dark-mode .tab.active { color: #60a5fa; border-bottom-color: #60a5fa; }
-
-    /* Application Card */
-    .application-card {
-      background: white;
-      border-radius: 16px;
-      padding: 1.5rem;
-      margin-bottom: 1rem;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .application-card.review-target {
-      border: 2px solid #fbbf24;
-      box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.18), 0 16px 35px rgba(0, 0, 0, 0.18);
-    }
-
-    .dark-mode .application-card { background: #16213e; }
-
-    .app-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .app-info h3 { margin: 0; color: #1e293b; font-size: 1.1rem; }
-    .app-email { font-size: 0.85rem; color: #64748b; }
-    .app-number { font-family: monospace; color: #64748b; }
-
-    .dark-mode .app-info h3 { color: #e4e4e7; }
-    .dark-mode .app-email,
-    .dark-mode .app-number { color: #94a3b8; }
-
-    .app-details-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .detail-item .label {
-      display: block;
-      font-size: 0.8rem;
-      color: #64748b;
-    }
-
-    .detail-item .value {
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .dark-mode .detail-item .label { color: #94a3b8; }
-    .dark-mode .detail-item .value { color: #e4e4e7; }
-
-    .app-actions {
-      display: flex;
-      gap: 1rem;
-    }
-
-    .btn-review, .btn-approve, .btn-reject {
-      padding: 0.75rem 1.5rem;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .btn-review { background: #2563eb; color: white; }
-    .btn-review:hover { background: #1d4ed8; }
-    .btn-approve { background: #10b981; color: white; }
-    .btn-approve:hover { background: #059669; }
-    .btn-reject { background: #ef4444; color: white; }
-    .btn-reject:hover { background: #dc2626; }
-
-    .rejection-reason {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #fef2f2;
-      border-radius: 8px;
-      color: #dc2626;
-    }
-
-    .dark-mode .rejection-reason { background: #7f1d1d; color: #f87171; }
-
-    /* Empty State */
-    .empty-state {
-      text-align: center;
-      padding: 3rem;
-      background: white;
-      border-radius: 16px;
-      color: #64748b;
-    }
-
-    .dark-mode .empty-state {
-      background: #16213e;
-      color: #94a3b8;
-    }
-
-    /* Modal */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .modal-content {
-      background: white;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-content.modal-wide {
-      max-width: 860px;
-    }
-
-    .dark-mode .modal-content { background: #16213e; }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.5rem;
-      border-bottom: 1px solid #e2e8f0;
-    }
-
-    .dark-mode .modal-header { border-color: #2a2a4a; }
-
-    .modal-header h3 { margin: 0; color: #1e293b; }
-    .dark-mode .modal-header h3 { color: #e4e4e7; }
-
-    .close-btn {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: #94a3b8;
-    }
-
-    .modal-body { padding: 1.5rem; }
-
-    .form-group { margin-bottom: 1rem; }
-    .form-group label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #334155;
-    }
-
-    .dark-mode .form-group label { color: #e4e4e7; }
-
-    .form-input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border: 2px solid #e2e8f0;
-      border-radius: 10px;
-      font-size: 1rem;
-      background: white;
-    }
-
-    .form-input:focus {
-      outline: none;
-      border-color: #3b82f6;
-    }
-
-    .dark-mode .form-input {
-      background: #0f3460;
-      border-color: #2a2a4a;
-      color: #e4e4e7;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .error-message {
-      color: #ef4444;
-      padding: 0.75rem;
-      background: #fef2f2;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .dark-mode .error-message { background: #7f1d1d; }
-
-    .btn-primary, .btn-secondary {
-      padding: 0.875rem 2rem;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      border: none;
-    }
-
-    .btn-primary { background: #3b82f6; color: white; }
-    .btn-primary:hover { background: #2563eb; }
-
-    .btn-secondary { background: #e2e8f0; color: #334155; }
-    .btn-secondary:hover { background: #cbd5e1; }
-
-    .dark-mode .btn-secondary { background: #374151; color: #e4e4e7; }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      margin-top: 1rem;
-    }
-
-    .btn-primary.approve { background: #10b981; }
-    .btn-primary.approve:hover { background: #059669; }
-    .btn-primary.reject { background: #ef4444; }
-    .btn-primary.reject:hover { background: #dc2626; }
-
-    .application-summary {
-      background: #f8fafc;
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-
-    .dark-mode .application-summary { background: #1e293b; }
-    .application-summary p { margin: 0.25rem 0; }
-    .dark-mode .application-summary p { color: #e4e4e7; }
-
-    .review-hero {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: #eff6ff;
-      margin-bottom: 1rem;
-    }
-
-    .dark-mode .review-hero { background: #0f3460; }
-    .review-hero h4 { margin: 0.25rem 0; color: #1e293b; font-size: 1.35rem; }
-    .review-hero p { margin: 0; color: #64748b; }
-    .dark-mode .review-hero h4 { color: #f8fafc; }
-    .dark-mode .review-hero p { color: #bfdbfe; }
-    .eyebrow { color: #2563eb; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; }
-    .review-status { align-self: center; }
-
-    .review-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
-    }
-
-    .review-group {
-      padding: 1rem;
-      border-radius: 12px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-    }
-
-    .dark-mode .review-group {
-      background: #1e293b;
-      border-color: #2a2a4a;
-    }
-
-    .review-group h5 {
-      margin: 0 0 0.75rem;
-      color: #1e40af;
-      font-size: 1rem;
-    }
-
-    .dark-mode .review-group h5 { color: #93c5fd; }
-    .review-group p { margin: 0.4rem 0; color: #334155; }
-    .dark-mode .review-group p { color: #e4e4e7; }
-
-    .review-note {
-      margin-top: 1rem;
-      padding: 1rem;
-      border-radius: 12px;
-      background: #fffbeb;
-      color: #92400e;
-    }
-
-    .dark-mode .review-note {
-      background: #78350f;
-      color: #fde68a;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-      .app-details-grid { grid-template-columns: repeat(2, 1fr); }
-      .review-grid { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-    }
-  `]
+  styles: [
+    `
+      .admin-loans-container {
+        min-height: 100vh;
+        background: #f5f7fa;
+        color: #1a1a2e;
+      }
+
+      .admin-loans-container .top-header,
+      .admin-loans-container .sidebar-footer {
+        display: none;
+      }
+
+      .dark-mode {
+        background: #1a1a2e;
+        color: #e4e4e7;
+      }
+
+      /* Header */
+      .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .dark-mode .top-header {
+        background: #16213e;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+
+      .header-right {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .user-name {
+        font-weight: 600;
+        color: #1a1a2e;
+      }
+      .dark-mode .user-name {
+        color: #e4e4e7;
+      }
+
+      .btn-logout {
+        padding: 0.5rem 1rem;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      /* Main Container */
+      .main-container {
+        display: flex;
+        min-height: auto;
+      }
+
+      /* Sidebar */
+      .sidebar {
+        width: 250px;
+        background: white;
+        padding: 2rem 0;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .dark-mode .sidebar {
+        background: #16213e;
+      }
+
+      .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        font-size: 1rem;
+        color: #64748b;
+        text-align: left;
+        transition: all 0.3s ease;
+      }
+
+      .nav-item:hover {
+        background: #f1f5f9;
+        color: #3b82f6;
+      }
+
+      .nav-item.active {
+        background: #eff6ff;
+        color: #3b82f6;
+        border-left: 4px solid #3b82f6;
+      }
+
+      .dark-mode .nav-item:hover {
+        background: #1e293b;
+        color: #60a5fa;
+      }
+
+      .dark-mode .nav-item.active {
+        background: #1e3a8a;
+        color: #60a5fa;
+      }
+
+      .nav-icon {
+        font-size: 1.25rem;
+      }
+
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .dark-mode .sidebar-footer {
+        border-color: #2a2a4a;
+      }
+
+      /* Content Area */
+      .content-area {
+        flex: 1;
+        padding: 2rem;
+        overflow-y: auto;
+      }
+
+      .section h2 {
+        margin: 0 0 1.5rem;
+        color: #1e293b;
+      }
+
+      .dark-mode .section h2 {
+        color: #e4e4e7;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+      }
+
+      /* Stats Grid */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .dark-mode .stat-card {
+        background: #16213e;
+      }
+
+      .stat-icon {
+        font-size: 2.5rem;
+      }
+
+      .stat-value {
+        display: block;
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+
+      .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+      }
+
+      .dark-mode .stat-label {
+        color: #94a3b8;
+      }
+
+      /* Table */
+      .products-table {
+        background: white;
+        border-radius: 16px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .dark-mode .products-table {
+        background: #16213e;
+      }
+
+      .products-table::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .products-table::-webkit-scrollbar-thumb {
+        background: rgba(96, 165, 250, 0.45);
+        border-radius: 999px;
+      }
+
+      table {
+        width: 100%;
+        min-width: 920px;
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #f8fafc;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: #334155;
+      }
+
+      .dark-mode th {
+        background: #0f3460;
+        color: #e4e4e7;
+      }
+
+      td {
+        padding: 1rem;
+        border-top: 1px solid #e2e8f0;
+        color: #334155;
+      }
+
+      .dark-mode td {
+        border-color: #2a2a4a;
+        color: #e4e4e7;
+      }
+
+      .type-badge {
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .dark-mode .type-badge {
+        background: #1e3a8a;
+        color: #60a5fa;
+      }
+
+      .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #fee2e2;
+        color: #dc2626;
+      }
+
+      .status-badge.active {
+        background: #d1fae5;
+        color: #059669;
+      }
+
+      .dark-mode .status-badge {
+        background: #7f1d1d;
+        color: #f87171;
+      }
+
+      .dark-mode .status-badge.active {
+        background: #064e3b;
+        color: #34d399;
+      }
+
+      .btn-action {
+        padding: 0.4rem 0.8rem;
+        margin-right: 0.5rem;
+        background: #e2e8f0;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+      }
+
+      .btn-action:hover {
+        background: #cbd5e1;
+      }
+      .btn-action.delete {
+        background: #fee2e2;
+        color: #dc2626;
+      }
+      .btn-action.delete:hover {
+        background: #fecaca;
+      }
+
+      .product-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        min-width: 132px;
+      }
+
+      .product-actions .btn-action {
+        min-width: 70px;
+        margin: 0;
+        padding: 0.65rem 0.85rem;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .dark-mode .btn-action {
+        background: #374151;
+        color: #e4e4e7;
+      }
+      .dark-mode .btn-action:hover {
+        background: #4b5563;
+      }
+      .dark-mode .btn-action.delete {
+        background: #7f1d1d;
+        color: #f87171;
+      }
+
+      /* Tabs */
+      .tabs {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e2e8f0;
+      }
+
+      .dark-mode .tabs {
+        border-color: #2a2a4a;
+      }
+
+      .tab {
+        padding: 1rem 1.5rem;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        color: #64748b;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+      }
+
+      .tab:hover {
+        color: #3b82f6;
+      }
+      .tab.active {
+        color: #3b82f6;
+        border-bottom-color: #3b82f6;
+      }
+
+      .dark-mode .tab {
+        color: #94a3b8;
+      }
+      .dark-mode .tab:hover,
+      .dark-mode .tab.active {
+        color: #60a5fa;
+        border-bottom-color: #60a5fa;
+      }
+
+      /* Application Card */
+      .application-card {
+        background: white;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+      }
+
+      .application-card.review-target {
+        border: 2px solid #fbbf24;
+        box-shadow:
+          0 0 0 4px rgba(251, 191, 36, 0.18),
+          0 16px 35px rgba(0, 0, 0, 0.18);
+      }
+
+      .dark-mode .application-card {
+        background: #16213e;
+      }
+
+      .app-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+      }
+
+      .app-info h3 {
+        margin: 0;
+        color: #1e293b;
+        font-size: 1.1rem;
+      }
+      .app-email {
+        font-size: 0.85rem;
+        color: #64748b;
+      }
+      .app-number {
+        font-family: monospace;
+        color: #64748b;
+      }
+
+      .dark-mode .app-info h3 {
+        color: #e4e4e7;
+      }
+      .dark-mode .app-email,
+      .dark-mode .app-number {
+        color: #94a3b8;
+      }
+
+      .app-details-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .detail-item .label {
+        display: block;
+        font-size: 0.8rem;
+        color: #64748b;
+      }
+
+      .detail-item .value {
+        font-weight: 600;
+        color: #334155;
+      }
+
+      .dark-mode .detail-item .label {
+        color: #94a3b8;
+      }
+      .dark-mode .detail-item .value {
+        color: #e4e4e7;
+      }
+
+      .app-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .btn-review,
+      .btn-approve,
+      .btn-reject {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .btn-review {
+        background: #2563eb;
+        color: white;
+      }
+      .btn-review:hover {
+        background: #1d4ed8;
+      }
+      .btn-approve {
+        background: #10b981;
+        color: white;
+      }
+      .btn-approve:hover {
+        background: #059669;
+      }
+      .btn-reject {
+        background: #ef4444;
+        color: white;
+      }
+      .btn-reject:hover {
+        background: #dc2626;
+      }
+
+      .rejection-reason {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #fef2f2;
+        border-radius: 8px;
+        color: #dc2626;
+      }
+
+      .dark-mode .rejection-reason {
+        background: #7f1d1d;
+        color: #f87171;
+      }
+
+      /* Empty State */
+      .empty-state {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 16px;
+        color: #64748b;
+      }
+
+      .dark-mode .empty-state {
+        background: #16213e;
+        color: #94a3b8;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-content.modal-wide {
+        max-width: 860px;
+      }
+
+      .dark-mode .modal-content {
+        background: #16213e;
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .dark-mode .modal-header {
+        border-color: #2a2a4a;
+      }
+
+      .modal-header h3 {
+        margin: 0;
+        color: #1e293b;
+      }
+      .dark-mode .modal-header h3 {
+        color: #e4e4e7;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #94a3b8;
+      }
+
+      .modal-body {
+        padding: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #334155;
+      }
+
+      .dark-mode .form-group label {
+        color: #e4e4e7;
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: white;
+      }
+
+      .form-input:focus {
+        outline: none;
+        border-color: #3b82f6;
+      }
+
+      .dark-mode .form-input {
+        background: #0f3460;
+        border-color: #2a2a4a;
+        color: #e4e4e7;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .error-message {
+        color: #ef4444;
+        padding: 0.75rem;
+        background: #fef2f2;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .dark-mode .error-message {
+        background: #7f1d1d;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        padding: 0.875rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+      }
+
+      .btn-primary {
+        background: #3b82f6;
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #2563eb;
+      }
+
+      .btn-secondary {
+        background: #e2e8f0;
+        color: #334155;
+      }
+      .btn-secondary:hover {
+        background: #cbd5e1;
+      }
+
+      .dark-mode .btn-secondary {
+        background: #374151;
+        color: #e4e4e7;
+      }
+
+      .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .btn-primary.approve {
+        background: #10b981;
+      }
+      .btn-primary.approve:hover {
+        background: #059669;
+      }
+      .btn-primary.reject {
+        background: #ef4444;
+      }
+      .btn-primary.reject:hover {
+        background: #dc2626;
+      }
+
+      .application-summary {
+        background: #f8fafc;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .dark-mode .application-summary {
+        background: #1e293b;
+      }
+      .application-summary p {
+        margin: 0.25rem 0;
+      }
+      .dark-mode .application-summary p {
+        color: #e4e4e7;
+      }
+
+      .review-hero {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        background: #eff6ff;
+        margin-bottom: 1rem;
+      }
+
+      .dark-mode .review-hero {
+        background: #0f3460;
+      }
+      .review-hero h4 {
+        margin: 0.25rem 0;
+        color: #1e293b;
+        font-size: 1.35rem;
+      }
+      .review-hero p {
+        margin: 0;
+        color: #64748b;
+      }
+      .dark-mode .review-hero h4 {
+        color: #f8fafc;
+      }
+      .dark-mode .review-hero p {
+        color: #bfdbfe;
+      }
+      .eyebrow {
+        color: #2563eb;
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+      .review-status {
+        align-self: center;
+      }
+
+      .review-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .review-group {
+        padding: 1rem;
+        border-radius: 12px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+      }
+
+      .dark-mode .review-group {
+        background: #1e293b;
+        border-color: #2a2a4a;
+      }
+
+      .review-group h5 {
+        margin: 0 0 0.75rem;
+        color: #1e40af;
+        font-size: 1rem;
+      }
+
+      .dark-mode .review-group h5 {
+        color: #93c5fd;
+      }
+      .review-group p {
+        margin: 0.4rem 0;
+        color: #334155;
+      }
+      .dark-mode .review-group p {
+        color: #e4e4e7;
+      }
+
+      .review-note {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 12px;
+        background: #fffbeb;
+        color: #92400e;
+      }
+
+      .dark-mode .review-note {
+        background: #78350f;
+        color: #fde68a;
+      }
+
+      .admin-loans-container,
+      .main-container,
+      .content-area,
+      .products-table,
+      .section {
+        min-width: 0;
+      }
+
+      @media (max-width: 1023px) {
+        .main-container {
+          display: block;
+        }
+
+        .sidebar {
+          display: block;
+          width: 100%;
+          padding: 0.75rem;
+          overflow-x: auto;
+          position: static;
+          border-right: 0;
+          border-bottom: 1px solid #e2e8f0;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .dark-mode .sidebar {
+          border-bottom-color: #2a2a4a;
+        }
+
+        .sidebar-nav {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          min-width: max-content;
+        }
+
+        .nav-item {
+          white-space: nowrap;
+        }
+
+        .content-area {
+          padding: 1rem;
+        }
+
+        .section-header,
+        .app-header,
+        .app-actions,
+        .modal-actions,
+        .review-hero {
+          align-items: flex-start;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .app-details-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+        .tabs {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+        .tab {
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .review-grid {
+          grid-template-columns: 1fr;
+        }
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .content-area {
+          padding: 0.875rem;
+        }
+
+        .section-header h2 {
+          font-size: 1.55rem;
+        }
+
+        .stats-grid,
+        .app-details-grid,
+        .review-grid,
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        table {
+          min-width: 840px;
+        }
+
+        .product-actions {
+          flex-direction: column;
+          align-items: stretch;
+          min-width: 78px;
+        }
+
+        .product-actions .btn-action {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .modal-overlay {
+          align-items: flex-start;
+          overflow-y: auto;
+          padding: 1rem;
+        }
+
+        .modal-content {
+          width: 100%;
+          max-height: calc(100vh - 2rem);
+        }
+
+        .btn,
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger,
+        .btn-success {
+          width: 100%;
+        }
+      }
+    `,
+  ],
 })
 export class AdminLoansComponent implements OnInit, OnChanges {
   @Input() reviewApplicationId: number | null = null;
+  private reviewTargetConsumed = false;
 
   isDarkMode = false;
   username = '';
@@ -1019,9 +1468,13 @@ export class AdminLoansComponent implements OnInit, OnChanges {
     private loanService: LoanService,
     private authService: AuthService,
     private themeService: ThemeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {
     this.isDarkMode = this.themeService.getCurrentTheme() === 'dark';
+    effect(() => {
+      this.isDarkMode = this.themeService.isDarkMode();
+      this.cdr.detectChanges();
+    });
     const user = this.authService.getUser();
     this.username = user?.username || 'Admin';
   }
@@ -1034,14 +1487,18 @@ export class AdminLoansComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reviewApplicationId'] && this.reviewApplicationId) {
+      this.reviewTargetConsumed = false;
       this.openReviewTarget();
     }
   }
 
   loadProducts(): void {
     this.loanService.getAllProducts().subscribe({
-      next: (data) => { this.products = data; this.cdr.detectChanges(); },
-      error: (err) => console.error('Error loading products:', err)
+      next: (data) => {
+        this.products = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading products:', err),
     });
   }
 
@@ -1050,21 +1507,32 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       next: (data) => {
         this.pendingApplications = data;
         this.cdr.detectChanges();
-        this.scrollToReviewTarget();
-      }
+        if (!this.reviewTargetConsumed) {
+          this.scrollToReviewTarget();
+        }
+      },
     });
     this.loanService.getApprovedApplications().subscribe({
-      next: (data) => { this.approvedApplications = data; this.cdr.detectChanges(); }
+      next: (data) => {
+        this.approvedApplications = data;
+        this.cdr.detectChanges();
+      },
     });
     this.loanService.getRejectedApplications().subscribe({
-      next: (data) => { this.rejectedApplications = data; this.cdr.detectChanges(); }
+      next: (data) => {
+        this.rejectedApplications = data;
+        this.cdr.detectChanges();
+      },
     });
   }
 
   loadDashboard(): void {
     this.loanService.getAdminDashboard().subscribe({
-      next: (data) => { this.dashboard = data; this.cdr.detectChanges(); },
-      error: (err) => console.error('Error loading dashboard:', err)
+      next: (data) => {
+        this.dashboard = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error loading dashboard:', err),
     });
   }
 
@@ -1076,7 +1544,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
   }
 
   scrollToReviewTarget(): void {
-    if (!this.reviewApplicationId) {
+    if (!this.reviewApplicationId || this.reviewTargetConsumed) {
       return;
     }
 
@@ -1084,8 +1552,11 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       document
         .getElementById(`loan-application-${this.reviewApplicationId}`)
         ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      const reviewTarget = this.pendingApplications.find((app) => app.id === this.reviewApplicationId);
+      const reviewTarget = this.pendingApplications.find(
+        (app) => app.id === this.reviewApplicationId,
+      );
       if (reviewTarget && !this.showApplicationReviewModal) {
+        this.reviewTargetConsumed = true;
         this.openApplicationReview(reviewTarget);
       }
     }, 150);
@@ -1093,10 +1564,14 @@ export class AdminLoansComponent implements OnInit, OnChanges {
 
   getCurrentApplications(): LoanApplication[] {
     switch (this.appTab) {
-      case 'pending': return this.pendingApplications;
-      case 'approved': return this.approvedApplications;
-      case 'rejected': return this.rejectedApplications;
-      default: return [];
+      case 'pending':
+        return this.pendingApplications;
+      case 'approved':
+        return this.approvedApplications;
+      case 'rejected':
+        return this.rejectedApplications;
+      default:
+        return [];
     }
   }
 
@@ -1111,7 +1586,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       allowedTenures: '',
       minTenure: 0,
       maxTenure: 0,
-      processingFee: 0
+      processingFee: 0,
     };
   }
 
@@ -1135,7 +1610,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       allowedTenures: product.allowedTenures,
       minTenure: product.minTenure,
       maxTenure: product.maxTenure,
-      processingFee: product.processingFee * 100
+      processingFee: product.processingFee * 100,
     };
     this.showProductModal = true;
     this.formError = '';
@@ -1155,13 +1630,19 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       return;
     }
 
-    if (this.productForm.minAmount <= 0 || this.productForm.maxAmount <= this.productForm.minAmount) {
+    if (
+      this.productForm.minAmount <= 0 ||
+      this.productForm.maxAmount <= this.productForm.minAmount
+    ) {
       this.formError = 'Maximum amount must be greater than minimum amount';
       this.cdr.detectChanges();
       return;
     }
 
-    if (this.productForm.minTenure <= 0 || this.productForm.maxTenure < this.productForm.minTenure) {
+    if (
+      this.productForm.minTenure <= 0 ||
+      this.productForm.maxTenure < this.productForm.minTenure
+    ) {
       this.formError = 'Maximum tenure must be greater than or equal to minimum tenure';
       this.cdr.detectChanges();
       return;
@@ -1178,7 +1659,8 @@ export class AdminLoansComponent implements OnInit, OnChanges {
         (tenure) => tenure < this.productForm.minTenure || tenure > this.productForm.maxTenure,
       )
     ) {
-      this.formError = 'Allowed tenures must be comma-separated months inside the min/max tenure range';
+      this.formError =
+        'Allowed tenures must be comma-separated months inside the min/max tenure range';
       this.cdr.detectChanges();
       return;
     }
@@ -1199,7 +1681,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
         error: (err) => {
           this.formError = this.getErrorMessage(err, 'Failed to update product');
           this.cdr.detectChanges();
-        }
+        },
       });
     } else {
       this.loanService.createProduct(request).subscribe({
@@ -1210,7 +1692,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
         error: (err) => {
           this.formError = this.getErrorMessage(err, 'Failed to create product');
           this.cdr.detectChanges();
-        }
+        },
       });
     }
   }
@@ -1226,7 +1708,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
     if (confirm(`Delete ${product.productName}?`)) {
       this.loanService.deleteProduct(product.id).subscribe({
         next: () => this.loadProducts(),
-        error: (err) => alert(err.error?.message || 'Failed to delete product')
+        error: (err) => alert(err.error?.message || 'Failed to delete product'),
       });
     }
   }
@@ -1280,7 +1762,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
     const decision: LoanDecisionRequest = {
       decision: this.decisionType,
       remarks: this.decisionRemarks,
-      rejectionReason: this.rejectionReason
+      rejectionReason: this.rejectionReason,
     };
 
     this.loanService.processApplication(this.selectedApplication.id, decision).subscribe({
@@ -1292,7 +1774,7 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       error: (err) => {
         this.decisionError = err.error?.message || 'Failed to process application';
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 

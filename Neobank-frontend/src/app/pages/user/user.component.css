@@ -2566,3 +2566,280 @@
 
   opacity: 0.85;
 }
+
+/* Final responsive hardening for user dashboard shell */
+.user-dashboard,
+.main-container,
+.content-area {
+  min-width: 0;
+}
+
+.content-area {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.account-card,
+.transactions-section,
+.chart-section,
+.budget-summary,
+.create-bill-form,
+.profile-card,
+.reward-history {
+  min-width: 0;
+}
+
+.value,
+.tx-desc,
+.notification-message,
+.bill-name,
+.history-description {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1023px) {
+  .top-header {
+    min-height: 64px;
+    padding: 0.75rem 1rem;
+  }
+
+  .hamburger-menu {
+    display: flex;
+  }
+
+  .header-left {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .logo {
+    font-size: clamp(1.05rem, 4vw, 1.35rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .header-right {
+    flex: 0 0 auto;
+    gap: 0.5rem;
+  }
+
+  .user-info {
+    display: none;
+  }
+
+  .btn-logout {
+    padding: 0.5rem 0.75rem;
+    min-height: 40px;
+    font-size: 0.85rem;
+  }
+
+  .main-container {
+    display: block;
+    min-height: calc(100vh - 64px);
+  }
+
+  .sidebar {
+    position: fixed;
+    inset: 64px auto 0 0;
+    width: min(82vw, 310px);
+    height: calc(100vh - 64px);
+    z-index: 120;
+    overflow-y: auto;
+    transform: translateX(-105%);
+    left: 0;
+    padding: 1rem 0;
+    box-shadow: 12px 0 28px rgba(15, 23, 42, 0.25);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    left: 0;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+    z-index: 110;
+  }
+
+  .nav-text {
+    display: inline !important;
+  }
+
+  .nav-item {
+    width: 100%;
+    padding: 0.9rem 1.25rem;
+  }
+
+  .content-area {
+    padding: 1rem;
+  }
+
+  .home-grid,
+  .budget-analytics {
+    grid-template-columns: 1fr;
+  }
+
+  .budget-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bills-actions,
+  .budget-controls,
+  .reminder-card,
+  .overdue-card,
+  .bill-list-item,
+  .history-item,
+  .profile-row,
+  .transaction-item {
+    flex-wrap: wrap;
+  }
+
+  .transaction-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-overlay {
+    padding: 1rem;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .modal-content {
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100vh - 2rem);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .content-area {
+    padding: 0.875rem;
+  }
+
+  .account-card,
+  .transactions-section,
+  .chart-section,
+  .budget-summary,
+  .create-bill-form,
+  .profile-card,
+  .reward-history {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .account-details,
+  .budget-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .bills-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .section-title-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pie-chart-wrapper {
+    height: 230px;
+  }
+
+  .pie-chart-wrapper canvas {
+    height: 220px !important;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* Sprint polish: sticky navbar, in-sidebar close button, and rewards controls */
+.top-header {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+
+.sidebar-close {
+  display: none;
+}
+
+.reward-history-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.reward-history-subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.9rem;
+}
+
+.reward-history-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.reward-month-filter {
+  min-height: 42px;
+  border: 1px solid rgba(96, 165, 250, 0.3);
+  border-radius: 10px;
+  background: #0f3460;
+  color: #e4e4e7;
+  padding: 0 0.85rem;
+}
+
+@media (max-width: 1023px) {
+  .sidebar-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 0.75rem 0.75rem 0.25rem;
+    border: 0;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    position: relative;
+  }
+
+  .sidebar-close span {
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    border-radius: 999px;
+    background: #e5efff;
+  }
+
+  .sidebar-close span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .sidebar-close span:last-child {
+    transform: rotate(-45deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .reward-history-header,
+  .reward-history-actions,
+  .history-item {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .reward-month-filter,
+  .reward-history-actions .btn-small {
+    width: 100%;
+  }
+}

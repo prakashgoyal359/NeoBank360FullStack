@@ -20,6 +20,7 @@ import { ThemeService } from '../../../services/theme.service';
           <option value="LOAN">Loans</option>
         </select>
       </div>
+      <div class="table-scroll">
       <table>
         <thead>
           <tr>
@@ -49,6 +50,7 @@ import { ThemeService } from '../../../services/theme.service';
           </tr>
         </tbody>
       </table>
+      </div>
     </section>
   `,
   styles: [
@@ -97,8 +99,23 @@ import { ThemeService } from '../../../services/theme.service';
         color: #e5efff;
         border-color: #2d5b91;
       }
+      .table-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+      }
+      .table-scroll::-webkit-scrollbar {
+        height: 8px;
+      }
+      .table-scroll::-webkit-scrollbar-thumb {
+        background: rgba(96, 165, 250, 0.45);
+        border-radius: 999px;
+      }
       table {
         width: 100%;
+        min-width: 860px;
         border-collapse: collapse;
         background: #ffffff;
         border-radius: 12px;
@@ -160,6 +177,28 @@ import { ThemeService } from '../../../services/theme.service';
       }
       .panel.dark-mode .empty {
         color: #a8bddf;
+      }
+      @media (max-width: 1023px) {
+        .panel {
+          padding: 1rem;
+        }
+        .title-row {
+          align-items: stretch;
+          flex-direction: column;
+          gap: 0.9rem;
+        }
+        select {
+          width: 100%;
+          font-size: 16px;
+        }
+      }
+      @media (max-width: 640px) {
+        .panel {
+          padding: 0.875rem;
+        }
+        h2 {
+          font-size: 1.25rem;
+        }
       }
     `,
   ],

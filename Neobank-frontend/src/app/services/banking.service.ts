@@ -189,6 +189,6 @@ export class BankingService {
 
   // Deposit to account (Admin)
   depositToAccount(accountNumber: string, amount: number): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/admin/deposit`, { accountNumber, amount });
+    return this.http.post(`${this.apiUrl}/admin/deposit`, { accountNumber, amount }, { responseType: 'text' });
   }
 }
