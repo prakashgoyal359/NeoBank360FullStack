@@ -1045,7 +1045,7 @@ import {
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 1000;
+        z-index: 1800;
       }
 
       .modal-content {
@@ -1777,7 +1777,6 @@ export class AdminLoansComponent implements OnInit, OnChanges {
       },
     });
   }
-
   formatLoanType(type: string): string {
     return type.charAt(0) + type.slice(1).toLowerCase();
   }

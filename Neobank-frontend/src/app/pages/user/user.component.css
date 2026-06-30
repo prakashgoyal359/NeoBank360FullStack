@@ -2757,6 +2757,46 @@
   }
 }
 
+/* Fixed sticky dashboard header on every viewport */
+.user-dashboard {
+  --dashboard-header-height: 60px;
+  padding-top: var(--dashboard-header-height);
+}
+
+.top-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  min-height: var(--dashboard-header-height);
+  z-index: 1500;
+}
+
+.main-container {
+  min-height: calc(100vh - var(--dashboard-header-height));
+}
+
+.hamburger-menu.active span:nth-child(1),
+.hamburger-menu.active span:nth-child(3) {
+  transform: none !important;
+}
+
+.hamburger-menu.active span:nth-child(2) {
+  opacity: 1 !important;
+}
+
+@media (max-width: 1023px) {
+  .user-dashboard {
+    --dashboard-header-height: 56px;
+  }
+
+  .sidebar {
+    inset: var(--dashboard-header-height) auto 0 0 !important;
+    height: calc(100vh - var(--dashboard-header-height)) !important;
+  }
+}
+
 /* Sprint polish: sticky navbar, in-sidebar close button, and rewards controls */
 .top-header {
   position: sticky;
@@ -2841,5 +2881,42 @@
   .reward-month-filter,
   .reward-history-actions .btn-small {
     width: 100%;
+  }
+}
+
+/* Final override: keep the user navbar fixed after all responsive rules */
+.user-dashboard {
+  --dashboard-header-height: 60px;
+  padding-top: var(--dashboard-header-height);
+}
+
+.user-dashboard .top-header {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: var(--dashboard-header-height);
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
+  z-index: 1500;
+}
+
+.user-dashboard .hamburger-menu.active span:nth-child(1),
+.user-dashboard .hamburger-menu.active span:nth-child(3) {
+  transform: none !important;
+}
+
+.user-dashboard .hamburger-menu.active span:nth-child(2) {
+  opacity: 1 !important;
+}
+
+@media (max-width: 1023px) {
+  .user-dashboard {
+    --dashboard-header-height: 56px;
+  }
+
+  .user-dashboard .sidebar {
+    inset: var(--dashboard-header-height) auto 0 0 !important;
+    height: calc(100vh - var(--dashboard-header-height)) !important;
   }
 }

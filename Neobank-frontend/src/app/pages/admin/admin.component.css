@@ -1590,7 +1590,7 @@
 
 /* Fixed sticky dashboard header on every viewport */
 .admin-layout {
-  --dashboard-header-height: 76px;
+  --dashboard-header-height: 60px;
   padding-top: var(--dashboard-header-height);
 }
 
@@ -1601,6 +1601,8 @@
   right: 0;
   width: 100%;
   min-height: var(--dashboard-header-height);
+  padding-top: 0.45rem !important;
+  padding-bottom: 0.45rem !important;
   z-index: 1500;
 }
 
@@ -1619,7 +1621,7 @@
 
 @media (max-width: 1023px) {
   .admin-layout {
-    --dashboard-header-height: 64px;
+    --dashboard-header-height: 56px;
   }
 
   .sidebar {

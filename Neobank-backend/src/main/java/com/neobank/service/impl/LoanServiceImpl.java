@@ -303,8 +303,31 @@ public class LoanServiceImpl implements LoanService {
 
         loanAccount = loanAccountRepository.save(loanAccount);
 
+        disburseLoanAmountToUserAccount(loanAccount);
+
         // Generate repayment schedule
         generateRepaymentSchedule(loanAccount, firstEmiDate);
+    }
+
+    private void disburseLoanAmountToUserAccount(LoanAccount loanAccount) {
+        Account bankAccount = accountRepository.findByUser(loanAccount.getUser()).stream()
+                .filter(account -> Boolean.TRUE.equals(account.getIsActive()))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Active bank account not found for loan disbursal"));
+
+        BigDecimal newBalance = bankAccount.getBalance().add(loanAccount.getDisbursedAmount());
+        bankAccount.setBalance(newBalance);
+        accountRepository.save(bankAccount);
+
+        transactionRepository.save(Transaction.builder()
+                .account(bankAccount)
+                .transactionType(TransactionType.CREDIT)
+                .amount(loanAccount.getDisbursedAmount())
+                .description("Loan disbursal: " + loanAccount.getLoanAccountNumber())
+                .category("Loan Disbursal")
+                .balanceAfter(newBalance)
+                .referenceNumber("LND" + loanAccount.getId())
+                .build());
     }
 
     private void generateRepaymentSchedule(LoanAccount loanAccount, LocalDate firstEmiDate) {

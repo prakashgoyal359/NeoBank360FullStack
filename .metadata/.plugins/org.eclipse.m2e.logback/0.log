@@ -631,3 +631,4 @@ org.eclipse.core.runtime.CoreException: Could not resolve artifact org.webjars:s
 2026-06-29 20:31:05,144 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@30b29392{STARTING}[12.1.4,sto=0] @571ms
 2026-06-29 23:10:24,437 [Stop Help Server] INFO  org.eclipse.jetty.server.Server - Stopped oejs.Server@30b29392{STOPPING}[12.1.4,sto=0]
 2026-06-29 23:10:24,485 [Stop Help Server] INFO  o.e.jetty.server.AbstractConnector - Stopped oejs.ServerConnector@7c35097e{HTTP/1.1, (http/1.1)}{127.0.0.1:0}
+2026-06-30 19:24:10,004 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
