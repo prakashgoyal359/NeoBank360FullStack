@@ -55,74 +55,114 @@
 }
 
 /* Top Header */
+
 .top-header {
   display: flex;
+
   justify-content: space-between;
+
   align-items: center;
+
   padding: 1rem 2rem;
+
   background: white;
+
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
   position: sticky;
+
   top: 0;
+
   z-index: 100;
+
   gap: 1rem;
 }
 
 .user-dashboard.dark-mode .top-header {
   background: #16213e;
+
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .header-left {
   display: flex;
+
   align-items: center;
+
   gap: 1rem;
+
   flex: 0;
 }
 
 .logo {
   font-size: 1.5rem;
+
   font-weight: 700;
+
   color: #3b82f6;
+
   margin: 0;
+
   white-space: nowrap;
 }
 
 /* Hamburger Menu Button */
+
 .hamburger-menu {
   display: none;
+
   width: 2.5rem;
+
   height: 2.5rem;
+
   flex-direction: column;
+
   justify-content: center;
+
   align-items: center;
+
   gap: 0.375rem;
+
   background: #f3f4f6;
+
   border: 2px solid #e5e7eb;
+
   border-radius: 8px;
+
   cursor: pointer;
+
   padding: 0;
+
   transition: all 0.3s ease;
+
   min-width: 44px;
+
   min-height: 44px;
 }
 
 .hamburger-menu:hover {
   background: #e5e7eb;
+
   border-color: #d1d5db;
 }
 
 .hamburger-menu:focus {
   outline: 2px solid #3b82f6;
+
   outline-offset: 2px;
 }
 
 .hamburger-menu span {
   width: 1.375rem;
+
   height: 0.2rem;
+
   background: #1a1a2e;
+
   border-radius: 2px;
+
   transition: all 0.3s ease;
+
   display: block;
 }
 
@@ -140,6 +180,7 @@
 
 .user-dashboard.dark-mode .hamburger-menu {
   background: #1e293b;
+
   border-color: #2a2a4a;
 }
 
@@ -149,25 +190,37 @@
 
 .user-dashboard.dark-mode .hamburger-menu:hover {
   background: #334155;
+
   border-color: #475569;
 }
 
 /* Sidebar Overlay */
+
 .sidebar-overlay {
   display: none;
+
   position: fixed;
+
   top: 0;
+
   left: 0;
+
   right: 0;
+
   bottom: 0;
+
   background: rgba(0, 0, 0, 0.5);
+
   z-index: 90;
+
   opacity: 0;
+
   transition: opacity 0.3s ease;
 }
 
 .sidebar-overlay.active {
   display: block;
+
   opacity: 1;
 }
 
@@ -231,9 +284,13 @@
 
 .sidebar {
   width: 250px;
+
   background: white;
+
   padding: 2rem 0;
+
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+
   transition: transform 0.3s ease;
 }
 
@@ -243,50 +300,71 @@
 
 .sidebar-nav {
   display: flex;
+
   flex-direction: column;
+
   gap: 0.5rem;
 }
 
 .nav-item {
   display: flex;
+
   align-items: center;
+
   gap: 1rem;
+
   padding: 1rem 1.5rem;
+
   border: none;
+
   background: transparent;
+
   cursor: pointer;
+
   font-size: 1rem;
+
   color: #64748b;
+
   transition: all 0.3s ease;
+
   text-align: left;
+
   min-height: 44px;
 }
 
 .nav-item:hover {
   background: #f1f5f9;
+
   color: #3b82f6;
 }
 
 .nav-item.active {
   background: #eff6ff;
+
   color: #3b82f6;
+
   border-left: 4px solid #3b82f6;
+
   padding-left: calc(1.5rem - 4px);
 }
 
 .dark-mode .nav-item:hover {
   background: #1e293b;
+
   color: #60a5fa;
 }
 
 .dark-mode .nav-item.active {
   background: #1e3a8a;
+
   color: #60a5fa;
 }
 
 .nav-icon {
   font-size: 1.25rem;
+
   min-width: 1.5rem;
+
   text-align: center;
 }
 
@@ -296,8 +374,11 @@
 
 .sidebar-footer {
   padding: 1rem;
+
   border-top: 1px solid #e2e8f0;
+
   display: flex;
+
   justify-content: center;
 }
 
@@ -399,11 +480,13 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
+
     transform: translateY(10px);
   }
 
   to {
     opacity: 1;
+
     transform: translateY(0);
   }
 }
@@ -934,11 +1017,13 @@
 @keyframes slideUp {
   from {
     transform: translateY(20px);
+
     opacity: 0;
   }
 
   to {
     transform: translateY(0);
+
     opacity: 1;
   }
 }
@@ -1125,6 +1210,7 @@
 /* Responsive Design - Comprehensive Breakpoints */
 
 /* Extra Small Mobile: 320px - 374px */
+
 @media (max-width: 374px) {
   .hamburger-menu {
     display: flex;
@@ -1132,6 +1218,7 @@
 
   .top-header {
     padding: 0.75rem 1rem;
+
     gap: 0.5rem;
   }
 
@@ -1150,6 +1237,7 @@
 
   .btn-logout {
     padding: 0.375rem 0.75rem;
+
     font-size: 0.75rem;
   }
 
@@ -1159,13 +1247,21 @@
 
   .sidebar {
     position: fixed;
+
     left: -100%;
+
     top: 56px;
+
     width: 100%;
+
     height: calc(100vh - 56px);
+
     z-index: 95;
+
     padding: 1rem 0;
+
     transform: translateX(0);
+
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
   }
 
@@ -1179,6 +1275,7 @@
 
   .nav-item {
     padding: 0.75rem 1rem;
+
     font-size: 0.9rem;
   }
 
@@ -1192,6 +1289,7 @@
 
   .content-area {
     padding: 1rem 0.75rem;
+
     max-width: 100%;
   }
 
@@ -1201,6 +1299,7 @@
 
   .bills-grid {
     grid-template-columns: repeat(2, 1fr);
+
     gap: 0.75rem;
   }
 
@@ -1218,6 +1317,7 @@
 
   .budget-stats {
     grid-template-columns: repeat(2, 1fr);
+
     gap: 0.75rem;
   }
 
@@ -1235,6 +1335,7 @@
 }
 
 /* Small Mobile: 375px - 424px */
+
 @media (min-width: 375px) and (max-width: 424px) {
   .hamburger-menu {
     display: flex;
@@ -1242,6 +1343,7 @@
 
   .top-header {
     padding: 0.75rem 1rem;
+
     gap: 0.5rem;
   }
 
@@ -1256,17 +1358,25 @@
 
   .btn-logout {
     padding: 0.4rem 0.8rem;
+
     font-size: 0.8rem;
   }
 
   .sidebar {
     position: fixed;
+
     left: -100%;
+
     top: 56px;
+
     width: 100%;
+
     height: calc(100vh - 56px);
+
     z-index: 95;
+
     padding: 1rem 0;
+
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
   }
 
@@ -1276,6 +1386,7 @@
 
   .nav-item {
     padding: 0.75rem 1.2rem;
+
     font-size: 0.95rem;
   }
 
@@ -1293,6 +1404,7 @@
 
   .bills-grid {
     grid-template-columns: repeat(3, 1fr);
+
     gap: 1rem;
   }
 
@@ -1310,11 +1422,13 @@
 
   .budget-stats {
     grid-template-columns: repeat(2, 1fr);
+
     gap: 0.75rem;
   }
 }
 
 /* Medium Mobile/Tablet: 425px - 767px */
+
 @media (min-width: 425px) and (max-width: 767px) {
   .hamburger-menu {
     display: flex;
@@ -1338,29 +1452,41 @@
 
   .btn-logout {
     padding: 0.4rem 0.9rem;
+
     font-size: 0.85rem;
   }
 
   .sidebar {
     position: fixed;
+
     left: -100%;
+
     top: 56px;
+
     width: 100%;
+
     max-width: 280px;
+
     height: calc(100vh - 56px);
+
     z-index: 95;
+
     overflow-y: auto;
+
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.15);
+
     transform: translateX(-100%);
   }
 
   .sidebar.open {
     transform: translateX(0);
+
     left: auto;
   }
 
   .nav-item {
     padding: 1rem 1.5rem;
+
     font-size: 0.95rem;
   }
 
@@ -1374,6 +1500,7 @@
 
   .content-area {
     padding: 1.25rem;
+
     flex: 1;
   }
 
@@ -1383,27 +1510,32 @@
 
   .bills-grid {
     grid-template-columns: repeat(3, 1fr);
+
     gap: 1.25rem;
   }
 
   .budget-stats {
     grid-template-columns: repeat(2, 1fr);
+
     gap: 1rem;
   }
 
   .section h2,
   .section h3 {
     font-size: 1.5rem;
+
     margin-bottom: 1rem;
   }
 
   .btn {
     padding: 0.4rem 0.8rem;
+
     font-size: 0.85rem;
   }
 }
 
 /* Large Tablet: 768px - 1023px */
+
 @media (min-width: 768px) and (max-width: 1023px) {
   .hamburger-menu {
     display: none;
@@ -1423,17 +1555,21 @@
 
   .user-name {
     display: inline;
+
     font-size: 0.9rem;
   }
 
   .sidebar {
     width: 220px;
+
     position: static;
+
     transform: none;
   }
 
   .sidebar.open {
     left: auto;
+
     transform: none;
   }
 
@@ -1443,11 +1579,13 @@
 
   .main-container {
     flex-direction: row;
+
     min-height: calc(100vh - 64px);
   }
 
   .content-area {
     padding: 1.5rem;
+
     flex: 1;
   }
 
@@ -1457,22 +1595,26 @@
 
   .bills-grid {
     grid-template-columns: repeat(3, 1fr);
+
     gap: 1.5rem;
   }
 
   .budget-stats {
     grid-template-columns: repeat(3, 1fr);
+
     gap: 1rem;
   }
 
   .section h2,
   .section h3 {
     font-size: 1.75rem;
+
     margin-bottom: 1.25rem;
   }
 }
 
 /* Desktop: 1024px - 1279px */
+
 @media (min-width: 1024px) and (max-width: 1279px) {
   .hamburger-menu {
     display: none;
@@ -1484,6 +1626,7 @@
 
   .sidebar {
     width: 240px;
+
     position: static;
   }
 
@@ -1497,11 +1640,13 @@
 
   .main-container {
     flex-direction: row;
+
     min-height: calc(100vh - 70px);
   }
 
   .content-area {
     padding: 2rem;
+
     flex: 1;
   }
 
@@ -1511,22 +1656,26 @@
 
   .bills-grid {
     grid-template-columns: repeat(3, 1fr);
+
     gap: 1.5rem;
   }
 
   .budget-stats {
     grid-template-columns: repeat(4, 1fr);
+
     gap: 1rem;
   }
 
   .section h2,
   .section h3 {
     font-size: 1.875rem;
+
     margin-bottom: 1.5rem;
   }
 }
 
 /* Large Desktop: 1280px - 1439px */
+
 @media (min-width: 1280px) and (max-width: 1439px) {
   .hamburger-menu {
     display: none;
@@ -1558,16 +1707,19 @@
 
   .bills-grid {
     grid-template-columns: repeat(4, 1fr);
+
     gap: 1.5rem;
   }
 
   .budget-stats {
     grid-template-columns: repeat(4, 1fr);
+
     gap: 1.5rem;
   }
 }
 
 /* Ultra-Wide Desktop: 1440px+ */
+
 @media (min-width: 1440px) {
   .hamburger-menu {
     display: none;
@@ -1591,6 +1743,7 @@
 
   .content-area {
     padding: 2.5rem;
+
     max-width: 1600px;
   }
 
@@ -1600,11 +1753,13 @@
 
   .bills-grid {
     grid-template-columns: repeat(4, 1fr);
+
     gap: 2rem;
   }
 
   .budget-stats {
     grid-template-columns: repeat(4, 1fr);
+
     gap: 2rem;
   }
 
@@ -1615,6 +1770,7 @@
 }
 
 /* Legacy Media Queries - Old Responsive */
+
 @media (max-width: 1024px) {
   .home-grid {
     grid-template-columns: 1fr;
@@ -1633,20 +1789,26 @@
   .content-area,
   .home-container {
     width: 100%;
+
     max-width: 100%;
+
     padding-left: 1rem !important;
+
     padding-right: 1rem !important;
   }
 
   .modal-overlay {
     padding: 1rem;
+
     align-items: flex-start !important;
   }
 
   .modal-content,
   .modal-dialog {
     width: 100% !important;
+
     max-width: 100% !important;
+
     margin-top: 1rem;
   }
 }
@@ -2568,6 +2730,7 @@
 }
 
 /* Final responsive hardening for user dashboard shell */
+
 .user-dashboard,
 .main-container,
 .content-area {
@@ -2576,6 +2739,7 @@
 
 .content-area {
   max-width: 100%;
+
   overflow-x: hidden;
 }
 
@@ -2600,6 +2764,7 @@
 @media (max-width: 1023px) {
   .top-header {
     min-height: 64px;
+
     padding: 0.75rem 1rem;
   }
 
@@ -2609,17 +2774,21 @@
 
   .header-left {
     flex: 1 1 auto;
+
     min-width: 0;
   }
 
   .logo {
     font-size: clamp(1.05rem, 4vw, 1.35rem);
+
     overflow: hidden;
+
     text-overflow: ellipsis;
   }
 
   .header-right {
     flex: 0 0 auto;
+
     gap: 0.5rem;
   }
 
@@ -2629,35 +2798,49 @@
 
   .btn-logout {
     padding: 0.5rem 0.75rem;
+
     min-height: 40px;
+
     font-size: 0.85rem;
   }
 
   .main-container {
     display: block;
+
     min-height: calc(100vh - 64px);
   }
 
   .sidebar {
     position: fixed;
+
     inset: 64px auto 0 0;
+
     width: min(82vw, 310px);
+
     height: calc(100vh - 64px);
+
     z-index: 120;
+
     overflow-y: auto;
+
     transform: translateX(-105%);
+
     left: 0;
+
     padding: 1rem 0;
+
     box-shadow: 12px 0 28px rgba(15, 23, 42, 0.25);
   }
 
   .sidebar.open {
     transform: translateX(0);
+
     left: 0;
   }
 
   .sidebar-overlay.active {
     display: block;
+
     z-index: 110;
   }
 
@@ -2667,6 +2850,7 @@
 
   .nav-item {
     width: 100%;
+
     padding: 0.9rem 1.25rem;
   }
 
@@ -2700,14 +2884,19 @@
 
   .modal-overlay {
     padding: 1rem;
+
     align-items: flex-start;
+
     overflow-y: auto;
   }
 
   .modal-content {
     width: 100%;
+
     max-width: 560px;
+
     max-height: calc(100vh - 2rem);
+
     overflow-y: auto;
   }
 }
@@ -2725,6 +2914,7 @@
   .profile-card,
   .reward-history {
     padding: 1rem;
+
     border-radius: 12px;
   }
 
@@ -2739,6 +2929,7 @@
 
   .section-title-row {
     align-items: flex-start;
+
     flex-direction: column;
   }
 
@@ -2758,18 +2949,26 @@
 }
 
 /* Fixed sticky dashboard header on every viewport */
+
 .user-dashboard {
   --dashboard-header-height: 60px;
+
   padding-top: var(--dashboard-header-height);
 }
 
 .top-header {
   position: fixed !important;
+
   top: 0;
+
   left: 0;
+
   right: 0;
+
   width: 100%;
+
   min-height: var(--dashboard-header-height);
+
   z-index: 1500;
 }
 
@@ -2793,14 +2992,18 @@
 
   .sidebar {
     inset: var(--dashboard-header-height) auto 0 0 !important;
+
     height: calc(100vh - var(--dashboard-header-height)) !important;
   }
 }
 
 /* Sprint polish: sticky navbar, in-sidebar close button, and rewards controls */
+
 .top-header {
   position: sticky;
+
   top: 0;
+
   z-index: 900;
 }
 
@@ -2810,54 +3013,82 @@
 
 .reward-history-header {
   display: flex;
+
   align-items: flex-start;
+
   justify-content: space-between;
+
   gap: 1rem;
+
   margin-bottom: 1rem;
 }
 
 .reward-history-subtitle {
   margin: 0.25rem 0 0;
+
   color: var(--text-secondary, #94a3b8);
+
   font-size: 0.9rem;
 }
 
 .reward-history-actions {
   display: flex;
+
   align-items: center;
+
   gap: 0.75rem;
+
   flex-wrap: wrap;
 }
 
 .reward-month-filter {
   min-height: 42px;
+
   border: 1px solid rgba(96, 165, 250, 0.3);
+
   border-radius: 10px;
+
   background: #0f3460;
+
   color: #e4e4e7;
+
   padding: 0 0.85rem;
 }
 
 @media (max-width: 1023px) {
   .sidebar-close {
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
+
     width: 44px;
+
     height: 44px;
+
     margin: 0.75rem 0.75rem 0.25rem;
+
     border: 0;
+
     border-radius: 10px;
+
     background: rgba(255, 255, 255, 0.08);
+
     cursor: pointer;
+
     position: relative;
   }
 
   .sidebar-close span {
     position: absolute;
+
     width: 20px;
+
     height: 2px;
+
     border-radius: 999px;
+
     background: #e5efff;
   }
 
@@ -2875,29 +3106,59 @@
   .reward-history-actions,
   .history-item {
     align-items: stretch;
+
     flex-direction: column;
   }
 
   .reward-month-filter,
   .reward-history-actions .btn-small {
     width: 100%;
+
+    background: #2563eb;
   }
 }
 
+.reward-history-actions .btn-small {
+  border: 0;
+
+  border-radius: 8px;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 0.75rem 1rem;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  min-height: 44px;
+}
+
 /* Final override: keep the user navbar fixed after all responsive rules */
+
 .user-dashboard {
   --dashboard-header-height: 60px;
+
   padding-top: var(--dashboard-header-height);
 }
 
 .user-dashboard .top-header {
   position: fixed !important;
+
   top: 0;
+
   left: 0;
+
   right: 0;
+
   min-height: var(--dashboard-header-height);
+
   padding-top: 0.45rem !important;
+
   padding-bottom: 0.45rem !important;
+
   z-index: 1500;
 }
 
@@ -2917,6 +3178,7 @@
 
   .user-dashboard .sidebar {
     inset: var(--dashboard-header-height) auto 0 0 !important;
+
     height: calc(100vh - var(--dashboard-header-height)) !important;
   }
 }
